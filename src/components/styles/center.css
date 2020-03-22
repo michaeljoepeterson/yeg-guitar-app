@@ -1,0 +1,13 @@
+.center-container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-container > .login-container{
+    height: 100vh;
+}
+
+.hidden{
+    display: none !important;
+}
