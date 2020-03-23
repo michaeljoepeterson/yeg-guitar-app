@@ -4,6 +4,6 @@ import authReducer from './reducers/authReducer';
 
 export default createStore(
 	combineReducers({
-        authReducer
+        auth:authReducer
 	}),applyMiddleware(thunk)
 );

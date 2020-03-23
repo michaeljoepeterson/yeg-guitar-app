@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-//import {login} from '../actions/authActions';
+import {login} from '../actions/authActions';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -31,7 +31,8 @@ export class LoginForm extends React.Component{
    tryLogin = (event) =>{
         event.persist();
         event.preventDefault();
-        //this.props.dispatch(login(this.state.email,this.state.pass));
+        //console.log(this.state.email,this.state.pass);
+        this.props.dispatch(login(this.state.email,this.state.pass));
         
     }
     render(){
@@ -58,8 +59,8 @@ export class LoginForm extends React.Component{
 }
 
 const mapStateToProps = state => ({
-    //currentUser: state.auth.currentUser,
-    //error:state.auth.error,
-    //loading:state.auth.loading
+    currentUser: state.auth.currentUser,
+    error:state.auth.error,
+    loading:state.auth.loading
 });
 export default connect(mapStateToProps)(LoginForm);
