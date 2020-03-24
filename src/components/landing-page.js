@@ -6,7 +6,7 @@ import { Redirect } from 'react-router';
 export function LandingPage(props){
     const title = 'Edmonton Guitar';
     if(props.currentUser){
-        return <Redirect to='/'/>;
+        return <Redirect to='/create-lesson'/>;
     }
     return(
         <div className="center-container">
@@ -16,7 +16,7 @@ export function LandingPage(props){
 }
 
 const mapStateToProps = state => ({
-    //currentUser: state.auth.currentUser,
-    //error:state.auth.error
+    currentUser: state.auth.currentUser,
+    error:state.auth.error
 });
 export default connect(mapStateToProps)(LandingPage);
