@@ -1,0 +1,13 @@
+a{
+    color: white;
+    text-decoration: none;
+}
+
+.logout{
+    flex-grow: 1;
+    text-align: right;
+}
+
+.navbar{
+    margin-bottom:40px;
+}
