@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
+import {getStudents} from '../actions/studentActions';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -19,6 +20,10 @@ export class CreateLesson extends React.Component{
             date: new Date(),
             lessonType:'Finger Style'
         };
+    }
+
+    componentDidMount(){
+        this.props.dispatch(getStudents());
     }
 
     fieldChanged = (event,field) => {
@@ -45,6 +50,7 @@ export class CreateLesson extends React.Component{
 
     render(){
         console.log(this.state);
+        console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         return(
             <div>
@@ -65,6 +71,7 @@ export class CreateLesson extends React.Component{
 
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
-    lessonTypes:['Finger Style','Chords', 'Rythm']
+    lessonTypes:['Finger Style','Chords', 'Rythm'],
+    students:state.students.student
 });
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
