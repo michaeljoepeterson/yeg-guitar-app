@@ -18,21 +18,44 @@ export class CreateLesson extends React.Component{
             students:[],
             notes:null,
             date: new Date(),
-            lessonType:'Finger Style'
+            lessonType:'Finger Style',
+            student:''
         };
     }
 
     componentDidMount(){
-        this.props.dispatch(getStudents());
+        this.props.dispatch(getStudents())
+
+        .then(response => {
+            this.setState({
+                student:this.props.students[0].fullName
+            });
+        })
+
+        .catch(err => {
+
+        });
     }
 
     fieldChanged = (event,field) => {
         event.persist();
-        console.log(event);
         let value = event.target.value;
         this.setState({
-            field:value
+            [field]:value
         });
+    }
+
+    buildStudentSelect = () => {
+        let studentSelect = [];
+
+        for(let i = 0;i < this.props.students.length;i++){
+            const item = this.props.students[i];
+            studentSelect.push(
+                <MenuItem value={item.fullName} key={i}>{item.fullName}</MenuItem>
+            );
+        }
+        //debugger;
+        return studentSelect;
     }
 
     buildLessonSelect = () => {
@@ -49,19 +72,26 @@ export class CreateLesson extends React.Component{
     }
 
     render(){
-        console.log(this.state);
-        console.log(this.props);
+        // console.log(this.state);
+        // console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
+        let studentItems = this.props.students ? this.buildStudentSelect() : [];
         return(
             <div>
                 <form>
                     <Grid container>
-                    <Grid item xs={12} md={6}>
-                        <InputLabel id="lessonType">Lesson Type</InputLabel>
-                        <Select onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
-                            {lessonItems}
-                        </Select>
-                    </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputLabel id="lessonType">Lesson Type</InputLabel>
+                            <Select onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
+                                {lessonItems}
+                            </Select>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <InputLabel id="student">Student</InputLabel>
+                            <Select onChange={(e) => this.fieldChanged(e,'student')} id="student" value={this.state.student}>
+                                {studentItems}
+                            </Select>
+                        </Grid>
                     </Grid>
                 </form>
             </div>
@@ -72,6 +102,6 @@ export class CreateLesson extends React.Component{
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessonTypes:['Finger Style','Chords', 'Rythm'],
-    students:state.students.student
+    students:state.students.students
 });
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
