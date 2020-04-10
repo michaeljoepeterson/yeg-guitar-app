@@ -67,5 +67,24 @@ export const saveLesson = (lesson) => (dispatch,getState) => {
 }
 
 export const getLessons = () => (dispatch,getState) => {
+    dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    return (
+        fetch(`${API_BASE_URL}/lessons`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        })
 
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then((lessons) => {
+            dispatch(getLessonSuccess(lessons.lessons));
+        })
+        .catch(err => {
+            console.log('error getting lessons ',err);
+            dispatch(getLessonError(err));
+        })
+    );
 }

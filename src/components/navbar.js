@@ -27,7 +27,8 @@ export class Navbar extends React.Component{
                         <IconButton edge="start" color="inherit" aria-label="menu">
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant='h6'><Link to="/create-lesson">Create Lesson</Link></Typography>
+                        <Typography variant='h6'><Link to="/create-lesson">Create Lesson </Link></Typography>
+                        <Typography variant='h6'><Link to="/example-table"> | View Lessons</Link></Typography>
                         <Typography className="logout" variant='h6'><a href="/" onClick={this.logout}>Logout</a></Typography>
                     </Toolbar>
                 </AppBar>

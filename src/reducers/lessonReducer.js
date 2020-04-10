@@ -1,8 +1,11 @@
 import {
     ADD_LESSON_REQUEST,
     ADD_LESSON_SUCCESS,
-    ADD_LESSON_ERROR
-} from '../actions/recipeActions';
+    ADD_LESSON_ERROR,
+    GET_LESSON_REQUEST,
+    GET_LESSON_SUCCESS,
+    GET_LESSON_ERROR
+} from '../actions/lessonActions';
 
 const initialState = {
     error:null,
@@ -25,7 +28,8 @@ export default function reducer(state = initialState,action){
     else if(action.type === ADD_LESSON_ERROR){
         return Object.assign({},state,{
             loading:false,
-            error:action.error
+            error:action.error,
+            message:null
         });
     }
     
@@ -34,6 +38,33 @@ export default function reducer(state = initialState,action){
             loading:false,
             error:null,
             message:successMessage
+        });
+    }
+
+    else if(action.type === GET_LESSON_REQUEST){
+        return Object.assign({},state,{
+            loading:true,
+            error:null,
+            message:null,
+            lessons:[]
+        });
+    }
+
+    else if(action.type === GET_LESSON_SUCCESS){
+        return Object.assign({},state,{
+            loading:false,
+            error:null,
+            message:successMessage,
+            lessons:action.lessons
+        });
+    }
+
+    else if(action.type === GET_LESSON_ERROR){
+        return Object.assign({},state,{
+            loading:false,
+            error:action.error,
+            message:null,
+            lessons:[]
         });
     }
 
