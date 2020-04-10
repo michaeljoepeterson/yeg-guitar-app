@@ -90,11 +90,20 @@ export class CreateLesson extends React.Component{
 
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
-                <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} key={i}>{studentSelect}</Select>
+                <Grid className="student-row" item xs={12} md={3}>
+                    <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} key={i}>{studentSelect}</Select>
+                </Grid>
             )
         }
+
+        let finalSelect = [];
+        finalSelect.push(
+            <Grid container item xs={12}>
+                {selects}
+            </Grid>
+        );
         
-        return selects;
+        return finalSelect;
     }
 
     buildLessonSelect = () => {
@@ -105,8 +114,6 @@ export class CreateLesson extends React.Component{
                 <MenuItem value={item} key={i}>{item}</MenuItem>
             );
         }
-
-        
 
         return lessonItems;
     }
@@ -144,7 +151,7 @@ export class CreateLesson extends React.Component{
                             <IconButton aria-label="add student" onClick={(e) => this.addStudent()}>
                                 <AddCircleOutlinedIcon />
                             </IconButton>
-                            <InputLabel className="student-label" id="student">Student</InputLabel>
+                            <InputLabel className="student-label" id="student">Students</InputLabel>
                             {studentItems}
                         </Grid>
                     </Grid>
