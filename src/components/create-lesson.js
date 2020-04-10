@@ -6,11 +6,12 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Icon } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -90,15 +91,18 @@ export class CreateLesson extends React.Component{
 
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
-                <Grid className="student-row" item xs={12} md={3}>
-                    <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} key={i}>{studentSelect}</Select>
+                <Grid className="student-row" item xs={12} md={3} key={i}>
+                    <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} >{studentSelect}</Select>
+                    <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
+                        <CancelOutlinedIcon/>
+                    </IconButton>
                 </Grid>
             )
         }
 
         let finalSelect = [];
         finalSelect.push(
-            <Grid container item xs={12}>
+            <Grid container item xs={12} key={0}>
                 {selects}
             </Grid>
         );
@@ -126,6 +130,16 @@ export class CreateLesson extends React.Component{
         };
         let students = [...this.state.students];
         students.push(blankStudent);
+        this.setState({
+            studentCount,
+            students
+        });
+    }
+
+    removeStudent = (index) => {
+        const studentCount = this.state.studentCount - 1;
+        let students = this.state.students.filter((student,i) => i !== index);
+
         this.setState({
             studentCount,
             students
