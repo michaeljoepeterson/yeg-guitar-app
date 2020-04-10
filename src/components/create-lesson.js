@@ -12,6 +12,9 @@ import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import Snackbar from '@material-ui/core/Snackbar';
+import {saveLesson} from '../actions/lessonActions';
+import CloseIcon from '@material-ui/icons/Close';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -23,7 +26,9 @@ export class CreateLesson extends React.Component{
             notes:'',
             date: new Date(),
             lessonType:'Finger Style',
-            studentCount:1
+            studentCount:1,
+            saved:false,
+            savedMessage:'Saved'
         };
     }
 
@@ -156,6 +161,35 @@ export class CreateLesson extends React.Component{
         }
 
         console.log(lesson);
+
+        this.props.dispatch(saveLesson(lesson))
+
+        .then(res => {
+            let {code} = res;
+            
+            if(code === 200){
+                this.setState({
+                    saved:true,
+                    savedMessage:'Lesson Saved!'
+                });
+            }
+            else{
+                this.setState({
+                    saved:true,
+                    savedMessage:'Error saving lesson'
+                });
+            }
+        })
+
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    snackbarClosed = (name) => {
+        this.setState({
+            [name]:false
+        });
     }
 
     render(){
@@ -168,7 +202,7 @@ export class CreateLesson extends React.Component{
                 <form onSubmit={(e) => this.saveLesson(e)}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <TextField className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
+                            <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <div className="lesson-container">
@@ -190,6 +224,23 @@ export class CreateLesson extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
+                <Snackbar
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                    }}
+                    open={this.state.saved}
+                    autoHideDuration={5000}
+                    onClose={(e) => this.snackbarClosed('saved')}
+                    message={this.state.savedMessage}
+                    action={
+                    <React.Fragment>
+                        <IconButton size="small" aria-label="close" color="inherit" onClick={(e) => this.snackbarClosed('saved')}>
+                        <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                    }
+                />
             </div>
         );
     }
