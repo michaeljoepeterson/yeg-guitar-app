@@ -20,10 +20,9 @@ export class CreateLesson extends React.Component{
         this.state = {
             teacher:this.props.currentUser.id,
             students:[],
-            notes:null,
+            notes:'',
             date: new Date(),
             lessonType:'Finger Style',
-            student:'',
             studentCount:1
         };
     }
@@ -38,7 +37,6 @@ export class CreateLesson extends React.Component{
                 fullName:this.props.students[0].fullName
             });
             this.setState({
-                student:this.props.students[0].fullName,
                 students:currentStudents
             });
         })
@@ -146,20 +144,39 @@ export class CreateLesson extends React.Component{
         });
     }
 
+    saveLesson = (event) => {
+        event.persist();
+        event.preventDefault();
+        const lesson = {
+            date:this.state.date,
+            lessonType:this.state.lessonType,
+            notes:this.state.notes,
+            teacher:this.state.teacher,
+            students:this.state.students.map(student => student.id)
+        }
+
+        console.log(lesson);
+    }
+
     render(){
-        console.log(this.state);
+        //console.log(this.state);
         // console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.state.students.length > 0 ? this.buildStudentSelect() : [];
         return(
             <div>
-                <form>
+                <form onSubmit={(e) => this.saveLesson(e)}>
                     <Grid container>
+                        <Grid item xs={12}>
+                            <TextField className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
+                        </Grid>
                         <Grid item xs={12} md={6}>
-                            <InputLabel id="lessonType">Lesson Type</InputLabel>
-                            <Select onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
-                                {lessonItems}
-                            </Select>
+                            <div className="lesson-container">
+                                <InputLabel id="lessonType">Lesson Type</InputLabel>
+                                <Select onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
+                                    {lessonItems}
+                                </Select>
+                            </div>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <IconButton aria-label="add student" onClick={(e) => this.addStudent()}>
@@ -167,6 +184,9 @@ export class CreateLesson extends React.Component{
                             </IconButton>
                             <InputLabel className="student-label" id="student">Students</InputLabel>
                             {studentItems}
+                        </Grid>
+                        <Grid className="" item xs={12}>
+                            <Button type="submit" variant="contained">Save</Button>
                         </Grid>
                     </Grid>
                 </form>
