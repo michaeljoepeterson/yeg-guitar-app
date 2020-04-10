@@ -17,6 +17,23 @@ export const addLessonError = (error) => ({
     error
 });
 
+export const GET_LESSON_REQUEST = 'GET_LESSON_REQUEST';
+export const getLessonRequest = () => ({
+    type:GET_LESSON_REQUEST
+});
+
+export const GET_LESSON_SUCCESS = 'GET_LESSON_SUCCESS';
+export const getLessonSuccess = (lessons) => ({
+    type:GET_LESSON_SUCCESS,
+    lessons
+});
+
+export const GET_LESSON_ERROR = 'GET_LESSON_ERROR';
+export const getLessonError = (error) => ({
+    type:GET_LESSON_ERROR,
+    error
+});
+
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;
@@ -47,4 +64,8 @@ export const saveLesson = (lesson) => (dispatch,getState) => {
     });
     
     return promise;
+}
+
+export const getLessons = () => (dispatch,getState) => {
+
 }
