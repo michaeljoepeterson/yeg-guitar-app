@@ -1,5 +1,6 @@
 import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL} from '../config';
+import {loadAuthToken} from '../local-storage';
 
 export const ADD_LESSON_REQUEST = 'ADD_LESSON_REQUEST';
 export const addLessonRequest = () => ({
@@ -36,8 +37,8 @@ export const getLessonError = (error) => ({
 
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
-    const authToken = getState().auth.authToken;
-    console.log(JSON.stringify(lesson));
+    const authToken = loadAuthToken();
+    //console.log(JSON.stringify(lesson));
     let promise = new Promise((resolve,reject) => {
         return (
             fetch(`${API_BASE_URL}/lessons`,{
@@ -68,7 +69,7 @@ export const saveLesson = (lesson) => (dispatch,getState) => {
 
 export const getLessons = () => (dispatch,getState) => {
     dispatch(getLessonRequest());
-    const authToken = getState().auth.authToken;
+    const authToken = loadAuthToken();
     return (
         fetch(`${API_BASE_URL}/lessons`,{
             method:'GET',

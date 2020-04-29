@@ -1,6 +1,6 @@
 import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL} from '../config';
-import {saveAuthToken} from '../local-storage';
+import {saveAuthToken,clearAuthToken,loadAuthToken} from '../local-storage';
 import jwtDecode from 'jwt-decode';
 //handle loading state
 export const AUTH_REQUEST = 'AUTH_REQUEST';
@@ -55,4 +55,28 @@ export const login = (email,password) => dispatch => {
             dispatch(authError(err));
         })
     );
+};
+
+export const refreshAuthToken = () => () => {
+    //dispatch(authRequest());
+    const authToken = loadAuthToken();
+    //debugger;
+    return fetch(`${API_BASE_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    })
+    .then(res => normalizeResponseErrors(res))
+    .then(res => res.json())
+    .then(({authToken}) => {
+        //debugger;
+        //storeAuthInfo(authToken, dispatch)
+        console.log('auth token updated: ',authToken);
+        saveAuthToken(authToken);
+    })
+    .catch(err => {
+        //dispatch(authError(err));
+        clearAuthToken(authToken);
+    });
 };

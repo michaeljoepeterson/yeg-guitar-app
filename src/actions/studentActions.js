@@ -1,5 +1,6 @@
 import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL} from '../config';
+import {loadAuthToken} from '../local-storage';
 
 export const GET_STUDENT_REQUEST = 'GET_STUDENT_REQUEST';
 export const getStudentRequest = () => ({
@@ -20,7 +21,7 @@ export const getStudentError = (error) => ({
 
 export const getStudents = () => (dispatch,getState) => {
     dispatch(getStudentRequest());
-    const authToken = getState().auth.authToken;
+    const authToken = loadAuthToken();
     return (
         fetch(`${API_BASE_URL}/students`,{
             method:'GET',

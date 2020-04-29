@@ -38,7 +38,7 @@ export class ExampleTable extends React.Component{
                 } 
             }
             rows.push(
-                <TableRow>
+                <TableRow key={i}>
                     <TableCell component="th" scope="row">
                         {lesson.date}
                     </TableCell>
