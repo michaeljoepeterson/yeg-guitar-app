@@ -2,12 +2,11 @@ import React from 'react';
 import LandingPage from './components/landing-page';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {refreshAuthToken} from './actions/authActions';
+import {refreshAuthToken,enableTestMode} from './actions/authActions';
 import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/example-table';
 import CreateLesson from './components/create-lesson';
 import Navbar from './components/navbar';
-import {loadAuthToken} from './local-storage';
 import './App.css';
 
 export class App extends React.Component {
@@ -16,6 +15,11 @@ export class App extends React.Component {
     super(props);
     this.refreshInterval = null;
     this.minutes = 10;
+  }
+
+  componentDidMount(){
+    console.log(this.props.location);
+    
   }
 
   componentDidUpdate(prevProps) {
@@ -51,7 +55,9 @@ export class App extends React.Component {
     return (
       <div className="App">
         <Navbar />
-        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/"  render={(props) => (
+            <LandingPage />)
+          }/>
         <Route exact path="/create-lesson" render={(props) => (
             <CreateLesson key={props.match.params.pageid} {...props} />)
           } />
@@ -59,6 +65,9 @@ export class App extends React.Component {
             <ExampleTable key={props.match.params.pageid} {...props} />)
           } />
           <Route exact path="/create-admin" component={CreateAdmin} />
+          <Route exact path="/test"  render={(props) => (
+            <LandingPage />)
+          }/>
       </div>
     );
   }
@@ -68,6 +77,7 @@ export class App extends React.Component {
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
   authToken:state.auth.authToken,
-  error:state.auth.error
+  error:state.auth.error,
+  testMode:state.auth.testMode
 });
 export default withRouter(connect(mapStateToProps)(App));

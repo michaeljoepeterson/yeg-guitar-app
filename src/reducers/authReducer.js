@@ -2,14 +2,16 @@ import {
     AUTH_SUCCESS,
     AUTH_REQUEST,
     AUTH_ERROR,
-    LOGOUT
+    LOGOUT,
+    TEST_ENABLE
 } from '../actions/authActions';
 
 const initialState = {
     currentUser:null,
     error:null,
     loading:false,
-    authToken:null
+    authToken:null,
+    testMode:false
 };
 
 export default function reducer(state = initialState,action){
@@ -48,5 +50,16 @@ export default function reducer(state = initialState,action){
         });
     }
 
+    else if(action.type === TEST_ENABLE){
+        
+        return Object.assign({},state,{
+            loading:false,
+            error:null,
+            currentUser:null,
+            authToken:null,
+            testMode:true
+        });
+    }
+    
     return state;
 }
