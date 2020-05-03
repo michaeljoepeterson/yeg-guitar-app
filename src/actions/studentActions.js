@@ -21,7 +21,8 @@ export const getStudentError = (error) => ({
 
 export const getStudents = () => (dispatch,getState) => {
     dispatch(getStudentRequest());
-    const authToken = loadAuthToken();
+    const authToken = getState().auth.authToken;
+
     return (
         fetch(`${API_BASE_URL}/students`,{
             method:'GET',

@@ -37,7 +37,7 @@ export const getLessonError = (error) => ({
 
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
-    const authToken = loadAuthToken();
+    const authToken = getState().auth.authToken;
     //console.log(JSON.stringify(lesson));
     let promise = new Promise((resolve,reject) => {
         return (
@@ -69,7 +69,7 @@ export const saveLesson = (lesson) => (dispatch,getState) => {
 
 export const getLessons = () => (dispatch,getState) => {
     dispatch(getLessonRequest());
-    const authToken = loadAuthToken();
+    const authToken = getState().auth.authToken;
     return (
         fetch(`${API_BASE_URL}/lessons`,{
             method:'GET',

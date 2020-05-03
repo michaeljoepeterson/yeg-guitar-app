@@ -39,8 +39,7 @@ const storeAuthInfo = (authToken, dispatch) => {
 
 export const login = (email,password) => (dispatch,getState) => {
     const testMode = getState().auth.testMode;
-    if(testMode){
-        debugger;
+    if(testMode){     
         console.log('is test mode');
         setTestUrl();
     }
