@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import {getCategories} from '../actions/categoryActions';
 import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
+import {createStudent} from '../actions/studentActions';
+import SnackbarWrapper from './snackbar-wrapper';
 
 import './styles/create-student.css';
 
@@ -58,6 +60,46 @@ export class CreateStudent extends React.Component{
         return categorySelect;
     }
 
+    saveStudent = (event) =>{
+        event.persist();
+        event.preventDefault();
+
+        const student = {
+            firstName:this.state.firstName,
+            lastName:this.state.lastName,
+            category:this.state.category
+        };
+        //console.log(this.props.currentUser);
+        this.props.dispatch(createStudent(student,this.props.currentUser.level))
+
+        .then(res => {
+            let {code} = res;
+            
+            if(code === 200){
+                this.setState({
+                    saved:true,
+                    savedMessage:'Student Saved!'
+                });
+            }
+            else{
+                this.setState({
+                    saved:true,
+                    savedMessage:'Error saving student'
+                });
+            }
+        })
+
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    snackbarClosed = (name) => {
+        this.setState({
+            [name]:false
+        });
+    }
+
     render(){
         console.log(this.state);
         console.log(this.props.categories);
@@ -66,7 +108,7 @@ export class CreateStudent extends React.Component{
         return(
             <div>
                 <Typography variant='h4'>Create New Student</Typography>
-                <form>
+                <form onSubmit={(e) => this.saveStudent(e)}>
                     <Grid container>
                         <Grid item xs={12} md={4}>
                             <TextField required label="First Name" id="firstName" value={this.state.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
@@ -82,6 +124,7 @@ export class CreateStudent extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
+                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} savedField={"saved"} savedMessage={this.state.savedMessage}/>
             </div>
         );
     }

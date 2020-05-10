@@ -160,7 +160,7 @@ export class CreateLesson extends React.Component{
             students:this.state.students.map(student => student.id)
         }
 
-        console.log(lesson);
+        //console.log(lesson);
 
         this.props.dispatch(saveLesson(lesson))
 

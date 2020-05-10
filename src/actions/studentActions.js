@@ -19,6 +19,10 @@ export const studentError = (error) => ({
     error
 });
 
+export const CREATE_STUDENT_SUCCESS = 'CREATE_STUDENT_SUCCESS';
+export const createStudentSuccess = () => ({
+    type:CREATE_STUDENT_SUCCESS
+});
 
 export const getStudents = () => (dispatch,getState) => {
     dispatch(studentRequest());
@@ -45,29 +49,33 @@ export const getStudents = () => (dispatch,getState) => {
     );
 };
 
-export const createStudent = (student) => (dispatch,getState) => {
+export const createStudent = (student,level) => (dispatch,getState) => {
     dispatch(studentRequest());
     const authToken = getState().auth.authToken;
+    let promise = new Promise((resolve,reject) => {
+        return (
+            fetch(`${API_BASE_URL}/students?level=${level}`,{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body:JSON.stringify(student)
+            })
+    
+            .then(res => normalizeResponseErrors(res))
+            .then(res => res.json())
+            .then((response) => {
+                dispatch(createStudentSuccess());
+                resolve(response)
+            })
+            .catch(err => {
+                console.log('error saving student ',err);
+                dispatch(studentError(err));
+            })
+        );
+    });
+    
 
-    return (
-        fetch(`${API_BASE_URL}/students`,{
-            method:'POST',
-            headers:{
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${authToken}`
-            },
-            body:JSON.stringify(student)
-        })
-
-        .then(res => normalizeResponseErrors(res))
-        .then(res => res.json())
-        .then((students) => {
-            
-            dispatch(getStudentSuccess(students.students));
-        })
-        .catch(err => {
-            console.log('error getting students ',err);
-            dispatch(studentError(err));
-        })
-    );
+    return promise;
 };
