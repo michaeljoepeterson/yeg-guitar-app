@@ -1,32 +1,32 @@
 import {
-    STUDENT_REQUEST,
-    GET_STUDENT_SUCCESS,
-    STUDENT_ERROR
-} from '../actions/studentActions';
+    CATEGORY_REQUEST,
+    GET_CATEGORY_SUCCESS,
+    CATEGORY_ERROR
+} from '../actions/categoryActions';
 
 const initialState = {
-    students:null,
+    categories:null,
     error:null,
     loading:false,
 };
 
 export default function reducer(state = initialState,action){
-    if(action.type === STUDENT_REQUEST){
+    if(action.type === CATEGORY_REQUEST){
         return Object.assign({},state,{
             loading:true,
             error:null,
             students:null
         });
     }
-    else if(action.type === GET_STUDENT_SUCCESS){
+    else if(action.type === GET_CATEGORY_SUCCESS){
         return Object.assign({},state,{
             loading:false,
             error:action.error,
-            students:action.students
+            categories:action.categories
         });
     }
     
-    else if(action.type === STUDENT_ERROR){
+    else if(action.type === CATEGORY_ERROR){
         return Object.assign({},state,{
             loading:false,
             error:action.error,
