@@ -11,6 +11,10 @@ import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
 import {createStudent} from '../actions/studentActions';
 import SnackbarWrapper from './snackbar-wrapper';
+import InputLabel from '@material-ui/core/InputLabel';
+import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
+import IconButton from '@material-ui/core/IconButton';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
 import './styles/create-student.css';
 
@@ -18,12 +22,14 @@ export class CreateStudent extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            categories:[],
+            //categrories for the student
+            categories:[''],
             firstName:'',
             lastName:'',
             category:'',
             saved:false,
-            savedMessage:'Saved'
+            savedMessage:'Saved',
+            categoryCount:1
         };
     }
 
@@ -45,6 +51,23 @@ export class CreateStudent extends React.Component{
         });
     }
 
+    categoryChanged = (event,index) => {
+        event.persist();
+        let value = event.target.value;
+        let categories = [...this.state.categories];
+        categories = categories.map((category,i) => {
+            if(i === index){
+                return value;
+            }
+            else {
+                return category
+            }
+        });
+        this.setState({
+            categories
+        });
+    }
+
     buildCategorySelect = (categories) => {
         let categoryItems = [];
 
@@ -54,10 +77,29 @@ export class CreateStudent extends React.Component{
                 <MenuItem value={item.id} key={i}>{item.name}</MenuItem>
             );
         }
+        let selects = [];
+        for(let i = 0;i < this.state.categoryCount;i++){
+            let value = this.state.categories[i] ? this.state.categories[i] : '';
+            selects.push(
+                <Grid className="student-row" item xs={12} md={3} key={i}>
+                    <Select onChange={(e) => this.categoryChanged(e,i)} value={this.state.categories[i]} >{categoryItems}</Select>
+                    <IconButton onClick={(e) => this.removeCategory(i)} aria-label="remove student">
+                        <CancelOutlinedIcon/>
+                    </IconButton>
+                </Grid>
+            )
+        }
 
-        let categorySelect = (<Select onChange={(e) => this.fieldChanged(e,'category')} value={this.state.category} >{categoryItems}</Select>);
+        //let categorySelect = (<Select onChange={(e) => this.fieldChanged(e,'category')} value={this.state.category} >{categoryItems}</Select>);
 
-        return categorySelect;
+        let finalSelect = [];
+        finalSelect.push(
+            <Grid container item xs={12} key={0}>
+                {selects}
+            </Grid>
+        );
+
+        return finalSelect;
     }
 
     saveStudent = (event) =>{
@@ -100,6 +142,25 @@ export class CreateStudent extends React.Component{
         });
     }
 
+    addCategory = () =>{
+        const categoryCount = this.state.categoryCount + 1;
+        let categories = [...this.state.categories];
+        categories.push('');
+        this.setState({
+            categoryCount,
+            categories
+        });
+    }
+
+    removeCategory = (index) =>{
+        const categoryCount = this.state.categoryCount - 1;
+        const categories = this.state.categories.filter((category,i) => index !== i);
+        this.setState({
+            categoryCount,
+            categories
+        });
+    }
+
     render(){
         console.log(this.state);
         console.log(this.props.categories);
@@ -117,9 +178,14 @@ export class CreateStudent extends React.Component{
                             <TextField required label="Last Name" id="lastName" value={this.state.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
                         </Grid>
                         <Grid item xs={12} md={4}>
+                            <IconButton aria-label="add category" onClick={(e) => this.addCategory()}>
+                                <AddCircleOutlinedIcon />
+                            </IconButton>
+                            <InputLabel className="student-label" id="categories">Categories</InputLabel>
                             {categories}
                         </Grid>
                         <Grid className="save-button" item xs={12}>
+                            
                             <Button type="submit" variant="contained">Save</Button>
                         </Grid>
                     </Grid>
