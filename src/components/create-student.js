@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
 import './styles/create-student.css';
+import './styles/create-lesson.css';
 
 export class CreateStudent extends React.Component{
     constructor(props) {
@@ -109,7 +110,7 @@ export class CreateStudent extends React.Component{
         const student = {
             firstName:this.state.firstName,
             lastName:this.state.lastName,
-            category:this.state.category
+            category:this.state.categories
         };
         //console.log(this.props.currentUser);
         this.props.dispatch(createStudent(student,this.props.currentUser.level))
@@ -162,8 +163,9 @@ export class CreateStudent extends React.Component{
     }
 
     render(){
-        console.log(this.state);
-        console.log(this.props.categories);
+        
+        // console.log(this.state);
+        // console.log(this.props.categories);
 
         let categories = this.props.categories ? this.buildCategorySelect(this.props.categories) : [];
         return(
@@ -172,10 +174,14 @@ export class CreateStudent extends React.Component{
                 <form onSubmit={(e) => this.saveStudent(e)}>
                     <Grid container>
                         <Grid item xs={12} md={4}>
-                            <TextField required label="First Name" id="firstName" value={this.state.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
+                            <div className="lesson-container">
+                                <TextField required label="First Name" id="firstName" value={this.state.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
+                            </div>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <TextField required label="Last Name" id="lastName" value={this.state.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
+                            <div className="lesson-container">
+                                <TextField required label="Last Name" id="lastName" value={this.state.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
+                            </div>       
                         </Grid>
                         <Grid item xs={12} md={4}>
                             <IconButton aria-label="add category" onClick={(e) => this.addCategory()}>
