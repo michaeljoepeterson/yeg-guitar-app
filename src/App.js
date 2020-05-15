@@ -7,7 +7,7 @@ import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/example-table';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
-import Navbar from './components/navbar';
+import TopNav from './components/navbar';
 import './App.css';
 
 export class App extends React.Component {
@@ -55,7 +55,7 @@ export class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Navbar />
+        <TopNav />
         <Route exact path="/"  render={(props) => (
             <LandingPage />)
           }/>
