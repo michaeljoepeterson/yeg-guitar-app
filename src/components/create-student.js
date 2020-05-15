@@ -1,5 +1,6 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
+import CheckPermission from '../HOC/check-permission';
 import { withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -207,4 +208,4 @@ const mapStateToProps = state => ({
     lessonTypes:['Finger Style','Chords', 'Rythm'],
     categories:state.category.categories
 });
-export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateStudent)));
+export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(CreateStudent))));

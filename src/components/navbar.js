@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Navbar,Nav,Button } from 'react-bootstrap';
+import {possibleLinks} from '../config';
 import './styles/navbar.css';
 //add logout functions
 export class TopNav extends React.Component{
@@ -17,31 +18,7 @@ export class TopNav extends React.Component{
     constructor(props) {
         super(props);
         this.displayNav = false;
-        /*
-        this.possibleLinks = [[(
-        <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/create-lesson">Create Lesson</Nav.Link>
-            <Nav.Link as={Link} to="/example-table">View Lessons</Nav.Link>
-            <Nav.Link as={Link} to="/create-student">Create Student</Nav.Link>
-        </Nav>)],[],[]];
-        */
-       this.possibleLinks = [
-           {
-               link:'/create-lesson',
-               display:'Create Lesson',
-               level:2
-           },
-           {
-                link:'/example-table',
-                display:'View Lessons',
-                level:0
-           },
-           {
-                link:'/create-student',
-                display:'Create Student',
-                level:1
-            }
-       ];
+        this.possibleLinks = possibleLinks;
       }
     
     logout = (event) => {
@@ -70,24 +47,9 @@ export class TopNav extends React.Component{
         this.displayNav = this.props.currentUser != null ? true : false;
         let links = this.props.currentUser != null ? this.getNavLinks() : [];
         return(
-            /*
-            <div className={this.displayNav ? '' : 'hidden'}>
-                <AppBar position="static" className="navbar">
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant='h6'><Link to="/create-lesson">Create Lesson </Link></Typography>
-                        <Typography variant='h6'><Link to="/example-table"> | View Lessons</Link></Typography>
-                        <Typography variant='h6'><Link to="/create-student"> | Create Student</Link></Typography>
-                        <Typography className="logout" variant='h6'><a href="/" onClick={this.logout}>Logout</a></Typography>
-                    </Toolbar>
-                </AppBar>
-            </div>
-            */
            <div className={this.displayNav ? '' : 'hidden'}>
             <Navbar bg="dark" expand="lg" variant="dark">
-                <Navbar.Brand href="/create-lesson">EGMS</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/create-lesson">EGMS</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">

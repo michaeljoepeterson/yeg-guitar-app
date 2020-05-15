@@ -1,5 +1,6 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
+import CheckPermission from '../HOC/check-permission';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getLessons} from '../actions/lessonActions';
@@ -85,4 +86,4 @@ const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessons:state.lessons.lessons
 });
-export default requiresLogin()(withRouter(connect(mapStateToProps)(ExampleTable)));
+export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(ExampleTable))));
