@@ -154,8 +154,10 @@ export class CreateLesson extends React.Component{
     saveLesson = (event) => {
         event.persist();
         event.preventDefault();
+        let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
+        debugger;
         const lesson = {
-            date:this.state.date,
+            date:dateTime,
             lessonType:this.state.lessonType,
             notes:this.state.notes,
             teacher:this.state.teacher,
@@ -195,13 +197,17 @@ export class CreateLesson extends React.Component{
     }
 
     handleDateChange = (event) =>{
-        event.persist();
-        console.log(event.target.value);
+        let date = new Date(event);
+        this.setState({
+            date
+        });
     }
 
     handleTimeChange = (event) =>{
-        event.persist();
-        console.log(event.target.value);
+        let time = new Date(event);
+        this.setState({
+            time
+        });
     }
 
     render(){
@@ -225,6 +231,7 @@ export class CreateLesson extends React.Component{
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
+                                required
                             />
                         </MuiPickersUtilsProvider>
                         </Grid>
@@ -239,6 +246,7 @@ export class CreateLesson extends React.Component{
                             KeyboardButtonProps={{
                                 'aria-label': 'change time',
                             }}
+                            required
                         />
                         </MuiPickersUtilsProvider>
                         </Grid>

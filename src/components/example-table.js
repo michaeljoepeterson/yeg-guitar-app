@@ -38,10 +38,11 @@ export class ExampleTable extends React.Component{
                     studentString += ',';
                 } 
             }
+            let date = new Date(lesson.date);
             rows.push(
                 <TableRow key={i}>
                     <TableCell component="th" scope="row">
-                        {lesson.date}
+                        {date.toDateString() + ' : ' + date.toLocaleTimeString()}
                     </TableCell>
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
