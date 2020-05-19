@@ -42,6 +42,7 @@ export const login = (email,password) => (dispatch,getState) => {
     if(testMode){     
         console.log('is test mode');
         setTestUrl();
+        dispatch(enableTestMode())
     }
     dispatch(authRequest());
     return (

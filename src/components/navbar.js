@@ -46,10 +46,11 @@ export class TopNav extends React.Component{
     render(){
         this.displayNav = this.props.currentUser != null ? true : false;
         let links = this.props.currentUser != null ? this.getNavLinks() : [];
+        const brand = this.props.testMode ? 'TEST' : 'EGMS';
         return(
            <div className={this.displayNav ? '' : 'hidden'}>
             <Navbar bg="dark" expand="lg" variant="dark">
-                <Navbar.Brand as={Link} to="/create-lesson">EGMS</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/create-lesson">{brand}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -64,6 +65,7 @@ export class TopNav extends React.Component{
 }
 
 const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser
+    currentUser: state.auth.currentUser,
+    testMode:state.auth.testMode
 });
 export default connect(mapStateToProps)(TopNav);

@@ -15,6 +15,8 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Snackbar from '@material-ui/core/Snackbar';
 import {saveLesson} from '../actions/lessonActions';
 import CloseIcon from '@material-ui/icons/Close';
+import SnackbarWrapper from './snackbar-wrapper';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -224,7 +226,8 @@ export class CreateLesson extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
-                <Snackbar
+                
+                {/* <Snackbar
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'center',
@@ -240,7 +243,8 @@ export class CreateLesson extends React.Component{
                         </IconButton>
                     </React.Fragment>
                     }
-                />
+                /> */}
+                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} savedField={"saved"} savedMessage={this.state.savedMessage}/>
             </div>
         );
     }
