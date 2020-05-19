@@ -12,11 +12,10 @@ import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import Snackbar from '@material-ui/core/Snackbar';
 import {saveLesson} from '../actions/lessonActions';
-import CloseIcon from '@material-ui/icons/Close';
 import SnackbarWrapper from './snackbar-wrapper';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -30,7 +29,8 @@ export class CreateLesson extends React.Component{
             lessonType:'Finger Style',
             studentCount:1,
             saved:false,
-            savedMessage:'Saved'
+            savedMessage:'Saved',
+            time:null
         };
     }
 
@@ -194,6 +194,16 @@ export class CreateLesson extends React.Component{
         });
     }
 
+    handleDateChange = (event) =>{
+        event.persist();
+        console.log(event.target.value);
+    }
+
+    handleTimeChange = (event) =>{
+        event.persist();
+        console.log(event.target.value);
+    }
+
     render(){
         //console.log(this.state);
         // console.log(this.props);
@@ -203,6 +213,35 @@ export class CreateLesson extends React.Component{
             <div>
                 <form onSubmit={(e) => this.saveLesson(e)}>
                     <Grid container>
+                        <Grid item sm={6} xs={12}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                margin="normal"
+                                id="date-picker-dialog"
+                                label="Date picker dialog"
+                                format="MM/dd/yyyy"
+                                value={this.state.date}
+                                onChange={this.handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardTimePicker
+                            margin="normal"
+                            id="time-picker"
+                            label="Time picker"
+                            value={this.state.time}
+                            onChange={this.handleTimeChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change time',
+                            }}
+                        />
+                        </MuiPickersUtilsProvider>
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
                         </Grid>
