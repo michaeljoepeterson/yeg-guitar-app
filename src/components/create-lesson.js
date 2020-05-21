@@ -155,7 +155,7 @@ export class CreateLesson extends React.Component{
         event.persist();
         event.preventDefault();
         let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
-        debugger;
+        
         const lesson = {
             date:dateTime,
             lessonType:this.state.lessonType,
@@ -224,7 +224,7 @@ export class CreateLesson extends React.Component{
                             <KeyboardDatePicker
                                 margin="normal"
                                 id="date-picker-dialog"
-                                label="Date picker dialog"
+                                label="Lesson Date"
                                 format="MM/dd/yyyy"
                                 value={this.state.date}
                                 onChange={this.handleDateChange}
@@ -240,7 +240,7 @@ export class CreateLesson extends React.Component{
                         <KeyboardTimePicker
                             margin="normal"
                             id="time-picker"
-                            label="Time picker"
+                            label="Lesson Time"
                             value={this.state.time}
                             onChange={this.handleTimeChange}
                             KeyboardButtonProps={{
