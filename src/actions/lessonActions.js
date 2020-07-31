@@ -91,21 +91,28 @@ export const getLessons = () => (dispatch,getState) => {
 }
 
 function buildQuery(options){
-    let query = '';
+    let query = '?';
 
     for(let key in options){
         if(options[key]){
-            query += `?${key}=${options[key]}&`;
+            query += `${key}=${options[key]}&`;
         }   
     }
     query = query.substring(0, query.length - 1);
     return query;
 }
 
+function buildDateString(date){
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
 export const getMyLessons = (email,startDate,endDate) => (dispatch,getState) => {
     dispatch(getLessonRequest());
     const authToken = getState().auth.authToken;
-    const query = buildQuery({email,startDate,endDate});
+    let startString = buildDateString(startDate);
+    let endString = buildDateString(endDate);
+    const query = buildQuery({email,startDate:startString,endDate:endString});
+
     return (
         fetch(`${API_BASE_URL}/lessons/my-lessons${query}`,{
             method:'GET',
