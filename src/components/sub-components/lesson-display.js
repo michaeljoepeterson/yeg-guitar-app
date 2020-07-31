@@ -1,9 +1,6 @@
 import React from 'react';
-import requiresLogin from '../HOC/requires-login';
-import CheckPermission from '../HOC/check-permission';
-import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {getLessons} from '../actions/lessonActions';
+import {getLessons} from '../../actions/lessonActions';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 
-export class ExampleTable extends React.Component{
+export class LessonDisplay extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -53,7 +50,7 @@ export class ExampleTable extends React.Component{
         }
 
         return(<TableContainer component={Paper}>
-            <Table  aria-label="simple table">
+            <Table aria-label="simple table">
                 <TableHead>
                 <TableRow>
                     <TableCell>Date</TableCell>
@@ -73,7 +70,7 @@ export class ExampleTable extends React.Component{
 
     render(){
         //console.log(this.state);
-        console.log('example table:',this.props.lessons);
+        console.log('lesson display:',this.props.lessons);
         const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
         return(
             <div>
@@ -87,4 +84,4 @@ const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessons:state.lessons.lessons
 });
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(ExampleTable))));
+export default (connect(mapStateToProps)(LessonDisplay));

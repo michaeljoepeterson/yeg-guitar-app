@@ -89,3 +89,39 @@ export const getLessons = () => (dispatch,getState) => {
         })
     );
 }
+
+function buildQuery(options){
+    let query = '';
+
+    for(let key in options){
+        if(options[key]){
+            query += `?${key}=${options[key]}&`;
+        }   
+    }
+    query = query.substring(0, query.length - 1);
+    return query;
+}
+
+export const getMyLessons = (email,startDate,endDate) => (dispatch,getState) => {
+    dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    const query = buildQuery({email,startDate,endDate});
+    return (
+        fetch(`${API_BASE_URL}/my-lessons${query}`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then((lessons) => {
+            dispatch(getLessonSuccess(lessons.lessons));
+        })
+        .catch(err => {
+            console.log('error getting lessons ',err);
+            dispatch(getLessonError(err));
+        })
+    );
+}

@@ -68,7 +68,7 @@ export const login = (email,password) => (dispatch,getState) => {
     );
 };
 
-export const refreshAuthToken = () => () => {
+export const refreshAuthToken = () => (dispatch,getState) => {
     //dispatch(authRequest());
     const authToken = loadAuthToken();
     //debugger;
@@ -84,7 +84,7 @@ export const refreshAuthToken = () => () => {
         //debugger;
         //storeAuthInfo(authToken, dispatch)
         console.log('auth token updated: ',authToken);
-        saveAuthToken(authToken);
+        storeAuthInfo(authToken,dispatch)
     })
     .catch(err => {
         //dispatch(authError(err));

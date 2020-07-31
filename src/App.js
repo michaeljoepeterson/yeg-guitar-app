@@ -7,6 +7,7 @@ import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/example-table';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
+import MyLessons from './components/my-lessons';
 import TopNav from './components/navbar';
 import './App.css';
 
@@ -62,16 +63,22 @@ export class App extends React.Component {
         <Route exact path="/create-lesson" render={(props) => (
             <CreateLesson key={props.match.params.pageid} {...props} />)
           } />
-          <Route exact path="/example-table" render={(props) => (
-            <ExampleTable key={props.match.params.pageid} {...props} />)
+          <Route exact path="/edit-lessons/:id" render={(props) => (
+            <CreateLesson key={props.match.params.pageid} {...props} />)
           } />
-          <Route exact path="/create-student" render={(props) => (
-            <CreateStudent key={props.match.params.pageid} {...props} />)
-          } />
-          <Route exact path="/create-admin" component={CreateAdmin} />
-          <Route exact path="/test"  render={(props) => (
-            <LandingPage />)
-          }/>
+        <Route exact path="/example-table" render={(props) => (
+          <ExampleTable key={props.match.params.pageid} {...props} />)
+        } />
+        <Route exact path="/my-lessons" render={(props) => (
+          <MyLessons key={props.match.params.pageid} {...props} />)
+        } />
+        <Route exact path="/create-student" render={(props) => (
+          <CreateStudent key={props.match.params.pageid} {...props} />)
+        } />
+        <Route exact path="/create-admin" component={CreateAdmin} />
+        <Route exact path="/test"  render={(props) => (
+          <LandingPage />)
+        }/>
       </div>
     );
   }
