@@ -1,0 +1,19 @@
+.modal-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:80vh;
+}
+
+.paper-container{
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1em;
+}
+
+.paper-container > div > button{
+    margin: 1em;
+}

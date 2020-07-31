@@ -16,6 +16,7 @@ import {saveLesson,setSelectedLesson,updateLesson} from '../actions/lessonAction
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
+import SimpleModal from './sub-components/simple-modal';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -31,7 +32,9 @@ export class CreateLesson extends React.Component{
             studentCount:1,
             saved:false,
             savedMessage:'Saved',
-            time:null
+            time:null,
+            modalOpen:false,
+            modalMessage:'Are you sure you want to create a class with no students?'
         };
     }
 
@@ -179,9 +182,20 @@ export class CreateLesson extends React.Component{
         });
     }
 
-    saveLesson = (event) => {
-        event.persist();
-        event.preventDefault();
+    saveLesson = (event,checkedModal) => {
+        if(event){
+            event.persist();
+            event.preventDefault();
+        }
+        if(!checkedModal && this.state.students.length === 0){
+            this.setState({
+                modalOpen:true
+            });
+            return;
+        }
+        this.setState({
+            modalOpen:false
+        });
         let isEdit = this.checkEditMode();
         let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
         
@@ -278,6 +292,22 @@ export class CreateLesson extends React.Component{
         });
     }
 
+    modalOpened = () => {
+        this.setState({
+            modalOpen:true
+        });
+    }
+
+    modalClosed = () => {
+        this.setState({
+            modalOpen:false
+        });
+    }
+
+    modalSubmitted = () => {
+        this.saveLesson(null,true)
+    }
+
     render(){
         //console.log(this.state);
         // console.log(this.props);
@@ -360,6 +390,7 @@ export class CreateLesson extends React.Component{
                     }
                 /> */}
                 <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
+                <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage}/>
             </div>
         );
     }
