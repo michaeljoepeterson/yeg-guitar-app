@@ -359,7 +359,7 @@ export class CreateLesson extends React.Component{
                     </React.Fragment>
                     }
                 /> */}
-                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} savedField={"saved"} savedMessage={this.state.savedMessage}/>
+                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
             </div>
         );
     }
