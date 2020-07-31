@@ -63,8 +63,8 @@ export class App extends React.Component {
         <Route exact path="/create-lesson" render={(props) => (
             <CreateLesson key={props.match.params.pageid} {...props} />)
           } />
-          <Route exact path="/edit-lessons/:id" render={(props) => (
-            <CreateLesson key={props.match.params.pageid} {...props} />)
+        <Route exact path="/edit-lesson/:id" render={(props) => (
+            <CreateLesson editable={true} key={props.match.params.pageid} {...props} />)
           } />
         <Route exact path="/example-table" render={(props) => (
           <ExampleTable key={props.match.params.pageid} {...props} />)

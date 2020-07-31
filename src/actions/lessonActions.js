@@ -35,6 +35,12 @@ export const getLessonError = (error) => ({
     error
 });
 
+export const SET_LESSON = 'SET_LESSON';
+export const setLesson = (lesson) => ({
+    type:SET_LESSON,
+    lesson
+});
+
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;
@@ -131,4 +137,49 @@ export const getMyLessons = (email,startDate,endDate) => (dispatch,getState) => 
             dispatch(getLessonError(err));
         })
     );
+}
+
+function addFullNames(lesson){
+    for(let i = 0;i < lesson.students.length;i++){
+        let student = lesson.students[i];
+        student.fullName = student.firstName + ' ' + student.lastName;
+        student.id = student._id;
+    }
+}
+
+export const setSelectedLesson = (lesson) => (dispatch,getState) => {
+    addFullNames(lesson)
+    dispatch(setLesson(lesson));
+}
+
+export const updateLesson = (lesson) => (dispatch,getState) => {
+    dispatch(addLessonRequest());
+    const authToken = getState().auth.authToken;
+    //console.log(JSON.stringify(lesson));
+    let promise = new Promise((resolve,reject) => {
+        return (
+            fetch(`${API_BASE_URL}/lessons/${lesson.id}`,{
+                method:'PUT',
+                headers:{
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body:JSON.stringify(lesson)
+            })
+    
+            .then(res => normalizeResponseErrors(res))
+            .then(res => res.json())
+            .then((jsonRes) => {
+                dispatch(addLessonSuccess(jsonRes));
+                resolve(jsonRes);
+            })
+            .catch(err => {
+                console.log('error saving lesson ',err);
+                dispatch(addLessonError(err));
+                reject(err);
+            })
+        );
+    });
+    
+    return promise;
 }

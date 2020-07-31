@@ -12,7 +12,7 @@ import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import {saveLesson} from '../actions/lessonActions';
+import {saveLesson,setSelectedLesson,updateLesson} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
@@ -21,6 +21,7 @@ import './styles/create-lesson.css';
 export class CreateLesson extends React.Component{
     constructor(props) {
         super(props);
+        this.createPath = 'create-lesson';
         this.state = {
             teacher:this.props.currentUser.id,
             students:[],
@@ -45,12 +46,39 @@ export class CreateLesson extends React.Component{
             });
             this.setState({
                 students:currentStudents
+            },() => {
+                this.checkSelectedLesson()
             });
         })
 
         .catch(err => {
 
         });
+    }
+
+    componentWillUnmount(){
+        //this.props.dispatch(setSelectedLesson(null));
+    }
+
+    checkEditMode = () => {
+        return !this.props.location.pathname.includes(this.createPath);
+    }
+
+    checkSelectedLesson = () =>{
+        console.log(this.props.selectedLesson);
+        let isEdit = this.checkEditMode();
+        if(this.props.selectedLesson && isEdit){
+            let selectedLesson = this.props.selectedLesson;
+            this.setState({
+                teacher:selectedLesson.teacher._id,
+                students:selectedLesson.students,
+                notes:selectedLesson.notes,
+                date: new Date(selectedLesson.date),
+                lessonType:selectedLesson.lessonType,
+                studentCount:selectedLesson.students.length,
+                time: new Date(selectedLesson.date)
+            });
+        }
     }
 
     fieldChanged = (event,field) => {
@@ -154,40 +182,80 @@ export class CreateLesson extends React.Component{
     saveLesson = (event) => {
         event.persist();
         event.preventDefault();
+        let isEdit = this.checkEditMode();
         let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
         
-        const lesson = {
-            date:dateTime,
-            lessonType:this.state.lessonType,
-            notes:this.state.notes,
-            teacher:this.state.teacher,
-            students:this.state.students.map(student => student.id)
+            const lesson = {
+                date:dateTime,
+                lessonType:this.state.lessonType,
+                notes:this.state.notes,
+                teacher:this.state.teacher,
+                students:this.state.students.map(student => student.id)
+            }
+        if(!isEdit){
+        
+            //console.log(lesson);
+
+            this.props.dispatch(saveLesson(lesson))
+
+            .then(res => {
+                let {code} = res;
+                
+                if(code === 200){
+                    this.setState({
+                        saved:true,
+                        savedMessage:'Lesson Saved!'
+                    });
+                }
+                else{
+                    this.setState({
+                        saved:true,
+                        savedMessage:'Error saving lesson'
+                    });
+                }
+            })
+
+            .catch(err => {
+                console.log(err);
+            });
         }
-
-        //console.log(lesson);
-
-        this.props.dispatch(saveLesson(lesson))
-
-        .then(res => {
-            let {code} = res;
-            
-            if(code === 200){
-                this.setState({
-                    saved:true,
-                    savedMessage:'Lesson Saved!'
-                });
+        else{
+            const lesson = {
+                date:dateTime,
+                lessonType:this.state.lessonType,
+                notes:this.state.notes,
+                teacher:this.state.teacher,
+                students:this.state.students.map(student => student.id),
+                id:this.props.selectedLesson.id
             }
-            else{
-                this.setState({
-                    saved:true,
-                    savedMessage:'Error saving lesson'
-                });
-            }
-        })
 
-        .catch(err => {
-            console.log(err);
-        });
+            //console.log(lesson);
+
+            this.props.dispatch(updateLesson(lesson))
+
+            .then(res => {
+                let {code} = res;
+                
+                if(code === 200){
+                    this.setState({
+                        saved:true,
+                        savedMessage:'Lesson Updated!'
+                    });
+                }
+                else{
+                    console.log(res)
+                    this.setState({
+                        saved:true,
+                        savedMessage:'Error updating lesson'
+                    });
+                }
+            })
+
+            .catch(err => {
+                console.log(err);
+            });
+        }
+        
     }
 
     snackbarClosed = (name) => {
@@ -269,7 +337,7 @@ export class CreateLesson extends React.Component{
                             {studentItems}
                         </Grid>
                         <Grid className="" item xs={12}>
-                            <Button type="submit" variant="contained">Save</Button>
+                            <Button type="submit" variant="contained">{this.props.editable ? 'Update' : 'Save'}</Button>
                         </Grid>
                     </Grid>
                 </form>
@@ -300,6 +368,7 @@ export class CreateLesson extends React.Component{
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessonTypes:['Finger Style','Chords', 'Rythm'],
-    students:state.students.students
+    students:state.students.students,
+    selectedLesson:state.lessons.selectedLesson
 });
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));

@@ -82,7 +82,7 @@ export class MyLessons extends React.Component{
                         </MuiPickersUtilsProvider>
                     </Grid>
                 </Grid>
-                <LessonDisplay />
+                <LessonDisplay editable={true}/>
             </div>
         );
     }

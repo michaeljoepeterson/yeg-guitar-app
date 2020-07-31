@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {getLessons} from '../../actions/lessonActions';
+import {Route, withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,11 +8,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import {setSelectedLesson} from '../../actions/lessonActions';
 
 
 export class LessonDisplay extends React.Component{
     constructor(props) {
         super(props);
+
         this.state = {
 
         };
@@ -20,6 +22,12 @@ export class LessonDisplay extends React.Component{
 
     componentDidMount(){
         //this.props.dispatch(getLessons())
+    }
+
+    setSelectedLesson = (lesson) => {
+        console.log('selected lesson: ',lesson);
+        this.props.dispatch(setSelectedLesson(lesson));
+        this.props.history.push(`/edit-lesson/${lesson.id}`);
     }
 
     buildTable = () =>{
@@ -36,7 +44,18 @@ export class LessonDisplay extends React.Component{
                 } 
             }
             let date = new Date(lesson.date);
-            rows.push(
+            let row = this.props.editable ? (
+                <TableRow className="clickable" key={i} onClick={(e) => this.setSelectedLesson(lesson)}>
+                    <TableCell component="th" scope="row">
+                        {date.toDateString() + ' : ' + date.toLocaleTimeString()}
+                    </TableCell>
+                    <TableCell align="right">{lesson.lessonType}</TableCell>
+                    <TableCell align="right">{lesson.notes}</TableCell>
+                    <TableCell align="right">{studentString}</TableCell>
+                    <TableCell align="right">{lesson.teacher.email}</TableCell>
+                </TableRow>
+            ) : 
+            (
                 <TableRow key={i}>
                     <TableCell component="th" scope="row">
                         {date.toDateString() + ' : ' + date.toLocaleTimeString()}
@@ -46,6 +65,9 @@ export class LessonDisplay extends React.Component{
                     <TableCell align="right">{studentString}</TableCell>
                     <TableCell align="right">{lesson.teacher.email}</TableCell>
                 </TableRow>
+            );
+            rows.push(
+                row
             )
         }
 
@@ -84,4 +106,4 @@ const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessons:state.lessons.lessons
 });
-export default (connect(mapStateToProps)(LessonDisplay));
+export default (withRouter(connect(mapStateToProps)(LessonDisplay)));
