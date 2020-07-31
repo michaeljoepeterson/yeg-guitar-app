@@ -3,15 +3,21 @@ import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {getLessons} from '../actions/lessonActions';
+import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display'
 
 export class MyLessons extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-
+            startDate:null,
+            endDate:null
         };
+    }
+
+    componentDidMount(){
+        let email = this.props.currentUser.username;
+        this.props.dispatch(getMyLessons(email,this.state.startDate,this.state.endDate));
     }
 
     render(){

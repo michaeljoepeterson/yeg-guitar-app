@@ -19,7 +19,7 @@ export class LessonDisplay extends React.Component{
     }
 
     componentDidMount(){
-        this.props.dispatch(getLessons())
+        //this.props.dispatch(getLessons())
     }
 
     buildTable = () =>{

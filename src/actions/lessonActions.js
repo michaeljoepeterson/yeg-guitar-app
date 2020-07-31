@@ -107,7 +107,7 @@ export const getMyLessons = (email,startDate,endDate) => (dispatch,getState) => 
     const authToken = getState().auth.authToken;
     const query = buildQuery({email,startDate,endDate});
     return (
-        fetch(`${API_BASE_URL}/my-lessons${query}`,{
+        fetch(`${API_BASE_URL}/lessons/my-lessons${query}`,{
             method:'GET',
             headers:{
                 Authorization: `Bearer ${authToken}`
