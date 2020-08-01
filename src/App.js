@@ -8,6 +8,7 @@ import ExampleTable from './components/example-table';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
 import MyLessons from './components/my-lessons';
+import Summary from './components/summary';
 import TopNav from './components/navbar';
 import './App.css';
 
@@ -74,6 +75,12 @@ export class App extends React.Component {
         } />
         <Route exact path="/create-student" render={(props) => (
           <CreateStudent key={props.match.params.pageid} {...props} />)
+        } />
+        <Route exact path="/summary/:id" render={(props) => (
+          <Summary key={props.match.params.pageid} {...props} />)
+        } />
+        <Route exact path="/summary" render={(props) => (
+          <Summary key={props.match.params.pageid} {...props} />)
         } />
         <Route exact path="/create-admin" component={CreateAdmin} />
         <Route exact path="/test"  render={(props) => (

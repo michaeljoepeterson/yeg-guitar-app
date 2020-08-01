@@ -10,7 +10,7 @@ export default () => Component => {
         if(location && user){
             let userLevel = user.level || user.level === 0? user.level : null;
             let path = location.pathname;
-            let page = possibleLinks.find(link => link.link === path);
+            let page = possibleLinks.find(link => path.includes(link.link));
             console.log(location.pathname,userLevel);
             if(userLevel <= page.level){
                 return <Component {...passThroughProps} />;
