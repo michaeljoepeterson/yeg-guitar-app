@@ -43,7 +43,10 @@ export class Summary extends React.Component{
         if(id){
             this.props.dispatch(getLessonSummary(id,this.state.startDate,this.state.endDate))
             .then(lessonData => {
-                console.log('lesson data: ',lessonData);
+                console.log('lesson data: ',lessonData.lessonData);
+                this.setState({
+                    lessonData:lessonData.lessonData
+                });
             })
 
             .catch(err => {
@@ -111,16 +114,21 @@ export class Summary extends React.Component{
                 </MuiPickersUtilsProvider>
             </Grid>
         </Grid>) : null;
-        let content = this.state.selectedId ? (
-            <SummaryView />
-        ) :(
+
+        let list = this.state.selectedId ? null :(
         <UserList summary={true} users={this.props.users}/>
         );
+
+        let summary = this.state.selectedId && this.state.lessonData? (
+            <SummaryView data={this.state.lessonData}/>
+        ) :null;
+        
         return(
             <div>
                 <h2>Summary</h2>
                 {dateSelectors}
-                {content}
+                {list}
+                {summary}
             </div>
         );
     }

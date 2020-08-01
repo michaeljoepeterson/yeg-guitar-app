@@ -11,3 +11,8 @@
 .users-container > ul > div{
     text-align: center;
 }
+
+.hours-table{
+    max-width:70% !important;
+    margin:auto !important;
+}
