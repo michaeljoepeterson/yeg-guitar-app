@@ -183,3 +183,34 @@ export const updateLesson = (lesson) => (dispatch,getState) => {
     
     return promise;
 }
+
+export const getLessonSummary = (id,startDate,endDate) => (dispatch,getState) => {
+    //dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    let startString = buildDateString(startDate);
+    let endString = buildDateString(endDate);
+    const query = buildQuery({id,startDate:startString,endDate:endString});
+
+    let promise = new Promise((resolve,reject) => {
+        fetch(`${API_BASE_URL}/lessons/summary${query}`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then((lessonData) => {
+            //dispatch(getLessonSuccess(lessons.lessons));
+            resolve(lessonData);
+        })
+        .catch(err => {
+            console.log('error getting lessons ',err);
+            //dispatch(getLessonError(err));
+            reject(err);
+        })
+    });
+        
+    return promise;
+}
