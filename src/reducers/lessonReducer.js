@@ -5,7 +5,8 @@ import {
     GET_LESSON_REQUEST,
     GET_LESSON_SUCCESS,
     GET_LESSON_ERROR,
-    SET_LESSON
+    SET_LESSON,
+    GET_STUDENT_LESSON_SUCCESS
 } from '../actions/lessonActions';
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
     loading:false,
     message:null,
     lessons:[],
-    selectedLesson:null
+    selectedLesson:null,
+    studentLessons:null
 };
 
 const successMessage = "Lesson Created!";
@@ -73,6 +75,12 @@ export default function reducer(state = initialState,action){
     else if(action.type === SET_LESSON){
         return Object.assign({},state,{
             selectedLesson:action.lesson
+        });
+    }
+
+    else if(action.type === GET_STUDENT_LESSON_SUCCESS){
+        return Object.assign({},state,{
+            studentLessons:action.lessons
         });
     }
 

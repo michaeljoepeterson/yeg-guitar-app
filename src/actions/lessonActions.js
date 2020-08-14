@@ -29,6 +29,12 @@ export const getLessonSuccess = (lessons) => ({
     lessons
 });
 
+export const GET_STUDENT_LESSON_SUCCESS = 'GET_STUDENT_LESSON_SUCCESS';
+export const getStudentLessonSuccess = (lessons) => ({
+    type:GET_STUDENT_LESSON_SUCCESS,
+    lessons
+});
+
 export const GET_LESSON_ERROR = 'GET_LESSON_ERROR';
 export const getLessonError = (error) => ({
     type:GET_LESSON_ERROR,
@@ -214,4 +220,31 @@ export const getLessonSummary = (id,startDate,endDate) => (dispatch,getState) =>
     });
         
     return promise;
+}
+
+export const getStudentLesson = (id) => (dispatch,getState) => {
+    dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    //let startString = buildDateString(startDate);
+    //let endString = buildDateString(endDate);
+    //const query = buildQuery({id,startDate:startString,endDate:endString});
+    const query = buildQuery({id});
+    return (fetch(`${API_BASE_URL}/lessons/search-student${query}`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        .then(res => normalizeResponseErrors(res))
+        .then(res => res.json())
+        .then((lessons) => {
+            dispatch(getStudentLessonSuccess(lessons.lessons));
+        })
+        .catch(err => {
+            console.log('error getting lessons ',err);
+            dispatch(getLessonError(err));
+        })
+    );
+        
 }

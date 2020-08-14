@@ -13,7 +13,7 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Help from '@material-ui/icons/Help';
-import {saveLesson,updateLesson} from '../actions/lessonActions';
+import {saveLesson,updateLesson,getStudentLesson} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
@@ -115,9 +115,15 @@ export class CreateLesson extends React.Component{
         });
     }
 
-    getStudentLessons = (id) =>{
-        console.log('get students',id);
-        this.modalOpened(this.studentModal);
+    getStudentLessons = async (id) =>{
+        try{
+            await this.props.dispatch(getStudentLesson(id))
+            this.modalOpened(this.studentModal);
+        }
+        catch(err){
+            console.log(err);
+        }
+        
     }
 
 
@@ -319,11 +325,25 @@ export class CreateLesson extends React.Component{
         this.saveLesson(null,true)
     }
 
+    buildStudentLessons = () => {
+        let lessons = [];
+
+        for(let i = 0;i < this.props.studentLessons.length;i++){
+            let lesson = this.props.studentLessons[i];
+            let list = (<p>{lesson.id} : {lesson.lessonType}</p>);
+            lessons.push(list);
+        }
+
+        return lessons;
+    }
+
     render(){
         //console.log(this.state);
-        // console.log(this.props);
+        console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.state.students.length > 0 ? this.buildStudentSelect() : [];
+        let studentLessonList = this.props.studentLessons ? this.buildStudentLessons() : null;
+        
         return(
             <div>
                 <form onSubmit={(e) => this.saveLesson(e)}>
@@ -386,7 +406,7 @@ export class CreateLesson extends React.Component{
                 <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
                 <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage} name={"modalOpen"}/>
                 <SimpleModal open={this.state.studentModalOpen} handleClose={this.modalClosed} name={this.studentModal}>
-                    <p>test content</p>
+                    {studentLessonList}
                 </SimpleModal>
             </div>
         );
@@ -397,6 +417,7 @@ const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     lessonTypes:['Finger Style','Chords', 'Rythm'],
     students:state.students.students,
-    selectedLesson:state.lessons.selectedLesson
+    selectedLesson:state.lessons.selectedLesson,
+    studentLessons:state.lessons.studentLessons
 });
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
