@@ -13,10 +13,10 @@ export default function SimpleModal(props){
     }
 
     const closeModal = () => {
-        props.handleClose();
+        props.handleClose(props.name);
     }
 
-    const body = (
+    const body = !props.children ? (
         <div style={props.modalStyle} className="modal-container">
             <Paper className="paper-container">
                 <p id="modal-description">
@@ -28,8 +28,21 @@ export default function SimpleModal(props){
                 </div>
             </Paper>
         </div>
-    );
-    
+    ) : (
+    <div style={props.modalStyle} className="modal-container">
+        <Paper className="paper-container">
+            <p id="modal-description">
+                {props.children}
+            </p>
+            <div>
+                {
+                    props.submitClick ? <Button onClick={(e) => submitClicked(e)} variant="contained">{props.submit ? props.submit : 'Submit'}</Button> : null
+                }
+                <Button onClick={(e) => closeModal(e)} variant="contained">{props.cancel ? props.cancel : 'Cancel'}</Button>
+            </div>
+        </Paper>
+    </div>);
+
     return(
         <Modal
         open={props.open}

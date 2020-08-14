@@ -138,7 +138,7 @@ export const getMyLessons = (email,startDate,endDate) => (dispatch,getState) => 
         })
     );
 }
-
+/*
 function addFullNames(lesson){
     for(let i = 0;i < lesson.students.length;i++){
         let student = lesson.students[i];
@@ -146,6 +146,7 @@ function addFullNames(lesson){
         student.id = student._id;
     }
 }
+*/
 
 export const setSelectedLesson = (lesson) => (dispatch,getState) => {
     //addFullNames(lesson)

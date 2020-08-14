@@ -1,6 +1,6 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
-import {Route, withRouter} from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,8 @@ import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import {saveLesson,setSelectedLesson,updateLesson} from '../actions/lessonActions';
+import Help from '@material-ui/icons/Help';
+import {saveLesson,updateLesson} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
@@ -23,6 +24,7 @@ export class CreateLesson extends React.Component{
     constructor(props) {
         super(props);
         this.createPath = 'create-lesson';
+        this.studentModal = 'studentModalOpen';
         this.state = {
             teacher:this.props.currentUser.id,
             students:[],
@@ -34,7 +36,8 @@ export class CreateLesson extends React.Component{
             savedMessage:'Saved',
             time:null,
             modalOpen:false,
-            modalMessage:'Are you sure you want to create a class with no students?'
+            modalMessage:'Are you sure you want to create a class with no students?',
+            studentModalOpen:false
         };
     }
 
@@ -112,6 +115,12 @@ export class CreateLesson extends React.Component{
         });
     }
 
+    getStudentLessons = (id) =>{
+        console.log('get students',id);
+        this.modalOpened(this.studentModal);
+    }
+
+
     buildStudentSelect = () => {
         let studentSelect = [];
 
@@ -119,8 +128,7 @@ export class CreateLesson extends React.Component{
             const item = this.props.students[i];
             studentSelect.push(
                 <MenuItem value={item.id} key={i}>{item.fullName}</MenuItem>
-            );
-           
+            );  
         }
 
         let selects = [];
@@ -128,6 +136,9 @@ export class CreateLesson extends React.Component{
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
                 <Grid className="student-row" item xs={12} md={3} key={i}>
+                    <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="remove student">
+                        <Help/>
+                    </IconButton>
                     <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} >{studentSelect}</Select>
                     <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
                         <CancelOutlinedIcon/>
@@ -292,15 +303,15 @@ export class CreateLesson extends React.Component{
         });
     }
 
-    modalOpened = () => {
+    modalOpened = (name) => {
         this.setState({
-            modalOpen:true
+            [name]:true
         });
     }
 
-    modalClosed = () => {
+    modalClosed = (name) => {
         this.setState({
-            modalOpen:false
+            [name]:false
         });
     }
 
@@ -372,25 +383,11 @@ export class CreateLesson extends React.Component{
                     </Grid>
                 </form>
                 
-                {/* <Snackbar
-                    anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                    }}
-                    open={this.state.saved}
-                    autoHideDuration={5000}
-                    onClose={(e) => this.snackbarClosed('saved')}
-                    message={this.state.savedMessage}
-                    action={
-                    <React.Fragment>
-                        <IconButton size="small" aria-label="close" color="inherit" onClick={(e) => this.snackbarClosed('saved')}>
-                        <CloseIcon fontSize="small" />
-                        </IconButton>
-                    </React.Fragment>
-                    }
-                /> */}
                 <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
-                <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage}/>
+                <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage} name={"modalOpen"}/>
+                <SimpleModal open={this.state.studentModalOpen} handleClose={this.modalClosed} name={this.studentModal}>
+                    <p>test content</p>
+                </SimpleModal>
             </div>
         );
     }
