@@ -148,7 +148,7 @@ function addFullNames(lesson){
 }
 
 export const setSelectedLesson = (lesson) => (dispatch,getState) => {
-    addFullNames(lesson)
+    //addFullNames(lesson)
     dispatch(setLesson(lesson));
 }
 
