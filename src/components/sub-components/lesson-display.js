@@ -30,11 +30,11 @@ export class LessonDisplay extends React.Component{
         this.props.history.push(`/edit-lesson/${lesson.id}`);
     }
 
-    buildTable = () =>{
+    buildTable = (lessons) =>{
 
         let rows = [];
-        for(let i = 0;i < this.props.lessons.length;i++){
-            let lesson = this.props.lessons[i];
+        for(let i = 0;i < lessons.length;i++){
+            let lesson = lessons[i];
             let studentString = '';
             for(let k = 0;k < lesson.students.length;k++){
                 let student = lesson.students[k];
@@ -52,7 +52,7 @@ export class LessonDisplay extends React.Component{
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
                     <TableCell align="right">{studentString}</TableCell>
-                    <TableCell align="right">{lesson.teacher.email}</TableCell>
+                    <TableCell align="right">{lesson.teacher.username}</TableCell>
                 </TableRow>
             ) : 
             (
@@ -63,7 +63,7 @@ export class LessonDisplay extends React.Component{
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
                     <TableCell align="right">{studentString}</TableCell>
-                    <TableCell align="right">{lesson.teacher.email}</TableCell>
+                    <TableCell align="right">{lesson.teacher.username}</TableCell>
                 </TableRow>
             );
             rows.push(
@@ -90,10 +90,20 @@ export class LessonDisplay extends React.Component{
         );
     }
 
+    buildStudentTable = () =>{
+        
+    }
+
     render(){
         //console.log(this.state);
         console.log('lesson display:',this.props.lessons);
-        const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
+        let table = null;
+        if(this.props.lessons && this.props.lessons.length > 0 && !this.props.studentLessons){
+            table = this.buildTable(this.props.lessons);
+        }
+        else if(this.props.studentLessons && this.props.studentLessons.length > 0){
+            table = this.buildTable(this.props.studentLessons);
+        }
         return(
             <div>
                 {table}

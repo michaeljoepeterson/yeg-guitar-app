@@ -18,6 +18,8 @@ import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
 import SimpleModal from './sub-components/simple-modal';
+import LessonDisplay from './sub-components/lesson-display';
+import Tooltip from '@material-ui/core/Tooltip';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -142,13 +144,17 @@ export class CreateLesson extends React.Component{
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
                 <Grid className="student-row" item xs={12} md={3} key={i}>
-                    <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="remove student">
-                        <Help/>
-                    </IconButton>
+                    <Tooltip title="See Previous Lessons">
+                        <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="student lessons">
+                            <Help/>
+                        </IconButton>
+                    </Tooltip>
                     <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} >{studentSelect}</Select>
-                    <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
-                        <CancelOutlinedIcon/>
-                    </IconButton>
+                    <Tooltip title="Remove Student">
+                        <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
+                            <CancelOutlinedIcon/>
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
             )
         }
@@ -342,7 +348,7 @@ export class CreateLesson extends React.Component{
         console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.state.students.length > 0 ? this.buildStudentSelect() : [];
-        let studentLessonList = this.props.studentLessons ? this.buildStudentLessons() : null;
+        let studentLessonList = this.props.studentLessons ? (<LessonDisplay studentLessons={this.props.studentLessons}/>) : null;
         
         return(
             <div>
@@ -391,9 +397,11 @@ export class CreateLesson extends React.Component{
                             </div>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <IconButton aria-label="add student" onClick={(e) => this.addStudent()}>
-                                <AddCircleOutlinedIcon />
-                            </IconButton>
+                            <Tooltip title="Add a Student">
+                                <IconButton aria-label="add student" onClick={(e) => this.addStudent()}>
+                                    <AddCircleOutlinedIcon />
+                                </IconButton>
+                            </Tooltip>
                             <InputLabel className="student-label" id="student">Students</InputLabel>
                             {studentItems}
                         </Grid>

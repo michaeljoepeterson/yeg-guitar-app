@@ -31,9 +31,9 @@ export default function SimpleModal(props){
     ) : (
     <div style={props.modalStyle} className="modal-container">
         <Paper className="paper-container">
-            <p id="modal-description">
+            <div id="modal-description">
                 {props.children}
-            </p>
+            </div>
             <div>
                 {
                     props.submitClick ? <Button onClick={(e) => submitClicked(e)} variant="contained">{props.submit ? props.submit : 'Submit'}</Button> : null
