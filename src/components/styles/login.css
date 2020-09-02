@@ -7,6 +7,9 @@
 
 .input-container{
     padding:1.5em;
+    display: flex;
+    align-items:center;
+    justify-content: space-evenly;
 }
 
 .input-container:last-of-type{

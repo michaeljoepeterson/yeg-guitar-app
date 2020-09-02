@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {login} from '../actions/authActions';
+import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -50,6 +51,11 @@ export class LoginForm extends React.Component{
                     <div className="input-container">
                         <CircularProgress className={this.displayLoading ? '' : 'hidden'} />
                         <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Login</Button>
+                        <Link to="/create-admin">
+                            <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
+                            Update
+                            </Button>
+                        </Link>
                     </div>
                 </form>
             </div>

@@ -93,5 +93,6 @@ export const refreshAuthToken = () => (dispatch,getState) => {
 };
 
 export const enableTestMode = () => (dispatch) =>{
+    setTestUrl();
     dispatch(testEnable());
 }

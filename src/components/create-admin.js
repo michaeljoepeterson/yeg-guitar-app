@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from '../actions/utils';
+import {Link} from 'react-router-dom';
 import './styles/center.css';
 import './styles/login.css';
 
@@ -18,7 +19,7 @@ export default class CreateAdmin extends React.Component{
             pass2:'',
             loading:false,
             error:null,
-            title:'Create Admin'
+            title:'Update Password'
         }
     }
 
@@ -29,7 +30,7 @@ export default class CreateAdmin extends React.Component{
             [key]:value
         });
     }
-
+    //to do move to reducer
     createAdmin = (event) =>{
         event.preventDefault();
         this.setState({
@@ -38,8 +39,8 @@ export default class CreateAdmin extends React.Component{
         if(this.state.pass === this.state.pass2){
             const email = this.state.email;
             const password = this.state.pass;
-            fetch(`${API_BASE_URL}/users/admin`,{
-                method:'POST',
+            fetch(`${API_BASE_URL}/users`,{
+                method:'PUT',
                 headers:{
                     'Content-Type':'application/json'
                 },
@@ -57,9 +58,14 @@ export default class CreateAdmin extends React.Component{
                         error:'Admin Exists'
                     });
                 }
+                else if(jsonRes.code === 400){
+                    this.setState({
+                        error:'Cannot update password'
+                    });
+                }
                 else{
                     this.setState({
-                        error:'Admin Created'
+                        error:'Updated Password'
                     });
                 }
             })
@@ -97,7 +103,12 @@ export default class CreateAdmin extends React.Component{
                         </div>
                         <div className="input-container">
                             <CircularProgress className={displayLoading ? '' : 'hidden'} />
-                            <Button className={displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Create</Button>
+                            <Link to="/">
+                                <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
+                                Login
+                                </Button>
+                            </Link>
+                            <Button className={displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Update</Button>
                         </div>
                     </form>
                 </div>
