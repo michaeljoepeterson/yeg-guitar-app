@@ -82,30 +82,31 @@ export class Summary extends React.Component{
         let dateSelectors = this.state.selectedId ? (
         <Grid container>
             <Grid item sm={6} xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
                         id="date-picker-dialog"
                         label="Start Date"
                         format="MM/dd/yyyy"
-                        value={this.state.startDate}
-                        onChange={(e) => this.dateUpdated(e,'startDate')}
+                        value={this.state.endDate}
+                        onChange={(e) => this.dateUpdated(e,'endDate')}
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
                         required
                     />
                 </MuiPickersUtilsProvider>
+                
             </Grid>
             <Grid item sm={6} xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
                         id="date-picker-dialog"
                         label="End Date"
                         format="MM/dd/yyyy"
-                        value={this.state.endDate}
-                        onChange={(e) => this.dateUpdated(e,'endDate')}
+                        value={this.state.startDate}
+                        onChange={(e) => this.dateUpdated(e,'startDate')}
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}

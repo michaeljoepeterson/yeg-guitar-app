@@ -50,14 +50,14 @@ export class MyLessons extends React.Component{
                 <h2>My lessons</h2>
                 <Grid container>
                     <Grid item sm={6} xs={12}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 margin="normal"
                                 id="date-picker-dialog"
                                 label="Start Date"
                                 format="MM/dd/yyyy"
-                                value={this.state.startDate}
-                                onChange={(e) => this.dateUpdated(e,'startDate')}
+                                value={this.state.endDate}
+                                onChange={(e) => this.dateUpdated(e,'endDate')}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -72,8 +72,8 @@ export class MyLessons extends React.Component{
                                 id="date-picker-dialog"
                                 label="End Date"
                                 format="MM/dd/yyyy"
-                                value={this.state.endDate}
-                                onChange={(e) => this.dateUpdated(e,'endDate')}
+                                value={this.state.startDate}
+                                onChange={(e) => this.dateUpdated(e,'startDate')}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
