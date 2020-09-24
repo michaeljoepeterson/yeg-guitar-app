@@ -11,6 +11,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import LessonDisplay from './sub-components/lesson-display';
 
 
 export class ExampleTable extends React.Component{
@@ -77,7 +78,7 @@ export class ExampleTable extends React.Component{
         const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
         return(
             <div>
-                {table}
+                <LessonDisplay />
             </div>
         );
     }

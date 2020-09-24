@@ -222,13 +222,13 @@ export class CreateLesson extends React.Component{
         let isEdit = this.checkEditMode();
         let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
         
-            const lesson = {
-                date:dateTime,
-                lessonType:this.state.lessonType,
-                notes:this.state.notes,
-                teacher:this.state.teacher,
-                students:this.state.students.map(student => student.id)
-            }
+        const lesson = {
+            date:dateTime,
+            lessonType:this.state.lessonType,
+            notes:this.state.notes,
+            teacher:this.state.teacher,
+            students:this.state.students.map(student => student.id)
+        }
         if(!isEdit){
         
             //console.log(lesson);
