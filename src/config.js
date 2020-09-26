@@ -10,7 +10,7 @@ export let possibleLinks = [
         level:2
     },
     {
-        link:'/example-table',
+        link:'/lesson-dash',
         display:'View Lessons',
         level:0
     },

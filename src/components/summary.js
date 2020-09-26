@@ -8,8 +8,6 @@ import {getLessonSummary} from '../actions/lessonActions';
 import UserList from './sub-components/user-list';
 import SummaryView from './sub-components/summary-view';
 import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers';
 import DatePicker from './sub-components/date-picker';
 
 export class Summary extends React.Component{
@@ -87,7 +85,6 @@ export class Summary extends React.Component{
                 label="Start Date" 
                 dateVal={this.state.endDate} 
                 dateUpdated={this.dateUpdated} target="endDate"/>
-                
             </Grid>
             <Grid item sm={6} xs={12}>
                 <DatePicker 

@@ -30,12 +30,25 @@ export class LessonDisplay extends React.Component{
         this.props.history.push(`/edit-lesson/${lesson.id}`);
     }
 
+    studentClicked = (student) => {
+        console.log('student clicked: ',student);
+    }
+
+    buildStudentSpans = (students) =>{
+        let spans = students.map((student,i) => {
+            return (<span onClick={(e) => this.studentClicked(student)} key={student.firstName + i}>{student.firstName + ' ' + student.lastName}{i === students.length - 1 ? '' : ','}</span>);
+        });
+
+        return spans;
+    }
+
     buildTable = (lessons) =>{
 
         let rows = [];
         for(let i = 0;i < lessons.length;i++){
             let lesson = lessons[i];
-            let studentString = '';
+            let studentSpans = this.buildStudentSpans(lesson.students);
+            /*
             for(let k = 0;k < lesson.students.length;k++){
                 let student = lesson.students[k];
                 studentString += student.firstName + ' ' + student.lastName;
@@ -43,15 +56,16 @@ export class LessonDisplay extends React.Component{
                     studentString += ',';
                 } 
             }
+            */
             let date = new Date(lesson.date);
             let row = this.props.editable ? (
-                <TableRow className="clickable" key={i} onClick={(e) => this.setSelectedLesson(lesson)}>
+                <TableRow className="clickable" key={i}>
                     <TableCell component="th" scope="row">
                         {date.toDateString() + ' : ' + date.toLocaleTimeString()}
                     </TableCell>
                     <TableCell align="right">{lesson.lessonType}</TableCell>
-                    <TableCell align="right">{lesson.notes}</TableCell>
-                    <TableCell align="right">{studentString}</TableCell>
+                    <TableCell align="right" onClick={(e) => this.setSelectedLesson(lesson)}>{lesson.notes}</TableCell>
+                    <TableCell align="right">{studentSpans}</TableCell>
                     <TableCell align="right">{lesson.teacher.username}</TableCell>
                 </TableRow>
             ) : 
@@ -62,7 +76,7 @@ export class LessonDisplay extends React.Component{
                     </TableCell>
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
-                    <TableCell align="right">{studentString}</TableCell>
+                    <TableCell align="right">{studentSpans}</TableCell>
                     <TableCell align="right">{lesson.teacher.username}</TableCell>
                 </TableRow>
             );
@@ -96,7 +110,6 @@ export class LessonDisplay extends React.Component{
 
     render(){
         //console.log(this.state);
-        console.log('lesson display:',this.props.lessons);
         let table = null;
         if(this.props.lessons && this.props.lessons.length > 0 && !this.props.studentLessons){
             table = this.buildTable(this.props.lessons);

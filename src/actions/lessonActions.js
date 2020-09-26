@@ -248,3 +248,7 @@ export const getStudentLesson = (id) => (dispatch,getState) => {
     );
         
 }
+
+export const generalSearch = () => async (dispatch,getState) =>{
+    console.log('getting lessons');
+}

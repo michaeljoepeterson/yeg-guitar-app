@@ -344,8 +344,7 @@ export class CreateLesson extends React.Component{
     }
 
     render(){
-        //console.log(this.state);
-        console.log(this.props);
+        //console.log(this.props);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.state.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay studentLessons={this.props.studentLessons}/>) : null;

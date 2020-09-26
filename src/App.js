@@ -4,7 +4,7 @@ import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {refreshAuthToken,enableTestMode} from './actions/authActions';
 import CreateAdmin from './components/create-admin';
-import ExampleTable from './components/example-table';
+import ExampleTable from './components/lesson-dash';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
 import MyLessons from './components/my-lessons';
@@ -67,7 +67,7 @@ export class App extends React.Component {
         <Route exact path="/edit-lesson/:id" render={(props) => (
             <CreateLesson editable={true} key={props.match.params.pageid} {...props} />)
           } />
-        <Route exact path="/example-table" render={(props) => (
+        <Route exact path="/lesson-dash" render={(props) => (
           <ExampleTable key={props.match.params.pageid} {...props} />)
         } />
         <Route exact path="/my-lessons" render={(props) => (

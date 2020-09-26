@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import LessonDisplay from './sub-components/lesson-display';
+import FilterControls from './sub-components/filter-controls';
 
 
 export class ExampleTable extends React.Component{
@@ -73,12 +74,11 @@ export class ExampleTable extends React.Component{
     }
 
     render(){
-        //console.log(this.state);
-        console.log('example table:',this.props.lessons);
-        const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
+        //const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
         return(
             <div>
-                <LessonDisplay />
+                <FilterControls/>
+                <LessonDisplay editable={true}/>
             </div>
         );
     }
