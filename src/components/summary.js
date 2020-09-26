@@ -10,6 +10,7 @@ import SummaryView from './sub-components/summary-view';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers';
+import DatePicker from './sub-components/date-picker';
 
 export class Summary extends React.Component{
     constructor(props) {
@@ -82,37 +83,17 @@ export class Summary extends React.Component{
         let dateSelectors = this.state.selectedId ? (
         <Grid container>
             <Grid item sm={6} xs={12}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        margin="normal"
-                        id="date-picker-dialog"
-                        label="Start Date"
-                        format="MM/dd/yyyy"
-                        value={this.state.endDate}
-                        onChange={(e) => this.dateUpdated(e,'endDate')}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
-                        required
-                    />
-                </MuiPickersUtilsProvider>
+                <DatePicker 
+                label="Start Date" 
+                dateVal={this.state.endDate} 
+                dateUpdated={this.dateUpdated} target="endDate"/>
                 
             </Grid>
             <Grid item sm={6} xs={12}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        margin="normal"
-                        id="date-picker-dialog"
-                        label="End Date"
-                        format="MM/dd/yyyy"
-                        value={this.state.startDate}
-                        onChange={(e) => this.dateUpdated(e,'startDate')}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
-                        required
-                    />
-                </MuiPickersUtilsProvider>
+                <DatePicker 
+                label="End Date" 
+                dateVal={this.state.startDate} 
+                dateUpdated={this.dateUpdated} target="startDate"/>
             </Grid>
         </Grid>) : null;
 

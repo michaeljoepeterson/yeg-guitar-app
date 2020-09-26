@@ -1,13 +1,12 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
-import {Route, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display';
 import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider,KeyboardDatePicker } from '@material-ui/pickers';
+import DatePicker from './sub-components/date-picker';
 
 export class MyLessons extends React.Component{
     constructor(props) {
@@ -50,36 +49,16 @@ export class MyLessons extends React.Component{
                 <h2>My lessons</h2>
                 <Grid container>
                     <Grid item sm={6} xs={12}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                margin="normal"
-                                id="date-picker-dialog"
-                                label="Start Date"
-                                format="MM/dd/yyyy"
-                                value={this.state.endDate}
-                                onChange={(e) => this.dateUpdated(e,'endDate')}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                                required
-                            />
-                        </MuiPickersUtilsProvider>
+                        <DatePicker 
+                        label="Start Date" 
+                        dateVal={this.state.endDate} 
+                        dateUpdated={this.dateUpdated} target="endDate"/>
                     </Grid>
                     <Grid item sm={6} xs={12}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                margin="normal"
-                                id="date-picker-dialog"
-                                label="End Date"
-                                format="MM/dd/yyyy"
-                                value={this.state.startDate}
-                                onChange={(e) => this.dateUpdated(e,'startDate')}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                                required
-                            />
-                        </MuiPickersUtilsProvider>
+                        <DatePicker 
+                        label="End Date" 
+                        dateVal={this.state.startDate} 
+                        dateUpdated={this.dateUpdated} target="startDate"/>
                     </Grid>
                 </Grid>
                 <LessonDisplay editable={true}/>
