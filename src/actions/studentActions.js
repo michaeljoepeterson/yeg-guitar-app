@@ -49,6 +49,23 @@ export const getStudents = () => (dispatch,getState) => {
     );
 };
 
+export const getStudentsAsync = async (authToken) => {
+    try{
+        let studentRaw = await fetch(`${API_BASE_URL}/students`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        studentRaw = await normalizeResponseErrors(studentRaw);
+        let students = await studentRaw.json();
+        return students.students;
+    }
+    catch(e){
+        console.log('error getting students ',e);
+    }
+};
+
 export const createStudent = (student,level) => (dispatch,getState) => {
     dispatch(studentRequest());
     const authToken = getState().auth.authToken;

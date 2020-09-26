@@ -1,6 +1,6 @@
 import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL} from '../config';
-import {loadAuthToken} from '../local-storage';
+//import {loadAuthToken} from '../local-storage';
 //use this as generic student request
 export const USER_REQUEST = 'USER_REQUEST';
 export const userRequest = () => ({
@@ -42,8 +42,25 @@ export const getUsers = () => (dispatch,getState) => {
             dispatch(getUserSuccess(res.users));
         })
         .catch(err => {
-            console.log('error getting students ',err);
+            console.log('error getting users ',err);
             dispatch(userError(err));
         })
     );
+};
+
+export const getUsersAsync = async (authToken) => {  
+    try{
+        let usersRaw = await fetch(`${API_BASE_URL}/users`,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        usersRaw = await normalizeResponseErrors(usersRaw);
+        let usersJson = await usersRaw.json();
+        return usersJson.users;
+    }
+    catch(e){
+        console.log('error getting users ',e);
+    }
 };
