@@ -8,7 +8,10 @@ export default function FilterControl(props){
         let filteredResponses = responses.filter(resp => {
             if(!foundResponses[resp[props.target]]){
                 foundResponses[resp[props.target]] = resp[props.target];
-                return resp;
+                return true;
+            }
+            else{
+                return false;
             }
         });
 
@@ -16,7 +19,12 @@ export default function FilterControl(props){
     }
 
     const filterChanged = (event,newValue) =>{
-        props.filterChanged(newValue,props.target,props.changeData);
+        try{
+            props.filterChanged(newValue,props.target,props.changeData);
+        }
+        catch(e){
+            throw e;
+        }
     }
     
     const buildFilter = () => {

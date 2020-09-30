@@ -249,6 +249,35 @@ export const getStudentLesson = (id) => (dispatch,getState) => {
         
 }
 
-export const generalSearch = () => async (dispatch,getState) =>{
+
+export const generalSearch = (options) => async (dispatch,getState) =>{
     console.log('getting lessons');
+    dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    let {startDate,endDate} = options;
+    let filters = {...options};
+    if(startDate && endDate){
+        let startString = buildDateString(startDate);
+        let endString = buildDateString(endDate);
+        filters.startDate = startString;
+        filters.endDate = endString;
+    }
+    const query = buildQuery(filters);
+    const url = `${API_BASE_URL}/lessons/search${query}`
+    try{
+        let res = await fetch(url,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        res = await normalizeResponseErrors(res);
+        res = await res.json();
+        dispatch(getLessonSuccess(res.lessons));
+        return res.lessons
+    }
+    catch(e){
+        console.log('error getting lessons ',e);
+        dispatch(getLessonError(e));
+    }
 }
