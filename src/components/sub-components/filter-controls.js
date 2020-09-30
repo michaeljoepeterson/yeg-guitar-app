@@ -5,6 +5,7 @@ import {getUsersAsync} from '../../actions/userActions';
 import {connect} from 'react-redux';
 import DatePicker from './date-picker';
 import Grid from '@material-ui/core/Grid';
+import {useGetStudents,useGetTeachers} from '../../effects/getData';
 import './styles/filter-controls.css';
 
 function FilterControls(props){
@@ -39,6 +40,10 @@ function FilterControls(props){
         console.log(allStudents,allTeachers);
         props.dispatch(generalSearch());
     }
+    //send data to parent
+    const lessonsUpdated = () => {
+
+    }
 
     const dates = setInitialDates();
 
@@ -46,54 +51,19 @@ function FilterControls(props){
     const [endDate, setEndDate] = useState(dates[1]);
     const [teacher, setTeacher] = useState(null);
     const [student, setStudent] = useState(null);
-    const [allStudents, setAllStudent] = useState(null);
-    const [allTeachers, setAllTeachers] = useState(null);
+    //const [allStudents, setAllStudent] = useState(null);
+    //const [allTeachers, setAllTeachers] = useState(null);
 
     useEffect(() => {
         searchLessons();
      }, [startDate,endDate,teacher,student]);
 
-     useEffect(() => {
-        async function getStudents(authToken){
-            try{
-                let students = getStudentsAsync(authToken);
-                return students;
-            }
-            catch(e){
-                console.log('error getting students',e);
-            }
-        }
+    const allStudents = useGetStudents(props.authToken);
+    const allTeachers = useGetTeachers(props.authToken);
+     
+    console.log('all teachers',allTeachers);
+    console.log('all students',allStudents)
 
-        async function getTeachers(authToken){
-            try{
-                let teachers = await getUsersAsync(authToken);
-                return teachers;
-            }
-            catch(e){
-                console.log('error getting teachers',e);
-            }
-        }
-
-        async function getData(){
-            if(!allStudents && props.authToken){
-                console.log('getting students======');
-                let students = await getStudents(props.authToken);
-                setAllStudent(students);
-            }
-
-            if(!allTeachers && props.authToken){
-                console.log('getting teachers======');
-                let teachers = await getTeachers(props.authToken);
-                setAllTeachers(teachers);
-            }
-        }
-
-        getData();
-        
-        console.log('should run on init?');
-        console.log('all students: ',allStudents);
-        console.log('all teachers: ',allTeachers);
-     },[]);
     const studentFilter = allStudents ? allStudents.map(student => (<p key={student.firstName + student.lastName}>{student.firstName}</p>)) : [];
     const teacherFilter = allTeachers ? allTeachers.map(teacher => (<p key={teacher.username}>{teacher.username}</p>)) : [];
     return(
