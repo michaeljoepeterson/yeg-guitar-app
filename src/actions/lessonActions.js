@@ -102,11 +102,11 @@ export const getLessons = () => (dispatch,getState) => {
     );
 }
 
-function buildQuery(options){
+function buildQuery(options,ignoreList){
     let query = '?';
 
     for(let key in options){
-        if(options[key]){
+        if(options[key] && !ignoreList.includes(key)){
             query += `${key}=${options[key]}&`;
         }   
     }
@@ -262,7 +262,7 @@ export const generalSearch = (options) => async (dispatch,getState) =>{
         filters.startDate = startString;
         filters.endDate = endString;
     }
-    const query = buildQuery(filters);
+    const query = buildQuery(filters,['selectedDate']);
     const url = `${API_BASE_URL}/lessons/search${query}`
     try{
         let res = await fetch(url,{

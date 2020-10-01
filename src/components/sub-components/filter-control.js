@@ -14,7 +14,6 @@ export default function FilterControl(props){
                 return false;
             }
         });
-
         return filteredResponses;
     }
 
@@ -34,7 +33,7 @@ export default function FilterControl(props){
             //}
         });
         let filteredResponses = removeCopies(copiedResponses);
-        const filter = !props.value ?(
+        const filter = !props.value && !props.ignoreEmpty ?(
             <Autocomplete
                 onChange={(e,newValue) => filterChanged(e,newValue) }
                 options={filteredResponses}
@@ -49,8 +48,9 @@ export default function FilterControl(props){
                 options={filteredResponses}
                 getOptionLabel={(option) => option[props.target] ? option[props.target] : ''}
                 style={{ maxWidth: 300 }}
-                value={ props.value? props.value : ''}
-                renderInput={(params) => <TextField {...params} label={props.title ? props.title : props.target} variant="outlined" style = {{width: '100%'}}
+                value={ props.value? props.value : null}
+                renderInput={(params) => <TextField {...params} label={props.title ? props.title : props.target} 
+                variant="outlined" style = {{width: '100%'}}
                 />}
                 />
         );

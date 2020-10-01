@@ -11,7 +11,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import LessonDisplay from './sub-components/lesson-display';
+import LessonDashTable from './sub-components/lesson-dash-table';
 import FilterControls from './sub-components/filter-controls';
 
 
@@ -19,7 +19,9 @@ export class ExampleTable extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-
+            student:null,
+            teacher:null,
+            selectedDate:null
         };
     }
 
@@ -73,12 +75,45 @@ export class ExampleTable extends React.Component{
         );
     }
 
+    teacherClicked = (teacher) =>{
+        this.setState({
+            teacher:teacher
+        }); 
+    }
+
+    studentClicked = (student) =>{
+        this.setState({
+            student:student
+        }); 
+    }
+
+    dateClicked = (date) =>{
+        this.setState({
+            selectedDate:date
+        });
+    }
+
+    filterChanged = (newVal,changeType) =>{
+        const studentTarget = 'fullName';
+        const teacherTarget = 'username';
+
+        if(changeType === studentTarget){
+            this.setState({
+                student:newVal
+            });
+        }
+        else if(changeType === teacherTarget){
+            this.setState({
+                teacher:newVal
+            });
+        }
+    }
+
     render(){
-        //const table = this.props.lessons && this.props.lessons.length > 0? this.buildTable() : []; 
         return(
             <div>
-                <FilterControls/>
-                <LessonDisplay editable={true}/>
+                <FilterControls student={this.state.student} teacher={this.state.teacher} filterChanged={this.filterChanged} selectedDate={this.state.selectedDate}/>
+                <LessonDashTable studentClicked={this.studentClicked} teacherClicked={this.teacherClicked} dateClicked={this.dateClicked}/>
             </div>
         );
     }

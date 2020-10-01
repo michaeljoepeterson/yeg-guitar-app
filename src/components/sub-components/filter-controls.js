@@ -54,9 +54,14 @@ function FilterControls(props){
         try{
             if(changeType === studentTarget){
                 curFilters.studentId = newVal ? newVal.id : null;
+                curFilters.selectedStudent = newVal;
             }
             else if(changeType === teacherTarget){
                 curFilters.teacherId = newVal ? newVal.id : null;
+                curFilters.selectedTeacher = newVal;
+            }
+            if(props.filterChanged){
+                props.filterChanged(newVal,changeType);
             }
             setFilters(curFilters);
         }
@@ -70,18 +75,15 @@ function FilterControls(props){
         searchLessons();
     }
 
-    
-    //const [startDate, setStartDate] = useState(dates[0]);
-    //const [endDate, setEndDate] = useState(dates[1]);
-    //const [teacher, setTeacher] = useState(null);
-    //const [student, setStudent] = useState(null);
-    
     const dates = setInitialDates();
     const [filters,setFilters] = useState({
         teacherId:null,
-        studentId:null,
+        studentId:props.studentId ? props.studentId : null,
         startDate:dates[0],
-        endDate:dates[1]
+        endDate:dates[1],
+        selectedTeacher:props.teacher ? props.teacher : null,
+        selectedStudent:props.student ? props.student : null,
+        selectedDate:props.date ? props.date : null
     });
     
     //initial get lesosns
@@ -89,14 +91,40 @@ function FilterControls(props){
         searchLessons();
      }, []);
      
+     useEffect(() => {
+        let currFilter = {...filters};
+        currFilter.studentId = props.student ? props.student.id : null;
+        currFilter.teacherId = props.teacher ? props.teacher.id : null;
+        currFilter.selectedStudent = props.student;
+        currFilter.selectedTeacher = props.teacher;
+        setFilters(currFilter);
+     }, [props.teacher,props.student]);
+     
+     useEffect(() => {
+        searchLessons();
+     }, [filters.selectedStudent,filters.selectedTeacher,filters.selectedDate]);
+
+     useEffect(() => {
+        let currFilter = {...filters};
+        if(props.selectedDate){
+            let tomorrow = new Date(props.selectedDate);
+            tomorrow.setDate(props.selectedDate.getDate() + 1);
+            currFilter.startDate = tomorrow;
+            currFilter.endDate = props.selectedDate;
+            currFilter.selectedDate = props.selectedDate;
+        }
+        setFilters(currFilter);
+     }, [props.selectedDate]);
+     
+
     const allStudents = useGetStudents(props.authToken);
     const allTeachers = useGetTeachers(props.authToken);
      
     console.log('all teachers',allTeachers);
     console.log('all students',allStudents)
 
-    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"}/>) : null;
-    const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherTarget} filterChanged={filterChanged} title={"Email"}/>) : null;
+    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true}/>) : null;
+    const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherTarget} filterChanged={filterChanged} title={"Email"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
         <Grid container>
             <Grid item md={3} xs={12}>
