@@ -1,14 +1,10 @@
 import React, { useState, useEffect  } from 'react';
-import {generalSearch} from '../../actions/lessonActions';
-import {getStudentsAsync} from '../../actions/studentActions';
-import {getUsersAsync} from '../../actions/userActions';
 import {connect} from 'react-redux';
 import DatePicker from './date-picker';
 import Grid from '@material-ui/core/Grid';
 import {useGetStudents,useGetTeachers} from '../../effects/getData';
 import {useFilterLessons} from '../../effects/filterLessons';
 import FilterControl from './filter-control';
-import Button from '@material-ui/core/Button';
 import './styles/filter-controls.css';
 
 function FilterControls(props){
