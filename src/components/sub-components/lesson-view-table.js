@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import {setSelectedLesson} from '../../actions/lessonActions';
 
 
-export function LessonDashTable(props){
+export function LessonViewTable(props){
 
 
 
@@ -108,4 +108,4 @@ export function LessonDashTable(props){
 const mapStateToProps = state => ({
     lessons:state.lessons.lessons
 });
-export default (withRouter(connect(mapStateToProps)(LessonDashTable)));
+export default (withRouter(connect(mapStateToProps)(LessonViewTable)));

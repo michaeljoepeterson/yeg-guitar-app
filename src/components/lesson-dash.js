@@ -3,7 +3,7 @@ import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import LessonDashTable from './sub-components/lesson-view-table';
+import LessonViewTable from './sub-components/lesson-view-table';
 import FilterControls from './sub-components/filter-controls';
 
 
@@ -59,7 +59,7 @@ export class ExampleTable extends React.Component{
         return(
             <div>
                 <FilterControls student={this.state.student} teacher={this.state.teacher} filterChanged={this.filterChanged} selectedDate={this.state.selectedDate}/>
-                <LessonDashTable studentClicked={this.studentClicked} teacherClicked={this.teacherClicked} dateClicked={this.dateClicked}/>
+                <LessonViewTable studentClicked={this.studentClicked} teacherClicked={this.teacherClicked} dateClicked={this.dateClicked}/>
             </div>
         );
     }

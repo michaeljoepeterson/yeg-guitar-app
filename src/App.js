@@ -10,6 +10,7 @@ import CreateLesson from './components/create-lesson';
 import MyLessons from './components/my-lessons';
 import Summary from './components/summary';
 import TopNav from './components/navbar';
+import StudentLessonPage from './components/student-lessons-page';
 import './App.css';
 
 export class App extends React.Component {
@@ -85,6 +86,9 @@ export class App extends React.Component {
         <Route exact path="/create-admin" component={CreateAdmin} />
         <Route exact path="/test"  render={(props) => (
           <LandingPage />)
+        }/>
+        <Route exact path="/student-lessons"  render={(props) => (
+          <StudentLessonPage {...props}/>)
         }/>
       </div>
     );

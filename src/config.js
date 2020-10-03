@@ -28,6 +28,11 @@ export let possibleLinks = [
         link:'/summary',
         display:'Summary',
         level:1
+     },
+     {
+        link:'/student-lessons',
+        display:'Student Lessons',
+        level:1
      }
 ];
 

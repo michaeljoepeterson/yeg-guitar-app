@@ -122,10 +122,10 @@ function FilterControls(props){
             </Grid>
             <Grid item md={3} xs={12}>
                 <Grid item container xs={12} alignItems="center">
-                        <DatePicker 
-                        label="End Date" 
-                        dateVal={filters.startDate} 
-                        dateUpdated={dateUpdated} target="startDate"/>
+                    <DatePicker 
+                    label="End Date" 
+                    dateVal={filters.startDate} 
+                    dateUpdated={dateUpdated} target="startDate"/>
                 </Grid>
             </Grid>
         </Grid>

@@ -54,7 +54,6 @@ export default function FilterControl(props){
                 />}
                 />
         );
-        console.log(props.value);
         return filter
     }
 
