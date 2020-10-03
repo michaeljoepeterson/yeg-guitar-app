@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import DatePicker from './date-picker';
 import Grid from '@material-ui/core/Grid';
 import {useGetStudents,useGetTeachers} from '../../effects/getData';
+import {useFilterLessons} from '../../effects/filterLessons';
 import FilterControl from './filter-control';
 import Button from '@material-ui/core/Button';
 import './styles/filter-controls.css';
@@ -41,12 +42,6 @@ function FilterControls(props){
         setFilters(curFilters);
     }
 
-    const searchLessons = async () =>{
-        console.log('dispatch lesson search',filters);
-        //send data to lesson view for component to use
-        props.dispatch(generalSearch(filters));
-    }
-
     const filterChanged = (newVal,changeType) =>{
         let curFilters = {...filters};
         console.log(newVal);
@@ -71,10 +66,6 @@ function FilterControls(props){
 
     }
 
-    const searchSubmit = () => {
-        searchLessons();
-    }
-
     const dates = setInitialDates();
     const [filters,setFilters] = useState({
         teacherId:null,
@@ -86,12 +77,10 @@ function FilterControls(props){
         selectedDate:props.date ? props.date : null
     });
     
-    //initial get lesosns
+    //effect to get lessons
+    useFilterLessons(filters,props.dispatch);
+    //could eventually extract to cust effect?
     useEffect(() => {
-        searchLessons();
-     }, []);
-     
-     useEffect(() => {
         let currFilter = {...filters};
         currFilter.studentId = props.student ? props.student.id : null;
         currFilter.teacherId = props.teacher ? props.teacher.id : null;
@@ -99,12 +88,8 @@ function FilterControls(props){
         currFilter.selectedTeacher = props.teacher;
         setFilters(currFilter);
      }, [props.teacher,props.student]);
-     
-     useEffect(() => {
-        searchLessons();
-     }, [filters.selectedStudent,filters.selectedTeacher,filters.selectedDate]);
 
-     useEffect(() => {
+    useEffect(() => {
         let currFilter = {...filters};
         if(props.selectedDate){
             let tomorrow = new Date(props.selectedDate);
@@ -141,17 +126,10 @@ function FilterControls(props){
             </Grid>
             <Grid item md={3} xs={12}>
                 <Grid item container xs={12} alignItems="center">
-                    <Grid item xs={6}>
                         <DatePicker 
                         label="End Date" 
                         dateVal={filters.startDate} 
                         dateUpdated={dateUpdated} target="startDate"/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button variant="contained" color="primary" onClick={(e) => searchSubmit(e)}>
-                            Search
-                        </Button>
-                    </Grid> 
                 </Grid>
             </Grid>
         </Grid>

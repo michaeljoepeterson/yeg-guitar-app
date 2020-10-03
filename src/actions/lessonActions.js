@@ -104,7 +104,7 @@ export const getLessons = () => (dispatch,getState) => {
 
 function buildQuery(options,ignoreList){
     let query = '?';
-
+    ignoreList = ignoreList ? ignoreList : [];
     for(let key in options){
         if(options[key] && !ignoreList.includes(key)){
             query += `${key}=${options[key]}&`;
