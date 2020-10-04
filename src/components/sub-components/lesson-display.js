@@ -59,12 +59,12 @@ export class LessonDisplay extends React.Component{
             */
             let date = new Date(lesson.date);
             let row = this.props.editable ? (
-                <TableRow className="clickable" key={i}>
+                <TableRow className="clickable" key={i} onClick={(e) => this.setSelectedLesson(lesson)}>
                     <TableCell component="th" scope="row">
                         {date.toDateString() + ' : ' + date.toLocaleTimeString()}
                     </TableCell>
                     <TableCell align="right">{lesson.lessonType}</TableCell>
-                    <TableCell align="right" onClick={(e) => this.setSelectedLesson(lesson)}>{lesson.notes}</TableCell>
+                    <TableCell align="right">{lesson.notes}</TableCell>
                     <TableCell align="right">{studentSpans}</TableCell>
                     <TableCell align="right">{lesson.teacher.username}</TableCell>
                 </TableRow>

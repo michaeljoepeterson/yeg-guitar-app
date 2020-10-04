@@ -17,6 +17,18 @@ div > .notes-field{
     margin-bottom: 1.5em;
 }
 
+.filter-container{
+    display:flex
+}
+
+.filter-container > div{
+    flex-grow: 1;
+}
+
+.filter-container > button{
+    padding: 0.2em;
+}
+
 @media (min-width: 960px) {
     .lesson-container{
         margin-top: 2.5em;

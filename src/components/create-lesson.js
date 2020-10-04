@@ -20,6 +20,7 @@ import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@
 import SimpleModal from './sub-components/simple-modal';
 import LessonDisplay from './sub-components/lesson-display';
 import Tooltip from '@material-ui/core/Tooltip';
+import FilterControl from './sub-components/filter-control';
 import './styles/create-lesson.css';
 
 export class CreateLesson extends React.Component{
@@ -27,6 +28,7 @@ export class CreateLesson extends React.Component{
         super(props);
         this.createPath = 'create-lesson';
         this.studentModal = 'studentModalOpen';
+        this.studentTarget = 'fullName';
         this.state = {
             teacher:this.props.currentUser.id,
             students:[],
@@ -48,10 +50,7 @@ export class CreateLesson extends React.Component{
 
         .then(response => {
             let currentStudents = [...this.state.students];
-            currentStudents.push({
-                id:this.props.students[0].id,
-                fullName:this.props.students[0].fullName
-            });
+            currentStudents.push(this.props.students[0]);
             this.setState({
                 students:currentStudents
             },() => {
@@ -101,20 +100,19 @@ export class CreateLesson extends React.Component{
         return this.props.students.find(student => student.id === id);
     }
 
-    studentChanged = (event,index) => {
-        event.persist();
-        let value = event.target.value;
-        let students = [...this.state.students];
-        let selectedStudent = this.findStudent(value);
-        let newStudent = {
-            id:selectedStudent.id,
-            fullName:selectedStudent.fullName
-        };
-        students[index] = newStudent;
-
-        this.setState({
-            students
-        });
+    studentChanged = (event,target,index) => {
+        //event.persist();
+        if(event && event.id){
+            let value = event;
+            let students = [...this.state.students];
+            let selectedStudent = this.findStudent(value.id);
+            let newStudent = {...selectedStudent};
+            students[index] = newStudent;
+    
+            this.setState({
+                students
+            });
+        }
     }
 
     getStudentLessons = async (id) =>{
@@ -128,8 +126,8 @@ export class CreateLesson extends React.Component{
         
     }
 
-
     buildStudentSelect = () => {
+        /*
         let studentSelect = [];
 
         for(let i = 0;i < this.props.students.length;i++){
@@ -138,10 +136,36 @@ export class CreateLesson extends React.Component{
                 <MenuItem value={item.id} key={i}>{item.fullName}</MenuItem>
             );  
         }
-
+        */
         let selects = [];
 
         for(let i = 0;i < this.state.studentCount;i++){
+            selects.push(
+                <Grid className="student-row" item xs={12} md={4} key={this.state.students[i].id + i}>
+                    <div class="filter-container">
+                        <Tooltip title="See Previous Lessons">
+                            <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="student lessons">
+                                <Help/>
+                            </IconButton>
+                        </Tooltip>
+                        <FilterControl 
+                        responses={this.props.students} 
+                        target={this.studentTarget} 
+                        changeData={i} 
+                        filterChanged={this.studentChanged} 
+                        title={"Name"} 
+                        value={this.state.students[i] ? this.state.students[i] : null }
+                        ignoreEmpty={true}/>
+                        <Tooltip title="Remove Student">
+                            <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
+                                <CancelOutlinedIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                </Grid> 
+            );
+
+            /*
             selects.push(
                 <Grid className="student-row" item xs={12} md={3} key={i}>
                     <Tooltip title="See Previous Lessons">
@@ -157,6 +181,7 @@ export class CreateLesson extends React.Component{
                     </Tooltip>
                 </Grid>
             )
+            */
         }
 
         let finalSelect = [];
