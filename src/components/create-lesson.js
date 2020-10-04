@@ -127,16 +127,7 @@ export class CreateLesson extends React.Component{
     }
 
     buildStudentSelect = () => {
-        /*
-        let studentSelect = [];
 
-        for(let i = 0;i < this.props.students.length;i++){
-            const item = this.props.students[i];
-            studentSelect.push(
-                <MenuItem value={item.id} key={i}>{item.fullName}</MenuItem>
-            );  
-        }
-        */
         let selects = [];
 
         for(let i = 0;i < this.state.studentCount;i++){
@@ -164,24 +155,6 @@ export class CreateLesson extends React.Component{
                     </div>
                 </Grid> 
             );
-
-            /*
-            selects.push(
-                <Grid className="student-row" item xs={12} md={3} key={i}>
-                    <Tooltip title="See Previous Lessons">
-                        <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="student lessons">
-                            <Help/>
-                        </IconButton>
-                    </Tooltip>
-                    <Select onChange={(e) => this.studentChanged(e,i)} value={this.state.students[i].id} >{studentSelect}</Select>
-                    <Tooltip title="Remove Student">
-                        <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
-                            <CancelOutlinedIcon/>
-                        </IconButton>
-                    </Tooltip>
-                </Grid>
-            )
-            */
         }
 
         let finalSelect = [];
