@@ -133,7 +133,7 @@ export class CreateLesson extends React.Component{
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
                 <Grid className="student-row" item xs={12} md={4} key={this.state.students[i].id + i}>
-                    <div class="filter-container">
+                    <div className="filter-container">
                         <Tooltip title="See Previous Lessons">
                             <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="student lessons">
                                 <Help/>
