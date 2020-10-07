@@ -67,7 +67,7 @@ export function LessonViewTable(props){
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right" onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell>
                     <TableCell align="right">{studentSpans}</TableCell>
-                    <TableCell align="right" onClick={(e) => teacherClicked(lesson.teacher)}>{lesson.teacher.username}</TableCell>
+                    <TableCell align="right" onClick={(e) => teacherClicked(lesson.teacher)}>{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
                 </TableRow>
             );
             rows.push(

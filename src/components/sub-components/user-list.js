@@ -32,7 +32,7 @@ export class UserList extends React.Component{
             let user = this.props.users[i];
             let userItem = this.props.summary ? (
                 <ListItem button key={i} onClick={(e) => this.selectUser(user)}>
-                    <ListItemText primary={user.username} />
+                    <ListItemText primary={!user.fullName ? user.username : user.fullName} />
                 </ListItem>
             ) : 
             (

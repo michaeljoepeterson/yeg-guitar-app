@@ -66,7 +66,7 @@ export class LessonDisplay extends React.Component{
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
                     <TableCell align="right">{studentSpans}</TableCell>
-                    <TableCell align="right">{lesson.teacher.username}</TableCell>
+                    <TableCell align="right">{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
                 </TableRow>
             ) : 
             (
@@ -77,7 +77,7 @@ export class LessonDisplay extends React.Component{
                     <TableCell align="right">{lesson.lessonType}</TableCell>
                     <TableCell align="right">{lesson.notes}</TableCell>
                     <TableCell align="right">{studentSpans}</TableCell>
-                    <TableCell align="right">{lesson.teacher.username}</TableCell>
+                    <TableCell align="right">{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
                 </TableRow>
             );
             rows.push(

@@ -16,7 +16,7 @@ export default function SummaryView(props){
         for(let key in props.data.hours){
             let row = (
                 <TableRow key={key}>
-                    <TableCell align="center">{ '$' + key + '.00'}</TableCell>
+                    {/* <TableCell align="center">{ '$' + key + '.00'}</TableCell> */}
                     <TableCell align="center">{props.data.students[key]}</TableCell>
                     <TableCell align="center">{props.data.hours[key]}</TableCell>
                 </TableRow>
@@ -31,7 +31,7 @@ export default function SummaryView(props){
             <Table aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <TableCell align="center">Rate</TableCell>
+                    {/* <TableCell align="center">Rate</TableCell> */}
                     <TableCell align="center">Number of Students</TableCell>
                     <TableCell align="center">Number of Lessons</TableCell>
                 </TableRow>
