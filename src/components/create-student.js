@@ -16,6 +16,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import './styles/create-student.css';
 import './styles/create-lesson.css';
@@ -31,7 +33,8 @@ export class CreateStudent extends React.Component{
             category:'',
             saved:false,
             savedMessage:'Saved',
-            categoryCount:1
+            categoryCount:1,
+            active:false
         };
     }
 
@@ -44,12 +47,6 @@ export class CreateStudent extends React.Component{
         let value = event.target.value;
         this.setState({
             [field]:value
-        });
-    }
-
-    snackbarClosed = (name) => {
-        this.setState({
-            [name]:false
         });
     }
 
@@ -111,7 +108,8 @@ export class CreateStudent extends React.Component{
         const student = {
             firstName:this.state.firstName,
             lastName:this.state.lastName,
-            category:this.state.categories
+            category:this.state.categories,
+            active:this.state.active
         };
         //console.log(this.props.currentUser);
         this.props.dispatch(createStudent(student,this.props.currentUser.level))
@@ -163,6 +161,12 @@ export class CreateStudent extends React.Component{
         });
     }
 
+    setActive = (event) =>{
+        this.setState({
+            active:event.target.checked
+        });
+    }
+
     render(){
         
         // console.log(this.state);
@@ -174,17 +178,30 @@ export class CreateStudent extends React.Component{
                 <Typography variant='h4'>Create New Student</Typography>
                 <form onSubmit={(e) => this.saveStudent(e)}>
                     <Grid container>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
+                        <FormControlLabel
+                            control={
+                            <Switch
+                                checked={this.state.active}
+                                onChange={this.setActive}
+                                name="active"
+                                color="primary"
+                            />
+                            }
+                            label="Active"
+                        />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
                             <div className="lesson-container">
                                 <TextField required label="First Name" id="firstName" value={this.state.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
                             </div>
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
                             <div className="lesson-container">
                                 <TextField required label="Last Name" id="lastName" value={this.state.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
                             </div>       
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
                             <IconButton aria-label="add category" onClick={(e) => this.addCategory()}>
                                 <AddCircleOutlinedIcon />
                             </IconButton>
@@ -197,7 +214,7 @@ export class CreateStudent extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
-                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} savedField={"saved"} savedMessage={this.state.savedMessage}/>
+                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
             </div>
         );
     }

@@ -50,7 +50,8 @@ export class CreateLesson extends React.Component{
             await this.props.dispatch(getLessonTypes());
             await this.props.dispatch(getStudents())
             let currentStudents = [...this.state.students];
-            currentStudents.push(this.props.students[0]);
+            let firstStudent = this.props.students.find(student => student.active);
+            currentStudents.push(firstStudent);
             this.setState({
                 students:currentStudents
             },() => {
