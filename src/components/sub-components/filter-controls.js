@@ -104,7 +104,7 @@ function FilterControls(props){
     console.log('all teachers',allTeachers);
     console.log('all students',allStudents)
 
-    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true}/>) : null;
+    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherTarget} filterChanged={filterChanged} title={"Email"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
         <Grid container>

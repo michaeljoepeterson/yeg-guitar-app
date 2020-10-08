@@ -129,7 +129,7 @@ export class CreateLesson extends React.Component{
     buildStudentSelect = () => {
 
         let selects = [];
-
+        const activeProp = 'active';
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
                 <Grid className="student-row" item xs={12} md={4} key={this.state.students[i].id + i}>
@@ -146,7 +146,8 @@ export class CreateLesson extends React.Component{
                         filterChanged={this.studentChanged} 
                         title={"Name"} 
                         value={this.state.students[i] ? this.state.students[i] : null }
-                        ignoreEmpty={true}/>
+                        ignoreEmpty={true}
+                        activeProp={activeProp}/>
                         <Tooltip title="Remove Student">
                             <IconButton onClick={(e) => this.removeStudent(i)} aria-label="remove student">
                                 <CancelOutlinedIcon/>

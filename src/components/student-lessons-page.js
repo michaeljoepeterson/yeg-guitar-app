@@ -35,10 +35,12 @@ function StudentLessonPage(props){
             setTeacher(newVal);
         }
     }
+    
+    const activeProp = 'active';
 
     return(
         <div>
-            <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}/>
+            <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}studentActive={activeProp}/>
             <LessonViewTable studentClicked={studentClicked} teacherClicked={teacherClicked} dateClicked={dateClicked}/>
         </div>
     )

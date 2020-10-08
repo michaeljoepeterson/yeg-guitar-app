@@ -6,6 +6,9 @@ export default function FilterControl(props){
     const removeCopies = (responses) => {
         let foundResponses = {};
         let filteredResponses = responses.filter(resp => {
+            if(props.activeProp && !resp[props.activeProp]){
+                return false;
+            }
             if(!foundResponses[resp[props.target]]){
                 foundResponses[resp[props.target]] = resp[props.target];
                 return true;
