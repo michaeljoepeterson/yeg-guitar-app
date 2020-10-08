@@ -47,6 +47,12 @@ export const setLesson = (lesson) => ({
     lesson
 });
 
+export const GET_LESSON_TYPES_SUCCESS = 'GET_LESSON_TYPES_SUCCESS';
+export const getLessonTypesSuccess = (types) => ({
+    type:GET_LESSON_TYPES_SUCCESS,
+    types
+});
+
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;
@@ -275,6 +281,29 @@ export const generalSearch = (options) => async (dispatch,getState) =>{
         res = await res.json();
         dispatch(getLessonSuccess(res.lessons));
         return res.lessons
+    }
+    catch(e){
+        console.log('error getting lessons ',e);
+        dispatch(getLessonError(e));
+    }
+}
+
+export const getLessonTypes = () => async (dispatch,getState) =>{
+    console.log('getting lessons');
+    dispatch(getLessonRequest());
+    const authToken = getState().auth.authToken;
+    const url = `${API_BASE_URL}/lesson-types`
+    try{
+        let res = await fetch(url,{
+            method:'GET',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        res = await normalizeResponseErrors(res);
+        res = await res.json();
+        dispatch(getLessonTypesSuccess(res.types));
+        return res.types
     }
     catch(e){
         console.log('error getting lessons ',e);

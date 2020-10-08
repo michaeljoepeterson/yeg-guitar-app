@@ -13,7 +13,7 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Help from '@material-ui/icons/Help';
-import {saveLesson,updateLesson,getStudentLesson} from '../actions/lessonActions';
+import {saveLesson,updateLesson,getStudentLesson,getLessonTypes} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
@@ -45,8 +45,24 @@ export class CreateLesson extends React.Component{
         };
     }
 
-    componentDidMount(){
-        this.props.dispatch(getStudents())
+    async componentDidMount(){
+        try{
+            await this.props.dispatch(getLessonTypes());
+            await this.props.dispatch(getStudents())
+            let currentStudents = [...this.state.students];
+            currentStudents.push(this.props.students[0]);
+            this.setState({
+                students:currentStudents
+            },() => {
+                this.checkSelectedLesson()
+            });
+        }
+        catch(e){
+            
+        }
+        /*
+        .then(response => {
+        })
 
         .then(response => {
             let currentStudents = [...this.state.students];
@@ -61,6 +77,7 @@ export class CreateLesson extends React.Component{
         .catch(err => {
 
         });
+        */
     }
 
     componentWillUnmount(){
@@ -421,7 +438,7 @@ export class CreateLesson extends React.Component{
 
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
-    lessonTypes:['Finger Style','Chords', 'Rythm'],
+    lessonTypes:state.lessons.lessonTypes.map(type => type.name),
     students:state.students.students,
     selectedLesson:state.lessons.selectedLesson,
     studentLessons:state.lessons.studentLessons
