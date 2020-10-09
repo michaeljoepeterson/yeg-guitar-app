@@ -20,6 +20,11 @@ export let possibleLinks = [
         level:1
      },
      {
+        link:'/create-type',
+        display:'Create Type',
+        level:1
+     },
+     {
         link:'/my-lessons',
         display:'My Lessons',
         level:2

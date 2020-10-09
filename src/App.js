@@ -11,6 +11,7 @@ import MyLessons from './components/my-lessons';
 import Summary from './components/summary';
 import TopNav from './components/navbar';
 import StudentLessonPage from './components/student-lessons-page';
+import CreateType from './components/pages/create-lesson-type';
 import './App.css';
 
 export class App extends React.Component {
@@ -89,6 +90,9 @@ export class App extends React.Component {
         }/>
         <Route exact path="/student-lessons"  render={(props) => (
           <StudentLessonPage {...props}/>)
+        }/>
+        <Route exact path="/create-type"  render={(props) => (
+          <CreateType {...props}/>)
         }/>
       </div>
     );

@@ -437,11 +437,14 @@ export class CreateLesson extends React.Component{
     }
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    lessonTypes:state.lessons.lessonTypes.map(type => type.name),
-    students:state.students.students,
-    selectedLesson:state.lessons.selectedLesson,
-    studentLessons:state.lessons.studentLessons
-});
+const mapStateToProps = state => {
+    let types = state.lessons.lessonTypes.filter(type => type.active).map(type => type.name);
+    return{
+        currentUser: state.auth.currentUser,
+        lessonTypes:types,
+        students:state.students.students,
+        selectedLesson:state.lessons.selectedLesson,
+        studentLessons:state.lessons.studentLessons
+    };
+};
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));

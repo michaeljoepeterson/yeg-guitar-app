@@ -310,3 +310,31 @@ export const getLessonTypes = () => async (dispatch,getState) =>{
         dispatch(getLessonError(e));
     }
 }
+
+export const createType = (type,level) => async (dispatch,getState) =>{
+    try{
+        dispatch(addLessonRequest);
+        const url = `${API_BASE_URL}/lesson-types?userLevel=${level}`;
+        let payload = !type.lessonType ? {
+            lessonType:type
+        } : type;
+        console.log(JSON.stringify(payload));
+        const authToken = getState().auth.authToken;
+        let res = await fetch(url,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authToken}`
+            },
+            body:JSON.stringify(payload)
+        });
+        res = await normalizeResponseErrors(res);
+        res = await res.json();
+        dispatch(addLessonSuccess());
+        return res;
+    }
+    catch(e){
+        console.log('error saving type ',e);
+        dispatch(addLessonRequest(e));
+    }
+}

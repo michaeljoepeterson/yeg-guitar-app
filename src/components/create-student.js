@@ -179,17 +179,19 @@ export class CreateStudent extends React.Component{
                 <form onSubmit={(e) => this.saveStudent(e)}>
                     <Grid container>
                         <Grid item xs={12} md={3}>
-                        <FormControlLabel
-                            control={
-                            <Switch
-                                checked={this.state.active}
-                                onChange={this.setActive}
-                                name="active"
-                                color="primary"
-                            />
-                            }
-                            label="Active"
-                        />
+                            <div className="lesson-container">
+                                <FormControlLabel
+                                    control={
+                                    <Switch
+                                        checked={this.state.active}
+                                        onChange={this.setActive}
+                                        name="active"
+                                        color="primary"
+                                    />
+                                    }
+                                    label="Active"
+                                />
+                            </div>
                         </Grid>
                         <Grid item xs={12} md={3}>
                             <div className="lesson-container">
@@ -209,7 +211,6 @@ export class CreateStudent extends React.Component{
                             {categories}
                         </Grid>
                         <Grid className="save-button" item xs={12}>
-                            
                             <Button type="submit" variant="contained">Save</Button>
                         </Grid>
                     </Grid>
@@ -222,7 +223,6 @@ export class CreateStudent extends React.Component{
 
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
-    lessonTypes:['Finger Style','Chords', 'Rythm'],
     categories:state.category.categories
 });
 export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(CreateStudent))));
