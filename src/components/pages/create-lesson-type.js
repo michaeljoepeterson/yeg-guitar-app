@@ -41,16 +41,16 @@ function CreateType(props){
             else{
                 setSnackBar({
                     saved:true,
-                    savedMessage:'Error saving student'
+                    savedMessage:'Error saving type'
                 });
             }
         }
         catch(e){
             setSnackBar({
                 saved:true,
-                savedMessage:'Error saving student'
+                savedMessage:'Error saving type'
             });
-            console.log('error saving student',e);
+            console.log('error saving type',e);
         }
     }
 
