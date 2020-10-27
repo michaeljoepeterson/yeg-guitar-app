@@ -1,0 +1,8 @@
+.filter-container > .MuiAutocomplete-root{
+    max-width: 500px !important;
+    margin: auto;
+}
+
+.filter-container > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root{
+    padding-right: 12px !important;
+}

@@ -17,15 +17,16 @@ div > .notes-field{
     margin-bottom: 1.5em;
 }
 
-.filter-container{
-    display:flex
+.filter-container-lesson{
+    display:flex;
+    justify-content: center;
 }
 
-.filter-container > div{
-    flex-grow: 1;
+.filter-container-lesson > div{
+    flex-grow: 0.8;
 }
 
-.filter-container > button{
+.filter-container-lesson > button{
     padding: 0.2em;
 }
 
@@ -33,4 +34,8 @@ div > .notes-field{
     .lesson-container{
         margin-top: 2.5em;
     }
-  }
+
+    .filter-container-lesson > div{
+        flex-grow: 1;
+    }
+}

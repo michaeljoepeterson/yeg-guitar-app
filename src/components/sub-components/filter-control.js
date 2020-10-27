@@ -1,6 +1,7 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import './styles/search-filters.css';
 
 export default function FilterControl(props){
     const removeCopies = (responses) => {
