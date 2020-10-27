@@ -13,12 +13,12 @@ export default function SummaryView(props){
 
     const buildDataTable = () =>{
         let rows = [];
-        for(let key in props.data.hours){
+        for(let key in props.data.students){
             let row = (
                 <TableRow key={key}>
                     {/* <TableCell align="center">{ '$' + key + '.00'}</TableCell> */}
+                    <TableCell align="center">{key}</TableCell>
                     <TableCell align="center">{props.data.students[key]}</TableCell>
-                    <TableCell align="center">{props.data.hours[key]}</TableCell>
                 </TableRow>
             )
             rows.push(
