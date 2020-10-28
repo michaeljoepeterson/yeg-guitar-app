@@ -87,7 +87,7 @@ export const refreshAuthToken = () => (dispatch,getState) => {
         storeAuthInfo(authToken,dispatch)
     })
     .catch(err => {
-        //dispatch(authError(err));
+        dispatch(authError(err));
         clearAuthToken(authToken);
     });
 };

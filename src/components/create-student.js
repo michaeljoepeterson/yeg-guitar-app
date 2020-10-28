@@ -34,7 +34,7 @@ export class CreateStudent extends React.Component{
             saved:false,
             savedMessage:'Saved',
             categoryCount:1,
-            active:false
+            active:true
         };
     }
 

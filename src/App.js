@@ -20,11 +20,22 @@ export class App extends React.Component {
     super(props);
     this.refreshInterval = null;
     this.minutes = 10;
+    this.state = {
+      initialLoad:true
+    }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     console.log(this.props.location);
-    
+    try{
+      await this.props.dispatch(refreshAuthToken());
+      this.setState({
+        initialLoad:false
+      })
+    }
+    catch(e){
+      console.log('error: ',e);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -56,8 +67,9 @@ export class App extends React.Component {
       clearInterval(this.refreshInterval);
   }
 
+  
   render() {
-    return (
+    let renderContent = this.state.initialLoad ? (<div className="App"></div>) : (
       <div className="App">
         <TopNav />
         <Route exact path="/"  render={(props) => (
@@ -94,6 +106,12 @@ export class App extends React.Component {
         <Route exact path="/create-type"  render={(props) => (
           <CreateType {...props}/>)
         }/>
+      </div>
+    );
+
+    return (
+      <div>
+        {renderContent}
       </div>
     );
   }
