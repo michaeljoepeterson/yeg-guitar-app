@@ -18,7 +18,7 @@ import { fromUnixTime } from 'date-fns/esm';
 function CreateType(props){
     const [type,setType] = useState({
         name:'',
-        active:false
+        active:true
     });
 
     const [snackBarData,setSnackBar] = useState({

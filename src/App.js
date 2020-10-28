@@ -27,6 +27,9 @@ export class App extends React.Component {
 
   async componentDidMount(){
     console.log(this.props.location);
+    if(this.props.location.pathname.includes('/test')){
+      this.props.dispatch(enableTestMode());
+    }
     try{
       await this.props.dispatch(refreshAuthToken());
       this.setState({
