@@ -7,6 +7,7 @@ import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display';
 import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
+import GetUrlFilters from '../HOC/get-url-filters';
 
 export class MyLessons extends React.Component{
     constructor(props) {
@@ -43,7 +44,7 @@ export class MyLessons extends React.Component{
     }
 
     render(){
-        console.log(this.state);
+        //console.log(this.state);
         return(
             <div>
                 <h2>My lessons</h2>
@@ -72,4 +73,4 @@ const mapStateToProps = state => ({
     lessons:state.lessons.lessons
 });
 
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(MyLessons))));
+export default GetUrlFilters()(CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(MyLessons)))));

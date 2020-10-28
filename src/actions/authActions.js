@@ -83,7 +83,7 @@ export const refreshAuthToken = () => (dispatch,getState) => {
     .then(({authToken}) => {
         //debugger;
         //storeAuthInfo(authToken, dispatch)
-        console.log('auth token updated: ',authToken);
+        console.log('auth token updated: ');
         storeAuthInfo(authToken,dispatch)
     })
     .catch(err => {
