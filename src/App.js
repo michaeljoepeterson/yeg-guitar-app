@@ -111,7 +111,7 @@ export class App extends React.Component {
         }/>
       </div>
     );
-        debugger;
+
     return (
       <div>
         {renderContent}

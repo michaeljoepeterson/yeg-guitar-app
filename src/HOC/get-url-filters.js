@@ -2,7 +2,8 @@ import React from 'react';
 import {withRouter} from 'react-router-dom';
 
 export default () => Component => {
-    const targetParams = ['start-date','end-date','startdate','enddate'];
+    const startDateNames = ['start-date','startdate']; 
+    const endDateNames = ['end-date','enddate']; 
 
     function parseQuery(query,name){
         let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
@@ -15,30 +16,51 @@ export default () => Component => {
         if (!results[2]) return resultsObj;
         let result = decodeURIComponent(results[2].replace(/\+/g, ' '));
         resultsObj.result = result;
-        return resultsObj
+        return resultsObj;
     }
 
-    function mapResults(){
+    function isValidDate(dateString) {
+        let d = new Date(dateString);
+        return d instanceof Date && !isNaN(d);
+    }
+
+    function mapResults(results){
         let mappedResults = {
             startDate:null,
             endDate:null
         };
+        results.forEach(result => {
+            let foundStartName = startDateNames.find(name => name === result.name);
+            let foundEndName = endDateNames.find(name => name === result.name);
+            
+            if(foundStartName){
+
+                mappedResults.startDate = isValidDate(result.result) ? result.result : null;
+            }
+            else if(foundEndName){
+                mappedResults.endDate = isValidDate(result.result) ? result.result : null;
+            }
+        });
+
+        return mappedResults;
     }
 
     function GetUrlFilters(props){
         const {location,...passThroughProps} = props;
         let {search} = location;
-        let startDate = null;
-        let endDate = null
+        let mappedResults = {
+            startDate:null,
+            endDate:null
+        };
         if(search){
-            console.log('query: ',search);
+            const targetParams = startDateNames.concat(endDateNames);
             let results = targetParams.map(name => {
                 return parseQuery(search,name);
             });
             results = results.filter(result => result.result);
-            console.log(results);
+            mappedResults = mapResults(results); 
         }
-        return <Component startDate={startDate} endDate={endDate} {...passThroughProps} />;
+        return <Component startDate={mappedResults.startDate} endDate={mappedResults.endDate} {...passThroughProps} />;
     }
 
     return withRouter(GetUrlFilters);
