@@ -111,7 +111,7 @@ export class App extends React.Component {
         }/>
       </div>
     );
-
+        debugger;
     return (
       <div>
         {renderContent}
@@ -122,9 +122,6 @@ export class App extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser,
-  authToken:state.auth.authToken,
-  error:state.auth.error,
   testMode:state.auth.testMode
 });
 export default withRouter(connect(mapStateToProps)(App));

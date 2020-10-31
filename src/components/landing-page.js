@@ -10,7 +10,7 @@ export function LandingPage(props){
     if(props.currentUser){
         return <Redirect to='/create-lesson'/>;
     }
-
+    
     if(props.location.pathname.includes('/test')){
         props.dispatch(enableTestMode());
         return <Redirect to='/'/>;

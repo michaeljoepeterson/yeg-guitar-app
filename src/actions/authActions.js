@@ -22,9 +22,12 @@ export const authError = (error) => ({
 });
 //losgout actions
 export const LOGOUT = "LOGOUT";
-export const logoutSession = () => ({
-    type:LOGOUT
-});
+export const logoutSession = () => {
+    clearAuthToken();
+    return {
+        type:LOGOUT
+    };
+}
 
 export const TEST_ENABLE = 'TEST_ENABLE';
 export const testEnable = () => ({
