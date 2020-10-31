@@ -17,9 +17,9 @@ export default function SimpleModal(props){
     }
 
     const body = !props.children ? (
-        <div style={props.modalStyle} className="modal-container">
-            <Paper className="paper-container">
-                <p id="modal-description">
+        <div style={props.modalStyle} className="modal-container modal-body">
+            <Paper className="paper-container modal-body">
+                <p className="modal-desc" id="modal-description">
                     {props.message}
                 </p>
                 <div>
@@ -29,9 +29,9 @@ export default function SimpleModal(props){
             </Paper>
         </div>
     ) : (
-    <div style={props.modalStyle} className="modal-container">
-        <Paper className="paper-container">
-            <div id="modal-description">
+    <div style={props.modalStyle} className="modal-container modal-body">
+        <Paper className="paper-container modal-body">
+            <div className="modal-desc" id="modal-description">
                 {props.children}
             </div>
             <div>
