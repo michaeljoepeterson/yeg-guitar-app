@@ -6,7 +6,7 @@ export let teacher = 2
 export let possibleLinks = [
     {
         link:'/create-lesson',
-        display:'Create Lesson',
+        display:'New Lesson',
         level:2
     },
     {
@@ -21,7 +21,7 @@ export let possibleLinks = [
      },
      {
         link:'/create-type',
-        display:'Create Type',
+        display:'New Class',
         level:1
      },
      {

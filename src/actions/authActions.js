@@ -22,9 +22,12 @@ export const authError = (error) => ({
 });
 //losgout actions
 export const LOGOUT = "LOGOUT";
-export const logoutSession = () => ({
-    type:LOGOUT
-});
+export const logoutSession = () => {
+    clearAuthToken();
+    return {
+        type:LOGOUT
+    };
+}
 
 export const TEST_ENABLE = 'TEST_ENABLE';
 export const testEnable = () => ({
@@ -83,11 +86,11 @@ export const refreshAuthToken = () => (dispatch,getState) => {
     .then(({authToken}) => {
         //debugger;
         //storeAuthInfo(authToken, dispatch)
-        console.log('auth token updated: ',authToken);
+        console.log('auth token updated: ');
         storeAuthInfo(authToken,dispatch)
     })
     .catch(err => {
-        //dispatch(authError(err));
+        dispatch(authError(err));
         clearAuthToken(authToken);
     });
 };

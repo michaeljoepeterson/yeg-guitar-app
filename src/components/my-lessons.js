@@ -7,16 +7,26 @@ import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display';
 import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
+import GetUrlFilters from '../HOC/get-url-filters';
 
 export class MyLessons extends React.Component{
     constructor(props) {
         super(props);
-        let startDate = new Date();
-        startDate.setDate(startDate.getDate() + 1);
-        let endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() + 1);
-        const defaultRange = 30;
-        endDate.setDate(endDate.getDate() - defaultRange);
+        let startDate;
+        let endDate;
+        //only wnat this to run once so can't do this in mount
+        if(props.startDate && props.endDate){
+            startDate = new Date(props.endDate);
+            endDate = new Date(props.startDate);
+        }
+        else{
+            startDate = new Date();
+            startDate.setDate(startDate.getDate() + 1);
+            endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 1);
+            const defaultRange = 30;
+            endDate.setDate(endDate.getDate() - defaultRange);
+        }
         this.state = {
             startDate,
             endDate
@@ -43,7 +53,7 @@ export class MyLessons extends React.Component{
     }
 
     render(){
-        console.log(this.state);
+        //console.log(this.state);
         return(
             <div>
                 <h2>My lessons</h2>
@@ -72,4 +82,4 @@ const mapStateToProps = state => ({
     lessons:state.lessons.lessons
 });
 
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(MyLessons))));
+export default GetUrlFilters()(CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(MyLessons)))));

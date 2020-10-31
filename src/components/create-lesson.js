@@ -90,7 +90,7 @@ export class CreateLesson extends React.Component{
     }
 
     checkSelectedLesson = () =>{
-        console.log(this.props.selectedLesson);
+        //console.log(this.props.selectedLesson);
         let isEdit = this.checkEditMode();
         if(this.props.selectedLesson && isEdit){
             let selectedLesson = this.props.selectedLesson;
@@ -222,6 +222,10 @@ export class CreateLesson extends React.Component{
         });
     }
 
+    buildDateString = (date) =>{
+        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    }
+
     saveLesson = (event,checkedModal) => {
         if(event){
             event.persist();
@@ -256,10 +260,18 @@ export class CreateLesson extends React.Component{
                 let {code} = res;
                 
                 if(code === 200){
+                    let startDate = new Date();
+                    let endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + 1);
+                    let startDateString = this.buildDateString(startDate);
+                    let endDateString = this.buildDateString(endDate);
+                    this.props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}`);
+                    /*
                     this.setState({
                         saved:true,
                         savedMessage:'Lesson Saved!'
                     });
+                    */
                 }
                 else{
                     this.setState({

@@ -20,11 +20,25 @@ export class App extends React.Component {
     super(props);
     this.refreshInterval = null;
     this.minutes = 10;
+    this.state = {
+      initialLoad:true
+    }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     console.log(this.props.location);
-    
+    if(this.props.location.pathname.includes('/test')){
+      this.props.dispatch(enableTestMode());
+    }
+    try{
+      await this.props.dispatch(refreshAuthToken());
+      this.setState({
+        initialLoad:false
+      })
+    }
+    catch(e){
+      console.log('error: ',e);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -56,8 +70,9 @@ export class App extends React.Component {
       clearInterval(this.refreshInterval);
   }
 
+  
   render() {
-    return (
+    let renderContent = this.state.initialLoad ? (<div className="App"></div>) : (
       <div className="App">
         <TopNav />
         <Route exact path="/"  render={(props) => (
@@ -96,14 +111,17 @@ export class App extends React.Component {
         }/>
       </div>
     );
+
+    return (
+      <div>
+        {renderContent}
+      </div>
+    );
   }
   
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser,
-  authToken:state.auth.authToken,
-  error:state.auth.error,
   testMode:state.auth.testMode
 });
 export default withRouter(connect(mapStateToProps)(App));
