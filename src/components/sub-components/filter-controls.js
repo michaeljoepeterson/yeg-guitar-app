@@ -104,7 +104,7 @@ function FilterControls(props){
     const allStudents = useGetStudents(props.authToken);
     const allTeachers = useGetTeachers(props.authToken);
      
-    console.log('all teachers',allTeachers);
+    //console.log('all teachers',allTeachers);
     console.log('all students',allStudents)
 
     const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.studentActive}/>) : null;

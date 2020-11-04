@@ -10,6 +10,7 @@ div > .student-row{
 div > .notes-field{
     width:50%;
     margin-bottom:2em;
+    margin-top: 2em;
 }
 
 .lesson-container{
