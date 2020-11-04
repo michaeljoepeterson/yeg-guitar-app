@@ -9,11 +9,13 @@ export let possibleLinks = [
         display:'New Lesson',
         level:2
     },
+    /*
     {
         link:'/lesson-dash',
         display:'View Lessons',
         level:0
     },
+    */
     {
         link:'/create-student',
         display:'Create Student',

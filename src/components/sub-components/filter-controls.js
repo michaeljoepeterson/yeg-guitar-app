@@ -40,12 +40,15 @@ function FilterControls(props){
 
     const filterChanged = (newVal,changeType) =>{
         let curFilters = {...filters};
-        console.log(newVal);
+        //console.log(newVal);
 
         try{
             if(changeType === studentTarget){
                 curFilters.studentId = newVal ? newVal.id : null;
                 curFilters.selectedStudent = newVal;
+                if(props.updateStudent){
+                    props.updateStudent(newVal);
+                }
             }
             else if(changeType === teacherTarget){
                 curFilters.teacherId = newVal ? newVal.id : null;
