@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react';
 import {getStudentsAsync} from '../actions/studentActions';
 import {getUsersAsync} from '../actions/userActions';
 
-export const useGetStudents =  (authToken) => {
+export const useGetStudents =  (authToken,students) => {
     const [allStudents,setStudents] = useState([]);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ export const useGetStudents =  (authToken) => {
 
         getStudents(authToken);
 
-    },[]);
+    },[students]);
 
     return allStudents;
 }

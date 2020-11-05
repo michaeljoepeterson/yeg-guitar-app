@@ -39,7 +39,6 @@ export const getStudents = () => (dispatch,getState) => {
         .then(res => normalizeResponseErrors(res))
         .then(res => res.json())
         .then((students) => {
-            
             dispatch(getStudentSuccess(students.students));
         })
         .catch(err => {
@@ -96,3 +95,27 @@ export const createStudent = (student,level) => (dispatch,getState) => {
 
     return promise;
 };
+
+export const updateStudentAsync = async (student,level) => {
+    let authToken = loadAuthToken();
+    try{
+        let payload = {
+            student
+        };
+
+        let studentRaw = await fetch(`${API_BASE_URL}/students/${student.id}?userLevel=${level}`,{
+            method:'PUT',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authToken}`
+            },
+            body:JSON.stringify(payload)
+        });
+        studentRaw = await normalizeResponseErrors(studentRaw);
+        let response = await studentRaw.json();
+        return response;
+    }
+    catch(e){
+        console.log('error updating student ',e);
+    }
+}

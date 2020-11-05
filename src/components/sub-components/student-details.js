@@ -9,18 +9,48 @@ import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
+import {updateStudentAsync,getStudents} from '../../actions/studentActions';
 
 function StudentDetails(props){
     const [studentCopy,setStudentCopy] = useState(null);
+    const [isLoading,setIsLoading] = useState(false);
 
-    const adminFields = ['firstName','lastName','active'];
-    const teacherFields = ['notes'];
+    //const adminFields = ['firstName','lastName','active'];
+    const adminFields = {
+        firstName:{
+            value:'firstName'
+        },
+        lastName:{
+            value:'lastName'
+        },
+        active:{
+            value:'active'
+        }
+    };
+    const teacherFields = {
+        notes:{
+            value:'notes'
+        }
+    };
 
     const fieldChanged = (event,fieldName) => {
         event.persist();
-        let value = event.target.value;
+        let value = fieldName !== adminFields.active.value ? event.target.value : event.target.checked;
+        let newStudent = {...studentCopy};
+        if(fieldName === adminFields.firstName.value){
+            newStudent.firstName = value;
+        }
+        else if(fieldName === adminFields.lastName.value){
+            newStudent.lastName = value;
+        }
+        else if(fieldName === adminFields.active.value){
+            newStudent.active = value;
+        }
+        else if(fieldName === teacherFields.notes.value){
+            newStudent.notes = value;
+        }
 
-        console.log('field changed')
+        setStudentCopy(newStudent);
     }
 
     const buildStudentDetails = () => {
@@ -32,17 +62,17 @@ function StudentDetails(props){
                     details = (
                         <Grid container>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="First Name" value={studentCopy.firstName} onChange={(e) => fieldChanged(e,adminFields[0])}/>
+                                <TextField label="First Name" value={studentCopy.firstName} onChange={(e) => fieldChanged(e,adminFields.firstName.value)}/>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <TextField label="Last Name" value={studentCopy.lastName} onChange={(e) => fieldChanged(e,adminFields[1])}/>
+                                <TextField label="Last Name" value={studentCopy.lastName} onChange={(e) => fieldChanged(e,adminFields.lastName.value)}/>
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <FormControlLabel
                                     control={
                                     <Switch
                                         checked={studentCopy.active}
-                                        onChange={(e) => fieldChanged(e,adminFields[2])}
+                                        onChange={(e) => fieldChanged(e,adminFields.active.value)}
                                         name="active"
                                         color="primary"
                                     />
@@ -51,7 +81,7 @@ function StudentDetails(props){
                                 />
                             </Grid>
                             <Grid item xs={12} >
-                                <TextField className="notes-field" multiline label="Notes" rows="3" value={studentCopy.notes} onChange={(e) => fieldChanged(e,adminFields[1])}/>
+                                <TextField className="notes-field" multiline label="Notes" rows="3" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
                             </Grid>
                         </Grid>
                     );
@@ -60,7 +90,7 @@ function StudentDetails(props){
                     details = (
                         <Grid container>
                             <Grid item xs={12}>
-                                <TextField className="notes-field" multiline label="Notes" rows="3" value={studentCopy.notes} onChange={(e) => fieldChanged(e,adminFields[1])}/>
+                                <TextField className="notes-field" multiline label="Notes" rows="3" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
                             </Grid>
                         </Grid>
                     );
@@ -74,8 +104,17 @@ function StudentDetails(props){
         return details;
     }
 
-    const updateStudent = () => {
-
+    const updateStudent = async () => {
+        setIsLoading(true);
+        try{
+            const resp = await updateStudentAsync(studentCopy,props.user.level);
+            await props.dispatch(getStudents());
+            setIsLoading(false);
+        }
+        catch(e){
+            setIsLoading(false);
+            console.log('error updating student: ',e);
+        }
     }
     
 
@@ -99,10 +138,13 @@ function StudentDetails(props){
         if(copy.id){
             setStudentCopy(copy);
         }
+        else{
+            setStudentCopy(null);
+        }
     },[props.student]);
 
     const studentDetails = buildStudentDetails();
-    const updateButton = studentCopy ? (<Button  variant="contained" onClick={(e) => updateStudent()}>Update</Button>) : null;
+    const updateButton = studentCopy ? (<Button  variant="contained" onClick={(e) => updateStudent()} disabled={isLoading}>Update</Button>) : null;
     return(
         <div>
             <Accordion>

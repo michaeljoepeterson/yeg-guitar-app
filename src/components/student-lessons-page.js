@@ -1,4 +1,4 @@
-import React, { useState  } from 'react';
+import React, { useState,useEffect  } from 'react';
 import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import {withRouter} from 'react-router-dom';
@@ -7,6 +7,7 @@ import LessonViewTable from './sub-components/lesson-view-table';
 import FilterControls from './sub-components/filter-controls';
 import StudentDetails from './sub-components/student-details';
 import Grid from '@material-ui/core/Grid';
+import {getStudents} from '../actions/studentActions';
 
 function StudentLessonPage(props){
     const [student,setStudent] = useState(null);
@@ -46,7 +47,9 @@ function StudentLessonPage(props){
     }
     
     const activeProp = 'active';
-
+    useEffect(() => {
+        //props.dispatch(getStudents());
+    }, []);
     return(
         <div>
             <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}studentActive={activeProp} updateStudent={updateSelectedStudent}/>

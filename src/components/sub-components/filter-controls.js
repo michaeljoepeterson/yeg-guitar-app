@@ -98,12 +98,11 @@ function FilterControls(props){
             currFilter.selectedDate = props.selectedDate;
         }
         setFilters(currFilter);
-     }, [props.selectedDate]);
-     
+    }, [props.selectedDate]);
 
-    const allStudents = useGetStudents(props.authToken);
-    const allTeachers = useGetTeachers(props.authToken);
-     
+    let allStudents = useGetStudents(props.authToken,props.students);
+    //let allStudents = props.students;
+    let allTeachers = useGetTeachers(props.authToken); 
     //console.log('all teachers',allTeachers);
     console.log('all students',allStudents)
 
@@ -136,7 +135,8 @@ function FilterControls(props){
 }
 
 const mapStateToProps = state => ({
-    authToken: state.auth.authToken
+    authToken: state.auth.authToken,
+    students:state.students.students
 });
 
 export default connect(mapStateToProps)(FilterControls);
