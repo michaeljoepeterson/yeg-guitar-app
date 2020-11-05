@@ -75,6 +75,23 @@ function FilterControls(props){
         selectedStudent:props.student ? props.student : null,
         selectedDate:props.date ? props.date : null
     });
+    //reset selected student when student updated
+    useEffect(() => {
+        try{
+            let currFilter = {...filters};
+            if(currFilter.selectedStudent){
+                let selectedStudent = props.students.find(student => student.id === currFilter.selectedStudent.id);
+                currFilter.selectedStudent = selectedStudent;
+            }
+            else{
+                currFilter.selectedStudent = null;
+            }
+            setFilters(currFilter);
+        }
+        catch(e){
+            console.log('error reseting selected student',e);
+        }
+    },[props.students]);    
     
     //effect to get lessons
     useFilterLessons(filters,props.dispatch);
@@ -99,6 +116,7 @@ function FilterControls(props){
         }
         setFilters(currFilter);
     }, [props.selectedDate]);
+
 
     let allStudents = useGetStudents(props.authToken,props.students);
     //let allStudents = props.students;
