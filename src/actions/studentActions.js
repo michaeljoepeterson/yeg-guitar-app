@@ -99,8 +99,12 @@ export const createStudent = (student,level) => (dispatch,getState) => {
 export const updateStudentAsync = async (student,level) => {
     let authToken = loadAuthToken();
     try{
+        let payloadStudent = {...student};
+        payloadStudent.category = payloadStudent.category.map(cat => {
+            return cat.id
+        });
         let payload = {
-            student
+            student:payloadStudent
         };
 
         let studentRaw = await fetch(`${API_BASE_URL}/students/${student.id}?userLevel=${level}`,{

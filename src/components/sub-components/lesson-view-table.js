@@ -16,9 +16,11 @@ export function LessonViewTable(props){
 
 
     const setLesson = (lesson) => {
-        console.log('selected lesson: ',lesson);
-        props.dispatch(setSelectedLesson(lesson));
-        props.history.push(`/edit-lesson/${lesson.id}`);
+        if(props.user.level <= 1){
+            console.log('selected lesson: ',lesson);
+            props.dispatch(setSelectedLesson(lesson));
+            props.history.push(`/edit-lesson/${lesson.id}`);
+        }
     }
 
     const studentClicked = (student) => {
@@ -106,6 +108,7 @@ export function LessonViewTable(props){
 }
 
 const mapStateToProps = state => ({
-    lessons:state.lessons.lessons
+    lessons:state.lessons.lessons,
+    user: state.auth.currentUser
 });
 export default (withRouter(connect(mapStateToProps)(LessonViewTable)));

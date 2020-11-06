@@ -39,7 +39,7 @@ export let possibleLinks = [
      {
         link:'/student-lessons',
         display:'Student Lessons',
-        level:1
+        level:2
      }
 ];
 

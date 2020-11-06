@@ -124,7 +124,7 @@ function FilterControls(props){
     //console.log('all teachers',allTeachers);
     console.log('all students',allStudents)
 
-    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.studentActive}/>) : null;
+    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.user.level <= 1 ? null : props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherTarget} filterChanged={filterChanged} title={"Email"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
         <Grid container>
@@ -154,7 +154,8 @@ function FilterControls(props){
 
 const mapStateToProps = state => ({
     authToken: state.auth.authToken,
-    students:state.students.students
+    students:state.students.students,
+    user: state.auth.currentUser
 });
 
 export default connect(mapStateToProps)(FilterControls);
