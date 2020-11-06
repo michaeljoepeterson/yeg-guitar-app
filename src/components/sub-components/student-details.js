@@ -78,12 +78,18 @@ function StudentDetails(props){
         setStudentCopy(student);
     }
 
-    const removeCategory = () => {
+    const removeCategory = (index) => {
+        let student = {...studentCopy};
+        student.category = student.category.filter((cat,i) => i !== index);
 
+        setStudentCopy(student);
     }
 
     const addCategory = () => {
+        let student = {...studentCopy};
+        student.category.push({});
 
+        setStudentCopy(student);
     }
 
     const buildStudentDetails = () => {
