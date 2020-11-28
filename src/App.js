@@ -12,6 +12,7 @@ import Summary from './components/summary';
 import TopNav from './components/navbar';
 import StudentLessonPage from './components/student-lessons-page';
 import CreateType from './components/pages/create-lesson-type';
+import fb from './fb/firebase';
 import './App.css';
 
 export class App extends React.Component {
@@ -31,6 +32,7 @@ export class App extends React.Component {
       this.props.dispatch(enableTestMode());
     }
     try{
+      let token = await fb.getToken();
       await this.props.dispatch(refreshAuthToken());
       this.setState({
         initialLoad:false
