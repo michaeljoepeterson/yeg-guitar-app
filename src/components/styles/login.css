@@ -12,6 +12,19 @@
     justify-content: space-evenly;
 }
 
+.login-container{
+    flex-direction: column;
+}
+
+.login-container > div{
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.login-container > div > button{
+    width: 100%;
+}
+
 .input-container:last-of-type{
     padding-bottom: 0;
 }

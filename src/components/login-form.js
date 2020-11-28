@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {login} from '../actions/authActions';
+import {login,googleSignIn} from '../actions/authActions';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -36,6 +36,16 @@ export class LoginForm extends React.Component{
         this.props.dispatch(login(this.state.email,this.state.pass));
         
     }
+
+    googleSignIn = async () => {
+        try{
+            await this.props.dispatch(googleSignIn());
+        }
+        catch(e){
+            console.log('error with google sign in page: ',e);
+        }
+    }
+
     render(){
         this.displayLoading = this.props.loading ? true : false;
         return(
@@ -48,14 +58,19 @@ export class LoginForm extends React.Component{
                     <div className="input-container">
                         <TextField required id="password" label="Password" variant="outlined" type="password" helperText={this.props.error ? 'Error Loging in' : ''} onChange={(e) => this.inputChanged(e,'pass')}/>
                     </div>
-                    <div className="input-container">
+                    <div className="input-container login-container">
                         <CircularProgress className={this.displayLoading ? '' : 'hidden'} />
-                        <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Login</Button>
-                        <Link to="/create-admin">
+                        <div>
+                            <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Login</Button>
+                        </div>
+                        {/* <Link to="/create-admin">
                             <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
                             Update
                             </Button>
-                        </Link>
+                        </Link> */}
+                        <div>
+                            <Button onClick={(e) => this.googleSignIn()} className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="button">Login With Google</Button>
+                        </div>
                     </div>
                 </form>
             </div>

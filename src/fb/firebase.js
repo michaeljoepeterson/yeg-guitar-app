@@ -9,7 +9,6 @@ class Firebase {
     //if(!firebase.apps.length){
     app.initializeApp(fbConfig);
     //}
-
     this.auth = app.auth();
     this.provider = new firebase.auth.GoogleAuthProvider();
   }

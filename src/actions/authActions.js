@@ -2,6 +2,7 @@ import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL,setTestUrl} from '../config';
 import {saveAuthToken,clearAuthToken,loadAuthToken} from '../local-storage';
 import jwtDecode from 'jwt-decode';
+import fb from '../fb/firebase';
 //handle loading state
 export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const authRequest = () => ({
@@ -98,4 +99,17 @@ export const refreshAuthToken = () => (dispatch,getState) => {
 export const enableTestMode = () => (dispatch) =>{
     setTestUrl();
     dispatch(testEnable());
+}
+
+export const googleSignIn = () => async (dispatch) => {
+    try{
+        const userData = await fb.signInWithGoogle();
+        const token = await fb.getToken();
+        console.log('google auth data: ',userData);
+        dispatch(authError({}));
+    }
+    catch(e){
+        console.log('error logging in with google: ',e);
+        dispatch(authError(e));
+    }
 }
