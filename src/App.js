@@ -20,7 +20,7 @@ function App(props){
 
   let refreshInterval = null;
   let minutes = 10;
-  const [initialLoad,useSetInitialLoad] = useState(false);
+  const [initialLoad,setInitialLoad] = useState(false);
 
   
   /*
@@ -52,7 +52,7 @@ function App(props){
 
       clearInterval(refreshInterval);
   }
-  /*
+  
   useEffect(() => {
     console.log(props.location);
     const init = async () =>{
@@ -63,7 +63,7 @@ function App(props){
         let token = await fb.getToken();
         await props.dispatch(refreshAuthToken());
         startPeriodicRefresh();
-        useSetInitialLoad(false);
+        setInitialLoad(false);
       }
       catch(e){
         console.log('error: ',e);
@@ -75,9 +75,9 @@ function App(props){
       stopPeriodicRefresh()
     }
   },[]);
-  */
+  
 
-  let token = useGoogleRefresh();
+  //let token = useGoogleRefresh();
 
   let renderContent = initialLoad ?
      (<div className="App"></div>) : (
