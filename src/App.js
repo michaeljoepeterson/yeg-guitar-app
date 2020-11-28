@@ -20,7 +20,7 @@ function App(props){
 
   let refreshInterval = null;
   let minutes = 10;
-  const [initialLoad,setInitialLoad] = useState(false);
+  const [initialLoad,setInitialLoad] = useState(true);
 
   
   /*
