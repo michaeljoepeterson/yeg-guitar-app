@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from 'react';
-import {fb} from '../fb/firebase';
+import fb from '../fb/firebase';
 
-export const useGoogleRefresh = (dispatch) =>{
+export const useGoogleRefresh = (dispatch,stopRefresh) =>{
     const refreshTime = 5000;
     
     const [time,useSetTime] = useState(null);
@@ -25,9 +25,14 @@ export const useGoogleRefresh = (dispatch) =>{
 
         return() => {
             console.log('clean up refresh');
-            clearInterval(refresh);
+            if(refresh){
+                clearInterval(refresh);
+            }
         }
     },[time]);
     //return token for use if needed
+    if(stopRefresh){
+        clearInterval(refresh);
+    }
     return token;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import LandingPage from './components/landing-page';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
@@ -13,36 +13,17 @@ import TopNav from './components/navbar';
 import StudentLessonPage from './components/student-lessons-page';
 import CreateType from './components/pages/create-lesson-type';
 import fb from './fb/firebase';
+import {useGoogleRefresh} from './effects/googleSignIn';
 import './App.css';
 
-export class App extends React.Component {
+function App(props){
 
-  constructor(props) {
-    super(props);
-    this.refreshInterval = null;
-    this.minutes = 10;
-    this.state = {
-      initialLoad:true
-    }
-  }
+  let refreshInterval = null;
+  let minutes = 10;
+  const [initialLoad,useSetInitialLoad] = useState(false);
 
-  async componentDidMount(){
-    console.log(this.props.location);
-    if(this.props.location.pathname.includes('/test')){
-      this.props.dispatch(enableTestMode());
-    }
-    try{
-      let token = await fb.getToken();
-      await this.props.dispatch(refreshAuthToken());
-      this.setState({
-        initialLoad:false
-      })
-    }
-    catch(e){
-      console.log('error: ',e);
-    }
-  }
-
+  
+  /*
   componentDidUpdate(prevProps) {
     if (!prevProps.currentUser && this.props.currentUser) {
       this.startPeriodicRefresh();
@@ -54,27 +35,52 @@ export class App extends React.Component {
   componentWillUnmount() {
     this.stopPeriodicRefresh();
   }
-
-  startPeriodicRefresh() {
-    const time = this.minutes * 60 * 1000;
+  */
+  const startPeriodicRefresh = () => {
+    const time = minutes * 60 * 1000;
     //const time = 10000;
-    this.refreshInterval = setInterval(
-        () => this.props.dispatch(refreshAuthToken()),
+    refreshInterval = setInterval(
+        () => props.dispatch(refreshAuthToken()),
         time
     );
   }
 
-  stopPeriodicRefresh() {
-      if (!this.refreshInterval) {
+  const stopPeriodicRefresh = () => {
+      if (!refreshInterval) {
           return;
       }
 
-      clearInterval(this.refreshInterval);
+      clearInterval(refreshInterval);
   }
+  /*
+  useEffect(() => {
+    console.log(props.location);
+    const init = async () =>{
+      if(props.location.pathname.includes('/test')){
+        props.dispatch(enableTestMode());
+      }
+      try{
+        let token = await fb.getToken();
+        await props.dispatch(refreshAuthToken());
+        startPeriodicRefresh();
+        useSetInitialLoad(false);
+      }
+      catch(e){
+        console.log('error: ',e);
+      }
+    }
+    init();
+    return () => {
+      console.log('app clean up');
+      stopPeriodicRefresh()
+    }
+  },[]);
+  */
 
-  
-  render() {
-    let renderContent = this.state.initialLoad ? (<div className="App"></div>) : (
+  let token = useGoogleRefresh();
+
+  let renderContent = initialLoad ?
+     (<div className="App"></div>) : (
       <div className="App">
         <TopNav />
         <Route exact path="/"  render={(props) => (
@@ -114,12 +120,11 @@ export class App extends React.Component {
       </div>
     );
 
-    return (
-      <div>
-        {renderContent}
-      </div>
-    );
-  }
+  return (
+    <div>
+      {renderContent}
+    </div>
+  );
   
 }
 
