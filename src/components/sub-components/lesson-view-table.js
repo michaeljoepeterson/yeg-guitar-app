@@ -54,7 +54,16 @@ export function LessonViewTable(props){
     }
 
     const buildTable = (lessons) =>{
-
+        lessons = lessons.sort((a,b) => {
+            let dateA = new Date(a.date);
+            let dateB = new Date(b.date);
+            if(dateA < dateB){
+                return 1;
+            }
+            else{
+                return -1;
+            }
+        })
         let rows = [];
         for(let i = 0;i < lessons.length;i++){
             let lesson = lessons[i];

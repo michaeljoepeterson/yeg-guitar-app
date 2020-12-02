@@ -6,41 +6,34 @@ export let admin = 1;
 export let teacher = 2
 export let possibleLinks = [
     {
+      link:'/my-lessons',
+      display:'My Lessons',
+      level:2
+    },
+    {
         link:'/create-lesson',
         display:'New Lesson',
         level:2
     },
-    /*
     {
-        link:'/lesson-dash',
-        display:'View Lessons',
-        level:0
+      link:'/student-lessons',
+      display:'Students',
+      level:2
     },
-    */
     {
         link:'/create-student',
-        display:'Create Student',
+        display:'New Student',
         level:1
      },
      {
         link:'/create-type',
-        display:'New Class',
+        display:'New Class Type',
         level:1
-     },
-     {
-        link:'/my-lessons',
-        display:'My Lessons',
-        level:2
      },
      {
         link:'/summary',
         display:'Summary',
         level:1
-     },
-     {
-        link:'/student-lessons',
-        display:'Student Lessons',
-        level:2
      }
 ];
 

@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display';
+import LessonViewTable from './sub-components/lesson-view-table';
 import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
 import GetUrlFilters from '../HOC/get-url-filters';
