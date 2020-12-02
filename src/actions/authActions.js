@@ -72,28 +72,27 @@ export const login = (email,password) => (dispatch,getState) => {
     );
 };
 
-export const refreshAuthToken = () => (dispatch,getState) => {
+export const refreshAuthToken = () => async (dispatch,getState) => {
     //dispatch(authRequest());
-    const authToken = loadAuthToken();
     //debugger;
-    return fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${authToken}`
-        }
-    })
-    .then(res => normalizeResponseErrors(res))
-    .then(res => res.json())
-    .then(({authToken}) => {
-        //debugger;
-        //storeAuthInfo(authToken, dispatch)
-        console.log('auth token updated: ');
+    try{
+        const token = loadAuthToken();
+        let res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`
+            } 
+        })
+        res = await normalizeResponseErrors(res);
+        let resJson = await res.json();
+        let {authToken} = resJson;
         storeAuthInfo(authToken,dispatch)
-    })
-    .catch(err => {
-        dispatch(authError(err));
-        clearAuthToken(authToken);
-    });
+
+    }
+    catch(e){
+        console.log('error refreshing token: ',e);
+        dispatch(authError(e));   
+    }
 };
 
 export const enableTestMode = () => (dispatch) =>{
@@ -105,8 +104,17 @@ export const googleSignIn = () => async (dispatch) => {
     try{
         const userData = await fb.signInWithGoogle();
         const token = await fb.getToken();
-        console.log('google auth data: ',userData);
-        dispatch(authError({}));
+        //console.log('google auth data: ',userData);
+        let res = await fetch(`${API_BASE_URL}/auth/login`,{
+            method:'POST',
+            headers:{
+                authtoken:token
+            }
+        });
+        res = await normalizeResponseErrors(res);
+        let resJson = await res.json();
+        let {authToken} = resJson;
+        storeAuthInfo(authToken,dispatch)
     }
     catch(e){
         console.log('error logging in with google: ',e);
