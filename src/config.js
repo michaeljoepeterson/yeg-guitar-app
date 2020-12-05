@@ -11,9 +11,9 @@ export let possibleLinks = [
       level:2
     },
     {
-        link:'/create-lesson',
-        display:'New Lesson',
-        level:2
+      link:'/create-lesson',
+      display:'New Lesson',
+      level:2
     },
     {
       link:'/student-lessons',
@@ -21,20 +21,20 @@ export let possibleLinks = [
       level:2
     },
     {
-        link:'/create-student',
-        display:'New Student',
-        level:1
-     },
-     {
-        link:'/create-type',
-        display:'New Class Type',
-        level:1
-     },
-     {
-        link:'/summary',
-        display:'Summary',
-        level:1
-     }
+      link:'/create-student',
+      display:'New Student',
+      level:1
+    },
+    {
+      link:'/create-type',
+      display:'New Class Type',
+      level:1
+    },
+    {
+      link:'/summary',
+      display:'Summary',
+      level:1
+    }
 ];
 
 //export const API_BASE_URL = 'http://localhost:8080/api';
