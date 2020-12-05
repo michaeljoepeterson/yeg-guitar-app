@@ -53,7 +53,11 @@ export default () => Component => {
     function GetUrlFilters(props){
         const {location,...passThroughProps} = props;
         let {search} = location;
-        let mappedResults = {};
+        let mappedResults = {
+            startDate:null,
+            endDate:null,
+            teacher:null
+        };
         if(search){
             const targetParams = startDateNames.concat(endDateNames).concat(teacherNames);
             let results = targetParams.map(name => {

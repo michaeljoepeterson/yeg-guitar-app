@@ -51,12 +51,15 @@ function StudentLessonPage(props){
     useEffect(() => {
         //props.dispatch(getStudents());
         if(props.teachers.length > 0 && props.teacher){
+            //find teacher from pre populated teacher list
+            //list populated by get teacher effect in filter controls
             let foundTeacher = props.teachers.find(teacher => teacher.username === props.teacher);
-            //setTimeout(() => {
-                setTeacher(foundTeacher);
-            //},50)
+            setTeacher(foundTeacher);
         }
-    }, [props.teachers]);
+        else if(props.teachers.length > 0 && !props.teacher){
+            setTeacher(null);
+        }
+    }, [props.teachers,props.teacher]);
     return(
         <div>
             <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}studentActive={activeProp} updateStudent={updateSelectedStudent}/>

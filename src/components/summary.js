@@ -93,9 +93,9 @@ export class Summary extends React.Component{
                 dateUpdated={this.dateUpdated} target="startDate"/>
             </Grid>
         </Grid>) : null;
-
+        let filteredUsers = this.props.currentUser.level >= 2 ? this.props.users.filter(user => user.username === this.props.currentUser.username) : [...this.props.users];
         let list = this.state.selectedId ? null :(
-        <UserList summary={true} users={this.props.users}/>
+        <UserList summary={true} users={filteredUsers}/>
         );
 
         let summary = this.state.selectedId && this.state.lessonData? (

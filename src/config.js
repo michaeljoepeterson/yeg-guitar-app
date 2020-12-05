@@ -36,7 +36,7 @@ export let possibleLinks = [
     {
       link:'/summary',
       display:'Summary',
-      level:1
+      level:2
     }
 ];
 
