@@ -11,7 +11,8 @@ function FilterControls(props){
     const startDateType = 'startDate';
     const endDateType = 'endDate';
     const studentTarget = 'fullName';
-    const teacherTarget = 'username';
+    const teacherTarget = 'fullName';
+    const teacherChange = 'fullNameTeacher';
 
     const setInitialDates = () => {
         let startDate = !props.startDate ? new Date() : new Date(props.startDate);
@@ -38,24 +39,24 @@ function FilterControls(props){
         setFilters(curFilters);
     }
 
-    const filterChanged = (newVal,changeType) =>{
+    const filterChanged = (newVal,changeType,changeData) =>{
         let curFilters = {...filters};
         //console.log(newVal);
 
         try{
-            if(changeType === studentTarget){
+            if(changeData === studentTarget){
                 curFilters.studentId = newVal ? newVal.id : null;
                 curFilters.selectedStudent = newVal;
                 if(props.updateStudent){
                     props.updateStudent(newVal);
                 }
             }
-            else if(changeType === teacherTarget){
+            else if(changeData === teacherChange){
                 curFilters.teacherId = newVal ? newVal.id : null;
                 curFilters.selectedTeacher = newVal;
             }
             if(props.filterChanged){
-                props.filterChanged(newVal,changeType);
+                props.filterChanged(newVal,changeType,changeData);
             }
             setFilters(curFilters);
         }
@@ -122,10 +123,10 @@ function FilterControls(props){
     //let allStudents = props.students;
     let allTeachers = useGetTeachers(props.authToken); 
     //console.log('all teachers',allTeachers);
-    console.log('all students',allStudents)
+    console.log('all teacher ',allTeachers)
 
     const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.user.level <= 1 ? null : props.studentActive}/>) : null;
-    const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherTarget} filterChanged={filterChanged} title={"Email"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
+    const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherChange} filterChanged={filterChanged} title={"Teacher"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
         <Grid container>
             <Grid item md={3} xs={12}>

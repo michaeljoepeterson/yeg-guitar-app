@@ -34,14 +34,14 @@ function StudentLessonPage(props){
         setSelectedDate(date);
     }
 
-    const filterChanged = (newVal,changeType) =>{
+    const filterChanged = (newVal,changeType,changeData) =>{
         const studentTarget = 'fullName';
-        const teacherTarget = 'username';
+        const teacherChange = 'fullNameTeacher';
 
-        if(changeType === studentTarget){
+        if(changeData === studentTarget){
             setStudent(newVal);
         }
-        else if(changeType === teacherTarget){
+        else if(changeData === teacherChange){
             setTeacher(newVal);
         }
     }
