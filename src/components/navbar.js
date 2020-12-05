@@ -29,9 +29,16 @@ export class TopNav extends React.Component{
             let possibleLink = this.possibleLinks[i];
             let linkLevel = possibleLink.level;
             if(level <= linkLevel){
-                links.push(
-                    <Nav.Link as={Link} to={possibleLink.link} key={i}>{possibleLink.display}</Nav.Link>
-                );
+                if(!possibleLink.query){
+                    links.push(
+                        <Nav.Link as={Link} to={possibleLink.link} key={i}>{possibleLink.display}</Nav.Link>
+                    );
+                }
+                else if(possibleLink.query && possibleLink.query.name === 'teacher'){
+                    links.push(
+                        <Nav.Link  as={Link} to={possibleLink.link + `?${possibleLink.query.name}=${this.props.currentUser.username}`} key={i}>{possibleLink.display}</Nav.Link>
+                    );
+                }
             }
         }
 

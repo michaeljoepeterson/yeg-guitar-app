@@ -8,6 +8,7 @@ import FilterControls from './sub-components/filter-controls';
 import StudentDetails from './sub-components/student-details';
 import Grid from '@material-ui/core/Grid';
 import {getStudents} from '../actions/studentActions';
+import GetUrlFilters from '../HOC/get-url-filters';
 
 function StudentLessonPage(props){
     const [student,setStudent] = useState(null);
@@ -49,7 +50,13 @@ function StudentLessonPage(props){
     const activeProp = 'active';
     useEffect(() => {
         //props.dispatch(getStudents());
-    }, []);
+        if(props.teachers.length > 0 && props.teacher){
+            let foundTeacher = props.teachers.find(teacher => teacher.username === props.teacher);
+            //setTimeout(() => {
+                setTeacher(foundTeacher);
+            //},50)
+        }
+    }, [props.teachers]);
     return(
         <div>
             <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}studentActive={activeProp} updateStudent={updateSelectedStudent}/>
@@ -65,6 +72,7 @@ function StudentLessonPage(props){
 
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
-    lessons:state.lessons.lessons
+    lessons:state.lessons.lessons,
+    teachers:state.users.users
 });
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(StudentLessonPage))));
+export default GetUrlFilters()(CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(StudentLessonPage)))));

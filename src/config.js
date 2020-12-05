@@ -6,9 +6,12 @@ export let admin = 1;
 export let teacher = 2
 export let possibleLinks = [
     {
-      link:'/my-lessons',
+      link:'/student-lessons',
       display:'My Lessons',
-      level:2
+      level:2,
+      query:{
+        name:'teacher'
+      }
     },
     {
       link:'/create-lesson',

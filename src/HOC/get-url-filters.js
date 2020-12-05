@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 export default () => Component => {
     const startDateNames = ['start-date','startdate']; 
     const endDateNames = ['end-date','enddate']; 
+    const teacherNames = ['teacher','user','username']; 
 
     function parseQuery(query,name){
         let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
@@ -27,18 +28,22 @@ export default () => Component => {
     function mapResults(results){
         let mappedResults = {
             startDate:null,
-            endDate:null
+            endDate:null,
+            teacher:null
         };
         results.forEach(result => {
             let foundStartName = startDateNames.find(name => name === result.name);
             let foundEndName = endDateNames.find(name => name === result.name);
-            
+            let foundTeacherName = teacherNames.find(name => name === result.name)
             if(foundStartName){
 
                 mappedResults.startDate = isValidDate(result.result) ? result.result : null;
             }
             else if(foundEndName){
                 mappedResults.endDate = isValidDate(result.result) ? result.result : null;
+            }
+            else if(foundTeacherName){
+                mappedResults.teacher = result.result;
             }
         });
 
@@ -48,19 +53,17 @@ export default () => Component => {
     function GetUrlFilters(props){
         const {location,...passThroughProps} = props;
         let {search} = location;
-        let mappedResults = {
-            startDate:null,
-            endDate:null
-        };
+        let mappedResults = {};
         if(search){
-            const targetParams = startDateNames.concat(endDateNames);
+            const targetParams = startDateNames.concat(endDateNames).concat(teacherNames);
             let results = targetParams.map(name => {
                 return parseQuery(search,name);
             });
             results = results.filter(result => result.result);
             mappedResults = mapResults(results); 
         }
-        return <Component startDate={mappedResults.startDate} endDate={mappedResults.endDate} {...passThroughProps} />;
+        console.log('results: ',mappedResults);
+        return <Component teacher={mappedResults.teacher} startDate={mappedResults.startDate} endDate={mappedResults.endDate} {...passThroughProps} />;
     }
 
     return withRouter(GetUrlFilters);

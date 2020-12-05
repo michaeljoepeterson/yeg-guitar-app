@@ -94,8 +94,6 @@ function FilterControls(props){
         }
     },[props.students]);    
     
-    //effect to get lessons
-    useFilterLessons(filters,props.dispatch);
     //could eventually extract to cust effect?
     useEffect(() => {
         let currFilter = {...filters};
@@ -103,9 +101,11 @@ function FilterControls(props){
         currFilter.teacherId = props.teacher ? props.teacher.id : null;
         currFilter.selectedStudent = props.student;
         currFilter.selectedTeacher = props.teacher;
-        setFilters(currFilter);
-     }, [props.teacher,props.student]);
 
+        console.log('changed filter: ',props.teacher);
+        setFilters(currFilter);
+    }, [props.teacher,props.student]);
+    
     useEffect(() => {
         let currFilter = {...filters};
         if(props.selectedDate){
@@ -117,13 +117,15 @@ function FilterControls(props){
         }
         setFilters(currFilter);
     }, [props.selectedDate]);
-
-
+    
+    
     let allStudents = useGetStudents(props.authToken,props.students);
     //let allStudents = props.students;
-    let allTeachers = useGetTeachers(props.authToken); 
+    let allTeachers = useGetTeachers(props.authToken,props.dispatch); 
+    //effect to get lessons
+    useFilterLessons(filters,props.dispatch);
     //console.log('all teachers',allTeachers);
-    console.log('all teacher ',allTeachers)
+    //console.log('all teacher ',allTeachers)
 
     const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.user.level <= 1 ? null : props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherChange} filterChanged={filterChanged} title={"Teacher"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;

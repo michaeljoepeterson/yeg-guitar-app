@@ -1,6 +1,6 @@
 import React, {useEffect,useState} from 'react';
 import {getStudentsAsync} from '../actions/studentActions';
-import {getUsersAsync} from '../actions/userActions';
+import {getUsersAsync,getUserSuccess} from '../actions/userActions';
 
 export const useGetStudents =  (authToken,students) => {
     const [allStudents,setStudents] = useState([]);
@@ -8,12 +8,12 @@ export const useGetStudents =  (authToken,students) => {
     useEffect(() => {
         async function getStudents(authToken){
             try{
-                console.log('getting students======');
+                //console.log('getting students======');
                 let students = await getStudentsAsync(authToken);
                 setStudents(students);
             }
             catch(e){
-                console.log('error getting students',e);
+                console.warn('error getting students',e);
                 setStudents(null)
             }
         }
@@ -25,18 +25,21 @@ export const useGetStudents =  (authToken,students) => {
     return allStudents;
 }
 
-export const useGetTeachers =  (authToken) => {
+export const useGetTeachers =  (authToken,dispatch) => {
     const [allTeachers,setTeachers] = useState([]);
 
     useEffect(() => {
         async function getTeachers(authToken){
             try{
-                console.log('getting teacherss======');
+                //console.log('getting teacherss======');
                 let teachers = await getUsersAsync(authToken);
+                if(dispatch){
+                    await dispatch(getUserSuccess(teachers));
+                }
                 setTeachers(teachers);
             }
             catch(e){
-                console.log('error getting teachers',e);
+                console.warn('error getting teachers',e);
                 setTeachers(null)
             }
         }
