@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {logoutSession} from '../actions/authActions';
-import { Navbar,Nav,Button } from 'react-bootstrap';
+import { Navbar,Nav,Button, NavDropdown } from 'react-bootstrap';
 import {possibleLinks} from '../config';
 import './styles/navbar.css';
 //add logout functions
@@ -22,14 +22,15 @@ export class TopNav extends React.Component{
     }
 
     getNavLinks = () => {
-        console.log(this.props.currentUser);
+        //console.log(this.props.currentUser);
         let {level} = this.props.currentUser;
         let links = [];
         for(let i = 0;i < this.possibleLinks.length;i++){
             let possibleLink = this.possibleLinks[i];
             let linkLevel = possibleLink.level;
+
             if(level <= linkLevel){
-                if(!possibleLink.query){
+                if(!possibleLink.query && !possibleLink.sublinks){
                     links.push(
                         <Nav.Link as={Link} to={possibleLink.link} key={i}>{possibleLink.display}</Nav.Link>
                     );
@@ -38,6 +39,17 @@ export class TopNav extends React.Component{
                     links.push(
                         <Nav.Link  as={Link} to={possibleLink.link + `?${possibleLink.query.name}=${this.props.currentUser.username}`} key={i}>{possibleLink.display}</Nav.Link>
                     );
+                }
+                else if(possibleLink.sublinks){
+                    links.push(
+                        <NavDropdown key={possibleLink.display} title={possibleLink.display}>
+                            {
+                                possibleLink.sublinks.map(sublink => {
+                                return(<NavDropdown.Item key={sublink.link} as={Link} to={sublink.link}>{sublink.display}</NavDropdown.Item>)
+                                })
+                            }
+                        </NavDropdown>
+                    )
                 }
             }
         }

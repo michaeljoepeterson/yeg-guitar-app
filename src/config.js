@@ -24,19 +24,23 @@ export let possibleLinks = [
       level:2
     },
     {
-      link:'/create-student',
-      display:'New Student',
-      level:1
-    },
-    {
-      link:'/create-type',
-      display:'New Class Type',
-      level:1
-    },
-    {
       link:'/summary',
       display:'Summary',
       level:2
+    },
+    {
+      display:'Create',
+      level:1,
+      sublinks:[
+        {
+          link:'/create-student',
+          display:'New Student'
+        },
+        {
+          link:'/create-type',
+          display:'New Class Type'
+        }
+      ]
     }
 ];
 

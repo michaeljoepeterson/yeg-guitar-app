@@ -21,6 +21,7 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 function StudentDetails(props){
     const [studentCopy,setStudentCopy] = useState(null);
     const [isLoading,setIsLoading] = useState(false);
+    const [isExpanded,setIsExpanded] = useState(false);
 
     //const adminFields = ['firstName','lastName','active'];
     const adminFields = {
@@ -129,7 +130,7 @@ function StudentDetails(props){
                                 />
                             </Grid>
                             <Grid item xs={6} >
-                                <TextField className="notes-field" multiline label="Notes" rows="3" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
+                                <TextField className="notes-field" multiline label="Notes" rows="13" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
                             </Grid>
                             <Grid item container xs={6} >
                                 <Grid item xs={12}>
@@ -180,6 +181,11 @@ function StudentDetails(props){
             console.log('error updating student: ',e);
         }
     }
+
+    const handleExpanded = (event) => {
+        const currExpanded = isExpanded ? false : true;
+        setIsExpanded(currExpanded);
+    }
     
 
     const studentSummary = props.student ? (
@@ -205,6 +211,12 @@ function StudentDetails(props){
         else{
             setStudentCopy(null);
         }
+        if(props.student && props.student.firstName){
+            setIsExpanded(true);
+        }
+        else{
+            setIsExpanded(false);
+        }
     },[props.student]);
 
     useEffect(() => {
@@ -213,11 +225,12 @@ function StudentDetails(props){
 
     const studentDetails = buildStudentDetails();
     const updateButton = studentCopy ? (<Button  variant="contained" onClick={(e) => updateStudent()} disabled={isLoading}>Update</Button>) : null;
+
     return(
         <div>
-            <Accordion>
+            <Accordion expanded={isExpanded} onChange={(e)=> handleExpanded(e)}>
                 {studentSummary}
-                <AccordionDetails style={{flexDirection: "column"}}>
+                <AccordionDetails style={{flexDirection: "column"}} >
                     {studentDetails}
                     <div>
                         {updateButton}
