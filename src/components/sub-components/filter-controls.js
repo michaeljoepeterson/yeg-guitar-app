@@ -16,13 +16,16 @@ function FilterControls(props){
 
     const setInitialDates = () => {
         let startDate = !props.startDate ? new Date() : new Date(props.startDate);
-        startDate.setDate(startDate.getDate() + 1);
+        if(!props.startDate){
+            startDate.setDate(startDate.getDate() + 1);
+        }
         let endDate = !props.endDate ? new Date(startDate) : new Date(props.endDate);
-        endDate.setDate(endDate.getDate() + 1);
-        const defaultRange = 30;
-        endDate.setDate(endDate.getDate() - defaultRange);
+        if(!props.endDate){
+            endDate.setDate(endDate.getDate() + 1);
+            const defaultRange = 30;
+            endDate.setDate(endDate.getDate() - defaultRange);
+        }
         let dates = [startDate,endDate];
-
         return dates;
     }
 

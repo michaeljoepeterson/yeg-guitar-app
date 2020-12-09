@@ -62,7 +62,7 @@ function StudentLessonPage(props){
     }, [props.teachers,props.teacher]);
     return(
         <div>
-            <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate}studentActive={activeProp} updateStudent={updateSelectedStudent}/>
+            <FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate} studentActive={activeProp} updateStudent={updateSelectedStudent} startDate={props.endDate} endDate={props.startDate}/>
             <Grid container>
                 <Grid item md={6} xs={12}>
                     <StudentDetails student={selectedStudent}/>

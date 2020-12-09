@@ -96,7 +96,7 @@ function App(props){
           <ExampleTable key={props.match.params.pageid} {...props} />)
         } />
         <Route exact path="/my-lessons" render={(props) => (
-          <MyLessons key={props.match.params.pageid} {...props} />)
+          <StudentLessonPage key={props.match.params.pageid} {...props} />)
         } />
         <Route exact path="/create-student" render={(props) => (
           <CreateStudent key={props.match.params.pageid} {...props} />)

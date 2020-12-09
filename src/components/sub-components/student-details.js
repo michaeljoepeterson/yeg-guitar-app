@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import InputLabel from '@material-ui/core/InputLabel';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
+import './styles/student-details.css'
 
 function StudentDetails(props){
     const [studentCopy,setStudentCopy] = useState(null);
@@ -130,7 +131,7 @@ function StudentDetails(props){
                                 />
                             </Grid>
                             <Grid item xs={6} >
-                                <TextField className="notes-field" multiline label="Notes" rows="13" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
+                                <TextField className="student-notes-field" multiline label="Notes" rows="13" value={studentCopy.notes} onChange={(e) => fieldChanged(e,teacherFields.notes.value)}/>
                             </Grid>
                             <Grid item container xs={6} >
                                 <Grid item xs={12}>
