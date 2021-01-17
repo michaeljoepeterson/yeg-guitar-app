@@ -49,7 +49,7 @@ export default () => Component => {
 
         return mappedResults;
     }
-
+    
     function GetUrlFilters(props){
         const {location,...passThroughProps} = props;
         let {search} = location;

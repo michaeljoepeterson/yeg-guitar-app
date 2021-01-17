@@ -13,6 +13,7 @@ function FilterControls(props){
     const studentTarget = 'fullName';
     const teacherTarget = 'fullName';
     const teacherChange = 'fullNameTeacher';
+    
 
     const setInitialDates = () => {
         let startDate = !props.startDate ? new Date() : new Date(props.startDate);
@@ -28,6 +29,17 @@ function FilterControls(props){
         let dates = [startDate,endDate];
         return dates;
     }
+
+    const dates = setInitialDates();
+    const [filters,setFilters] = useState({
+        teacherId:props.teacher ? props.teacher.id : null,
+        studentId:props.studentId ? props.studentId : null,
+        startDate:dates[0],
+        endDate:dates[1],
+        selectedTeacher:props.teacher ? props.teacher : null,
+        selectedStudent:props.student ? props.student : null,
+        selectedDate:props.date ? props.date : null
+    });
 
     const dateUpdated = (event, dateField) => {
         let newDate = new Date(event);
@@ -69,16 +81,7 @@ function FilterControls(props){
 
     }
 
-    const dates = setInitialDates();
-    const [filters,setFilters] = useState({
-        teacherId:null,
-        studentId:props.studentId ? props.studentId : null,
-        startDate:dates[0],
-        endDate:dates[1],
-        selectedTeacher:props.teacher ? props.teacher : null,
-        selectedStudent:props.student ? props.student : null,
-        selectedDate:props.date ? props.date : null
-    });
+    
     //reset selected student when student updated
     useEffect(() => {
         try{
@@ -129,7 +132,7 @@ function FilterControls(props){
     useFilterLessons(filters,props.dispatch);
     //console.log('all teachers',allTeachers);
     //console.log('all teacher ',allTeachers)
-
+    debugger;
     const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.user.level <= 1 ? null : props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherChange} filterChanged={filterChanged} title={"Teacher"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
@@ -147,12 +150,10 @@ function FilterControls(props){
                 dateUpdated={dateUpdated} target="endDate"/>
             </Grid>
             <Grid item md={3} xs={12}>
-                <Grid item container xs={12} alignItems="center">
                     <DatePicker 
                     label="End Date" 
                     dateVal={filters.startDate} 
                     dateUpdated={dateUpdated} target="startDate"/>
-                </Grid>
             </Grid>
         </Grid>
     )

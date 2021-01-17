@@ -63,7 +63,7 @@ export class TopNav extends React.Component{
         const brand = this.props.testMode ? 'TEST' : 'EGMS';
         return(
            <div className={this.displayNav ? '' : 'hidden'}>
-            <Navbar bg="dark" expand="lg" variant="dark">
+            <Navbar bg="dark" expand="md" variant="dark">
                 <Navbar.Brand as={Link} to="/create-lesson">{brand}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">

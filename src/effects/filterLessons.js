@@ -6,7 +6,7 @@ export const useFilterLessons = (filters,dispatch) => {
     const [loading,setLoading] = useState(false);
     const [prevFilters,setPrevFilters] = useState(filters)
     useEffect(() => {
-
+        
         const diffFilters = (filters) => {
             for(let key in filters){
                 if(filters[key] !== prevFilters[key]){
@@ -18,6 +18,7 @@ export const useFilterLessons = (filters,dispatch) => {
         }
 
         const searchLesson = async() => {
+            debugger;
             setLoading(true);
             await dispatch(generalSearch(filters));
             setLoading(false);
