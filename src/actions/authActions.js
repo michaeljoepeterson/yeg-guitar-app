@@ -74,7 +74,6 @@ export const login = (email,password) => (dispatch,getState) => {
 
 export const refreshAuthToken = () => async (dispatch,getState) => {
     //dispatch(authRequest());
-    //debugger;
     try{
         const token = loadAuthToken();
         let res = await fetch(`${API_BASE_URL}/auth/refresh`, {

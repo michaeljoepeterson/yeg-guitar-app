@@ -18,7 +18,6 @@ export const useFilterLessons = (filters,dispatch) => {
         }
 
         const searchLesson = async() => {
-            debugger;
             setLoading(true);
             await dispatch(generalSearch(filters));
             setLoading(false);

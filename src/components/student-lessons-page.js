@@ -69,7 +69,7 @@ function StudentLessonPage(props){
         <div>
             {filterControls}
             <Grid container>
-                <Grid item md={6} xs={12} className={!student ? 'hide' : ''}>
+                <Grid item xs={12} className={!student ? 'hide' : ''}>
                     <StudentDetails student={selectedStudent}/>
                 </Grid>
             </Grid>
