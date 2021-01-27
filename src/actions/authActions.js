@@ -120,3 +120,48 @@ export const googleSignIn = () => async (dispatch) => {
         dispatch(authError(e));
     }
 }
+
+export const emailSignIn = (email,pass) => async (dispatch) => {
+    try{
+        const userData = await fb.signInEmail(email,pass);
+        const token = await fb.getToken();
+        //console.log('google auth data: ',userData);
+        let res = await fetch(`${API_BASE_URL}/auth/login`,{
+            method:'POST',
+            headers:{
+                authtoken:token
+            }
+        });
+        res = await normalizeResponseErrors(res);
+        let resJson = await res.json();
+        let {authToken} = resJson;
+        storeAuthInfo(authToken,dispatch)
+    }
+    catch(e){
+        console.log('error logging in with google: ',e);
+        dispatch(authError(e));
+    }
+}
+
+export const createEmailUser = (email,pass) => async (dispatch) => {
+    try{
+        const userData = await fb.createUserEmail(email,pass);
+        const token = await fb.getToken();
+        //console.log('google auth data: ',userData);
+        let res = await fetch(`${API_BASE_URL}/auth/login`,{
+            method:'POST',
+            headers:{
+                authtoken:token
+            }
+        });
+
+        res = await normalizeResponseErrors(res);
+        let resJson = await res.json();
+        return resJson;
+    }
+    catch(e){
+        console.log('error logging in with google: ',e);
+        dispatch(authError(e));
+        throw e;
+    }
+}

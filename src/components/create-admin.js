@@ -6,10 +6,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {API_BASE_URL} from '../config';
 import {normalizeResponseErrors} from '../actions/utils';
 import {Link} from 'react-router-dom';
+import {createEmailUser} from '../actions/authActions';
 import './styles/center.css';
 import './styles/login.css';
+import {connect} from 'react-redux';
 
-export default class CreateAdmin extends React.Component{
+export class CreateAdmin extends React.Component{
     
     constructor(props){
         super(props)
@@ -31,50 +33,24 @@ export default class CreateAdmin extends React.Component{
         });
     }
     //to do move to reducer
-    createAdmin = (event) =>{
+    createAdmin = async (event) =>{
         event.preventDefault();
         this.setState({
             error:null
         });
         if(this.state.pass === this.state.pass2){
-            const email = this.state.email;
-            const password = this.state.pass;
-            fetch(`${API_BASE_URL}/users`,{
-                method:'PUT',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body:JSON.stringify({
-                    email,
-                    password
-                })
-            })
-            .then(res => normalizeResponseErrors(res))
-            .then(res => res.json())
-            .then((jsonRes) => {
-                console.log(jsonRes);
-                if(jsonRes.code === 401){
-                    this.setState({
-                        error:'Admin Exists'
-                    });
-                }
-                else if(jsonRes.code === 400){
-                    this.setState({
-                        error:'Cannot update password'
-                    });
-                }
-                else{
-                    this.setState({
-                        error:'Updated Password'
-                    });
-                }
-            })
-            .catch(err => {
-                console.log('error creating admin: ',err);
+            try{
+                await this.props.dispatch(createEmailUser(this.state.email,this.state.pass));
+    
                 this.setState({
-                    error:'Creating Admin'
+                    error:'User Created'
                 });
-            })
+            }
+            catch(e){
+                this.setState({
+                    error:e.message ? e.message : 'Error creating account'
+                });
+            }
         }
         else{
             this.setState({
@@ -101,14 +77,18 @@ export default class CreateAdmin extends React.Component{
                         <div className="input-container">
                             <TextField required id="password" label="Enter Password Again" variant="outlined" type="password" helperText={this.state.error ? this.state.error : ''} onChange={(e) => this.inputChanged(e,'pass2')}/>
                         </div>
-                        <div className="input-container">
+                        <div className="input-container login-container">
                             <CircularProgress className={displayLoading ? '' : 'hidden'} />
-                            <Link to="/">
-                                <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
-                                Login
-                                </Button>
-                            </Link>
-                            <Button className={displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Update</Button>
+                            <div>
+                                <Link to="/">
+                                    <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
+                                    Login
+                                    </Button>
+                                </Link>
+                            </div>
+                            <div>
+                                <Button className={displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Create</Button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -117,3 +97,10 @@ export default class CreateAdmin extends React.Component{
         );
     }
 }
+
+const mapStateToProps = state => ({
+    currentUser: state.auth.currentUser,
+    error:state.auth.error,
+    loading:state.auth.loading
+});
+export default connect(mapStateToProps)(CreateAdmin);

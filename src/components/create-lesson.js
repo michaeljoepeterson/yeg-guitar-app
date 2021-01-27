@@ -34,7 +34,7 @@ export class CreateLesson extends React.Component{
             students:[],
             notes:'',
             date: new Date(),
-            lessonType:'Finger Style',
+            lessonType:null,
             studentCount:1,
             saved:false,
             savedMessage:'Saved',
@@ -419,7 +419,7 @@ export class CreateLesson extends React.Component{
                         <Grid item xs={12} md={6}>
                             <div className="lesson-container">
                                 <InputLabel id="lessonType">Lesson Type</InputLabel>
-                                <Select onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
+                                <Select required onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
                                     {lessonItems}
                                 </Select>
                             </div>

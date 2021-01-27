@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {login,googleSignIn} from '../actions/authActions';
+import {googleSignIn,emailSignIn} from '../actions/authActions';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -33,7 +33,7 @@ export class LoginForm extends React.Component{
         event.persist();
         event.preventDefault();
         //console.log(this.state.email,this.state.pass);
-        this.props.dispatch(login(this.state.email,this.state.pass));
+        this.props.dispatch(emailSignIn(this.state.email,this.state.pass));
         
     }
 
@@ -63,13 +63,15 @@ export class LoginForm extends React.Component{
                         <div>
                             <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="submit">Login</Button>
                         </div>
-                        {/* <Link to="/create-admin">
-                            <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
-                            Update
-                            </Button>
-                        </Link> */}
                         <div>
                             <Button onClick={(e) => this.googleSignIn()} className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary" type="button">Login With Google</Button>
+                        </div>
+                        <div>
+                            <Link to="/create-admin">
+                                <Button className={this.displayLoading ? 'hidden' : ''} variant="contained" color="primary">
+                                Create
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </form>

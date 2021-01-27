@@ -25,6 +25,10 @@
     width: 100%;
 }
 
+.login-container > div > a > button{
+    width: 100%;
+}
+
 .input-container:last-of-type{
     padding-bottom: 0;
 }
