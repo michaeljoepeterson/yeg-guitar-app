@@ -16,7 +16,7 @@ export function LessonViewTable(props){
 
 
     const setLesson = (lesson) => {
-        if(props.user.level <= 1){
+        if(props.user.level <= 1 || (props.user.id === lesson.teacher.id)){
             console.log('selected lesson: ',lesson);
             props.dispatch(setSelectedLesson(lesson));
             props.history.push(`/edit-lesson/${lesson.id}`);
