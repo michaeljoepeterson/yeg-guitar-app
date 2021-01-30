@@ -263,8 +263,10 @@ export const generalSearch = (options) => async (dispatch,getState) =>{
     let {startDate,endDate} = options;
     let filters = {...options};
     if(startDate && endDate){
-        let startString = buildDateString(startDate);
-        let endString = buildDateString(endDate);
+        startDate.setHours(23,59);
+        endDate.setHours(0,0,0,0);
+        let startString = startDate.toISOString()//buildDateString(startDate);
+        let endString = endDate.toISOString()//buildDateString(endDate);
         filters.startDate = startString;
         filters.endDate = endString;
     }
