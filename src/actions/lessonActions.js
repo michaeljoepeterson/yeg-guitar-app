@@ -200,8 +200,10 @@ export const updateLesson = (lesson) => (dispatch,getState) => {
 export const getLessonSummary = (id,startDate,endDate) => (dispatch,getState) => {
     //dispatch(getLessonRequest());
     const authToken = getState().auth.authToken;
-    let startString = buildDateString(startDate);
-    let endString = buildDateString(endDate);
+    startDate.setHours(23,59);
+    endDate.setHours(0,0,0,0);
+    let startString = startDate.toISOString();
+    let endString = endDate.toISOString();
     const query = buildQuery({id,startDate:startString,endDate:endString});
 
     let promise = new Promise((resolve,reject) => {
@@ -265,8 +267,8 @@ export const generalSearch = (options) => async (dispatch,getState) =>{
     if(startDate && endDate){
         startDate.setHours(23,59);
         endDate.setHours(0,0,0,0);
-        let startString = startDate.toISOString()//buildDateString(startDate);
-        let endString = endDate.toISOString()//buildDateString(endDate);
+        let startString = startDate.toISOString();
+        let endString = endDate.toISOString();
         filters.startDate = startString;
         filters.endDate = endString;
     }

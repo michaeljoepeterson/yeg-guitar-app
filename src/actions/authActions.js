@@ -113,6 +113,7 @@ export const googleSignIn = () => async (dispatch) => {
         res = await normalizeResponseErrors(res);
         let resJson = await res.json();
         let {authToken} = resJson;
+        debugger;
         storeAuthInfo(authToken,dispatch)
     }
     catch(e){
