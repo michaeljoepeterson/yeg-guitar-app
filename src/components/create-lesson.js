@@ -262,7 +262,7 @@ export class CreateLesson extends React.Component{
                 if(code === 200){
                     let startDate = new Date();
                     let endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + 1);
+                    //endDate.setDate(endDate.getDate() + 1);
                     let startDateString = this.buildDateString(startDate);
                     let endDateString = this.buildDateString(endDate);
                     this.props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${this.props.currentUser.username}`);
