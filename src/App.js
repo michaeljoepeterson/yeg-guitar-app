@@ -19,7 +19,7 @@ import './App.css';
 function App(props){
 
   let refreshInterval = null;
-  let minutes = 10;
+  let minutes = 240;
   const [initialLoad,setInitialLoad] = useState(true);
 
   
@@ -37,14 +37,14 @@ function App(props){
   }
   */
   const startPeriodicRefresh = () => {
-    /*
+    
     const time = minutes * 60 * 1000;
     //const time = 10000;
     refreshInterval = setInterval(
         () => props.dispatch(refreshAuthToken()),
         time
     );
-    */
+    
   }
 
   const stopPeriodicRefresh = () => {
