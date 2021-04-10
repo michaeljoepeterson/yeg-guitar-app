@@ -1,0 +1,18 @@
+.users-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.users-container > ul{
+    width:50%;
+}
+
+.users-container > ul > div{
+    text-align: center;
+}
+
+.hours-table{
+    max-width:70% !important;
+    margin:auto !important;
+}
