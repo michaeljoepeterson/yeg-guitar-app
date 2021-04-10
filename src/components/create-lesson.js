@@ -21,7 +21,9 @@ import SimpleModal from './sub-components/simple-modal';
 import LessonDisplay from './sub-components/lesson-display';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterControl from './sub-components/filter-control';
+import { Lesson } from '../models/lesson';
 import './styles/create-lesson.css';
+import { Student } from '../models/student';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -30,11 +32,15 @@ export class CreateLesson extends React.Component{
         this.studentModal = 'studentModalOpen';
         this.studentTarget = 'fullName';
         this.state = {
+            lesson:new Lesson({
+                teacher:this.props.currentUser.id,
+                date:new Date()
+            }),
             teacher:this.props.currentUser.id,
             students:[],
             notes:'',
             date: new Date(),
-            lessonType:null,
+            lessonType:'',
             studentCount:1,
             saved:false,
             savedMessage:'Saved',
@@ -49,11 +55,14 @@ export class CreateLesson extends React.Component{
         try{
             await this.props.dispatch(getLessonTypes());
             await this.props.dispatch(getStudents())
-            let currentStudents = [...this.state.students];
+            let currentStudents = this.state.students.map(student => new Student(student));
             let firstStudent = this.props.students.find(student => student.active);
-            currentStudents.push(firstStudent);
+            currentStudents.push(new Student(firstStudent));
+            let lesson = new Lesson(this.state.lesson);
+            lesson.students = currentStudents.map(student => new Student(student));
             this.setState({
-                students:currentStudents
+                students:currentStudents,
+                lesson
             },() => {
                 this.checkSelectedLesson()
             });
@@ -61,28 +70,6 @@ export class CreateLesson extends React.Component{
         catch(e){
             
         }
-        /*
-        .then(response => {
-        })
-
-        .then(response => {
-            let currentStudents = [...this.state.students];
-            currentStudents.push(this.props.students[0]);
-            this.setState({
-                students:currentStudents
-            },() => {
-                this.checkSelectedLesson()
-            });
-        })
-
-        .catch(err => {
-
-        });
-        */
-    }
-
-    componentWillUnmount(){
-        //this.props.dispatch(setSelectedLesson(null));
     }
 
     checkEditMode = () => {
@@ -94,14 +81,24 @@ export class CreateLesson extends React.Component{
         let isEdit = this.checkEditMode();
         if(this.props.selectedLesson && isEdit){
             let selectedLesson = this.props.selectedLesson;
+            let lessonData = {
+                students:selectedLesson.students,
+                notes:selectedLesson.notes,
+                date: new Date(selectedLesson.date),
+                lessonType:selectedLesson.lessonType,
+                time: new Date(selectedLesson.date)
+            };
+            let lesson = new Lesson(lessonData);
+            lesson.teacher = selectedLesson.teacher.id;
             this.setState({
-                teacher:selectedLesson.teacher._id,
+                teacher:selectedLesson.teacher.id,
                 students:selectedLesson.students,
                 notes:selectedLesson.notes,
                 date: new Date(selectedLesson.date),
                 lessonType:selectedLesson.lessonType,
                 studentCount:selectedLesson.students.length,
-                time: new Date(selectedLesson.date)
+                time: new Date(selectedLesson.date),
+                lesson
             });
         }
     }
@@ -109,8 +106,11 @@ export class CreateLesson extends React.Component{
     fieldChanged = (event,field) => {
         event.persist();
         let value = event.target.value;
+        let lesson = new Lesson(this.state.lesson);
+        lesson[field] = value;
         this.setState({
-            [field]:value
+            [field]:value,
+            lesson
         });
     }
 
@@ -126,9 +126,11 @@ export class CreateLesson extends React.Component{
             let selectedStudent = this.findStudent(value.id);
             let newStudent = {...selectedStudent};
             students[index] = newStudent;
-    
+            let lesson = new Lesson(this.state.lesson);
+            lesson.students = students.map(student => new Student(student));
             this.setState({
-                students
+                students,
+                lesson
             });
         }
     }
@@ -200,25 +202,30 @@ export class CreateLesson extends React.Component{
 
     addStudent = () => {
         const studentCount = this.state.studentCount + 1;
-        const blankStudent = {
+        const blankStudent = new Student ({
             id:this.props.students[0].id,
             fullName:this.props.students[0].fullName
-        };
+        });
         let students = [...this.state.students];
         students.push(blankStudent);
+        let lesson = new Lesson(this.state.lesson);
+        lesson.students = students.map(student => new Student(student));
         this.setState({
             studentCount,
-            students
+            students,
+            lesson
         });
     }
 
     removeStudent = (index) => {
         const studentCount = this.state.studentCount - 1;
         let students = this.state.students.filter((student,i) => i !== index);
-
+        let lesson = new Lesson(this.state.lesson);
+        lesson.students = students.map(student => new Student(student));
         this.setState({
             studentCount,
-            students
+            students,
+            lesson
         });
     }
 
@@ -266,12 +273,6 @@ export class CreateLesson extends React.Component{
                     let startDateString = this.buildDateString(startDate);
                     let endDateString = this.buildDateString(endDate);
                     this.props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${this.props.currentUser.username}`);
-                    /*
-                    this.setState({
-                        saved:true,
-                        savedMessage:'Lesson Saved!'
-                    });
-                    */
                 }
                 else{
                     this.setState({
@@ -309,7 +310,7 @@ export class CreateLesson extends React.Component{
                     });
                 }
                 else{
-                    console.log(res)
+                    //console.log(res)
                     this.setState({
                         saved:true,
                         savedMessage:'Error updating lesson'
@@ -332,15 +333,21 @@ export class CreateLesson extends React.Component{
 
     handleDateChange = (event) =>{
         let date = new Date(event);
+        let lesson = new Lesson(this.state.lesson);
+        lesson.date = date;
         this.setState({
-            date
+            date,
+            lesson
         });
     }
 
     handleTimeChange = (event) =>{
         let time = new Date(event);
+        let lesson = new Lesson(this.state.lesson);
+        lesson.time = time;
         this.setState({
-            time
+            time,
+            lesson
         });
     }
 
@@ -373,7 +380,7 @@ export class CreateLesson extends React.Component{
     }
 
     render(){
-        console.log(this.props);
+        console.log(this.state);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.props.students.length > 0 && this.state.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay studentLessons={this.props.studentLessons}/>) : null;
