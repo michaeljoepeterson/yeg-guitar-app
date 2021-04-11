@@ -2,7 +2,7 @@ import { BaseClass } from "./baseClass";
 
 export class Student extends BaseClass{
     active = null;
-    category = [];
+    category = [''];
     firstName = '';
     lastName = '';
     fullName = '';

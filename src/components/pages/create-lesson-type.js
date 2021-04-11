@@ -11,14 +11,12 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import SnackbarWrapper from '../snackbar-wrapper';
 import Typography from '@material-ui/core/Typography';
+import { LessonType } from '../../models/lesson-type';
 
 import '../styles/create-lesson.css';
 
 function CreateType(props){
-    const [type,setType] = useState({
-        name:'',
-        active:true
-    });
+    const [type,setType] = useState(new LessonType());
 
     const [snackBarData,setSnackBar] = useState({
         saved:false,
