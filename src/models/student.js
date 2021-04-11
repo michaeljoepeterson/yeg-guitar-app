@@ -1,7 +1,7 @@
 import { BaseClass } from "./baseClass";
 
 export class Student extends BaseClass{
-    active = null;
+    active = true;
     category = [''];
     firstName = '';
     lastName = '';
@@ -14,5 +14,16 @@ export class Student extends BaseClass{
         if(data){
             this.mapData(data);
         }
+    }
+
+    getReq(){
+        const student = {
+            firstName:this.firstName,
+            lastName:this.lastName,
+            category:this.category,
+            active:this.active
+        };
+
+        return student
     }
 }
