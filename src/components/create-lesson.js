@@ -36,15 +36,9 @@ export class CreateLesson extends React.Component{
                 teacher:this.props.currentUser.id,
                 date:new Date()
             }),
-            teacher:this.props.currentUser.id,
-            students:[],
-            notes:'',
-            date: new Date(),
-            lessonType:'',
             studentCount:1,
             saved:false,
             savedMessage:'Saved',
-            time:null,
             modalOpen:false,
             modalMessage:'Are you sure you want to create a class with no students?',
             studentModalOpen:false
@@ -55,7 +49,7 @@ export class CreateLesson extends React.Component{
         try{
             await this.props.dispatch(getLessonTypes());
             await this.props.dispatch(getStudents())
-            let currentStudents = this.state.students.map(student => new Student(student));
+            let currentStudents = this.state.lesson.students.map(student => new Student(student));
             let firstStudent = this.props.students.find(student => student.active);
             currentStudents.push(new Student(firstStudent));
             let lesson = new Lesson(this.state.lesson);
@@ -75,9 +69,10 @@ export class CreateLesson extends React.Component{
     checkEditMode = () => {
         return !this.props.location.pathname.includes(this.createPath);
     }
-
+    /**
+     * check against a selected lesson and assign it to the lesson
+     */
     checkSelectedLesson = () =>{
-        //console.log(this.props.selectedLesson);
         let isEdit = this.checkEditMode();
         if(this.props.selectedLesson && isEdit){
             let selectedLesson = this.props.selectedLesson;
@@ -86,18 +81,13 @@ export class CreateLesson extends React.Component{
                 notes:selectedLesson.notes,
                 date: new Date(selectedLesson.date),
                 lessonType:selectedLesson.lessonType,
-                time: new Date(selectedLesson.date)
+                time: new Date(selectedLesson.date),
+                id:this.props.selectedLesson.id
             };
             let lesson = new Lesson(lessonData);
             lesson.teacher = selectedLesson.teacher.id;
             this.setState({
-                teacher:selectedLesson.teacher.id,
-                students:selectedLesson.students,
-                notes:selectedLesson.notes,
-                date: new Date(selectedLesson.date),
-                lessonType:selectedLesson.lessonType,
                 studentCount:selectedLesson.students.length,
-                time: new Date(selectedLesson.date),
                 lesson
             });
         }
@@ -122,7 +112,7 @@ export class CreateLesson extends React.Component{
         //event.persist();
         if(event && event.id){
             let value = event;
-            let students = [...this.state.students];
+            let students = [...this.state.lesson.students];
             let selectedStudent = this.findStudent(value.id);
             let newStudent = {...selectedStudent};
             students[index] = newStudent;
@@ -152,10 +142,10 @@ export class CreateLesson extends React.Component{
         const activeProp = 'active';
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
-                <Grid className="student-row" item xs={12} md={6} xl={4} key={this.state.students[i].id + i}>
+                <Grid className="student-row" item xs={12} md={6} xl={4} key={this.state.lesson.students[i].id + i}>
                     <div className="filter-container-lesson">
                         <Tooltip title="See Previous Lessons">
-                            <IconButton onClick={(e) => this.getStudentLessons(this.state.students[i].id)} aria-label="student lessons">
+                            <IconButton onClick={(e) => this.getStudentLessons(this.state.lesson.students[i].id)} aria-label="student lessons">
                                 <Help/>
                             </IconButton>
                         </Tooltip>
@@ -165,7 +155,7 @@ export class CreateLesson extends React.Component{
                         changeData={i} 
                         filterChanged={this.studentChanged} 
                         title={"Name"} 
-                        value={this.state.students[i] ? this.state.students[i] : null }
+                        value={this.state.lesson.students[i] ? this.state.lesson.students[i] : null }
                         ignoreEmpty={true}
                         activeProp={activeProp}/>
                         <Tooltip title="Remove Student">
@@ -206,7 +196,7 @@ export class CreateLesson extends React.Component{
             id:this.props.students[0].id,
             fullName:this.props.students[0].fullName
         });
-        let students = [...this.state.students];
+        let students = [...this.state.lesson.students];
         students.push(blankStudent);
         let lesson = new Lesson(this.state.lesson);
         lesson.students = students.map(student => new Student(student));
@@ -219,7 +209,7 @@ export class CreateLesson extends React.Component{
 
     removeStudent = (index) => {
         const studentCount = this.state.studentCount - 1;
-        let students = this.state.students.filter((student,i) => i !== index);
+        let students = this.state.lesson.students.filter((student,i) => i !== index);
         let lesson = new Lesson(this.state.lesson);
         lesson.students = students.map(student => new Student(student));
         this.setState({
@@ -232,13 +222,18 @@ export class CreateLesson extends React.Component{
     buildDateString = (date) =>{
         return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     }
-
+    /**
+     * 
+     * @param {*} event 
+     * @param {*} checkedModal 
+     * @returns 
+     */
     saveLesson = (event,checkedModal) => {
         if(event){
             event.persist();
             event.preventDefault();
         }
-        if(!checkedModal && this.state.students.length === 0){
+        if(!checkedModal && this.state.lesson.students.length === 0){
             this.setState({
                 modalOpen:true
             });
@@ -248,15 +243,7 @@ export class CreateLesson extends React.Component{
             modalOpen:false
         });
         let isEdit = this.checkEditMode();
-        let dateTime  = new Date(this.state.date.getFullYear(), this.state.date.getMonth(), this.state.date.getDate(), this.state.time.getHours(), this.state.time.getMinutes(),0); 
-        
-        const lesson = {
-            date:dateTime,
-            lessonType:this.state.lessonType,
-            notes:this.state.notes,
-            teacher:this.state.teacher,
-            students:this.state.students.map(student => student.id)
-        }
+        const lesson = this.state.lesson.getReq();
         if(!isEdit){
         
             //console.log(lesson);
@@ -269,7 +256,6 @@ export class CreateLesson extends React.Component{
                 if(code === 200){
                     let startDate = new Date();
                     let endDate = new Date(startDate);
-                    //endDate.setDate(endDate.getDate() + 1);
                     let startDateString = this.buildDateString(startDate);
                     let endDateString = this.buildDateString(endDate);
                     this.props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${this.props.currentUser.username}`);
@@ -286,17 +272,9 @@ export class CreateLesson extends React.Component{
                 console.log(err);
             });
         }
+        //update
         else{
-            const lesson = {
-                date:dateTime,
-                lessonType:this.state.lessonType,
-                notes:this.state.notes,
-                teacher:this.state.teacher,
-                students:this.state.students.map(student => student.id),
-                id:this.props.selectedLesson.id
-            }
-
-            //console.log(lesson);
+            const lesson = this.state.lesson.getReq();
 
             this.props.dispatch(updateLesson(lesson))
 
@@ -382,7 +360,7 @@ export class CreateLesson extends React.Component{
     render(){
         console.log(this.state);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
-        let studentItems = this.props.students && this.props.students.length > 0 && this.state.students.length > 0 ? this.buildStudentSelect() : [];
+        let studentItems = this.props.students && this.props.students.length > 0 && this.state.lesson.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay studentLessons={this.props.studentLessons}/>) : null;
         
         return(
@@ -396,7 +374,7 @@ export class CreateLesson extends React.Component{
                                 id="date-picker-dialog"
                                 label="Lesson Date"
                                 format="MM/dd/yyyy"
-                                value={this.state.date}
+                                value={this.state.lesson.date}
                                 onChange={this.handleDateChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
@@ -411,7 +389,7 @@ export class CreateLesson extends React.Component{
                             margin="normal"
                             id="time-picker"
                             label="Lesson Time"
-                            value={this.state.time}
+                            value={this.state.lesson.time}
                             onChange={this.handleTimeChange}
                             KeyboardButtonProps={{
                                 'aria-label': 'change time',
@@ -421,12 +399,12 @@ export class CreateLesson extends React.Component{
                         </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
+                            <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.lesson.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <div className="lesson-container">
                                 <InputLabel id="lessonType">Lesson Type</InputLabel>
-                                <Select required onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lessonType}>
+                                <Select required onChange={(e) => this.fieldChanged(e,'lessonType')} id="lessonType" value={this.state.lesson.lessonType}>
                                     {lessonItems}
                                 </Select>
                             </div>

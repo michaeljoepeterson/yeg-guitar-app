@@ -2,7 +2,7 @@ import { BaseClass } from "./baseClass";
 
 export class Lesson extends BaseClass{
     date = null;
-    type = null;
+    lessonType = null;
     notes = '';
     students = [];
     teacher = null;
