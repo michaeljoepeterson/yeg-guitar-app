@@ -9,11 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {setSelectedLesson} from '../../actions/lessonActions';
-
+import { Lesson } from '../../models/lesson';
 
 export function LessonViewTable(props){
-
-
 
     const setLesson = (lesson) => {
         if(props.user.level <= 1 || (props.user.id === lesson.teacher.id)){
@@ -53,7 +51,8 @@ export function LessonViewTable(props){
         }
     }
 
-    const buildTable = (lessons) =>{
+    const buildTable = (passedLessons) =>{
+        let lessons = passedLessons.map(lesson => new Lesson(lesson));
         lessons = lessons.sort((a,b) => {
             let dateA = new Date(a.date);
             let dateB = new Date(b.date);

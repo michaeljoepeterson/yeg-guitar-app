@@ -48,15 +48,7 @@ export class LessonDisplay extends React.Component{
         for(let i = 0;i < lessons.length;i++){
             let lesson = lessons[i];
             let studentSpans = this.buildStudentSpans(lesson.students);
-            /*
-            for(let k = 0;k < lesson.students.length;k++){
-                let student = lesson.students[k];
-                studentString += student.firstName + ' ' + student.lastName;
-                if(k !== lesson.students.length - 1){
-                    studentString += ',';
-                } 
-            }
-            */
+
             let date = new Date(lesson.date);
             let row = this.props.editable ? (
                 <TableRow className="clickable" key={i} onClick={(e) => this.setSelectedLesson(lesson)}>

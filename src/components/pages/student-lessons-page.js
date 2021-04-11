@@ -1,15 +1,15 @@
 import React, { useState,useEffect  } from 'react';
-import requiresLogin from '../HOC/requires-login';
-import CheckPermission from '../HOC/check-permission';
+import requiresLogin from '../../HOC/requires-login';
+import CheckPermission from '../../HOC/check-permission';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import LessonViewTable from './sub-components/lesson-view-table';
-import FilterControls from './sub-components/filter-controls';
-import StudentDetails from './sub-components/student-details';
+import LessonViewTable from '../sub-components/lesson-view-table';
+import FilterControls from '../sub-components/filter-controls';
+import StudentDetails from '../sub-components/student-details';
 import Grid from '@material-ui/core/Grid';
-import {getStudents} from '../actions/studentActions';
-import GetUrlFilters from '../HOC/get-url-filters';
-import {useGetTeachers} from '../effects/getData';
+import {getStudents} from '../../actions/studentActions';
+import GetUrlFilters from '../../HOC/get-url-filters';
+import {useGetTeachers} from '../../effects/getData';
 
 function StudentLessonPage(props){
     const [student,setStudent] = useState(null);
@@ -17,8 +17,6 @@ function StudentLessonPage(props){
     const [selectedDate,setSelectedDate] = useState(null);
     const [selectedStudent,setSelectedStudent] = useState(null);
     const [initialLoad,setInitialLoad] = useState(true);
-
-    console.log('rerendered page');
 
     const teacherClicked = (teacher) =>{
         setTeacher(teacher); 

@@ -13,7 +13,6 @@ import SnackbarWrapper from '../snackbar-wrapper';
 import Typography from '@material-ui/core/Typography';
 
 import '../styles/create-lesson.css';
-import { fromUnixTime } from 'date-fns/esm';
 
 function CreateType(props){
     const [type,setType] = useState({

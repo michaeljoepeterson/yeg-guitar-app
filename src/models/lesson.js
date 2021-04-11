@@ -1,8 +1,11 @@
 import { BaseClass } from "./baseClass";
-
+/**
+ * @Lesson
+ * props:
+ */
 export class Lesson extends BaseClass{
     date = null;
-    lessonType = null;
+    lessonType = '';
     notes = '';
     students = [];
     teacher = null;

@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import { MenuItem, Icon } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
