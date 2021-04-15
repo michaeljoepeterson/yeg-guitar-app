@@ -1,0 +1,12 @@
+/* .notes > div > div > .ck-editor__editable_inline {
+    transition: all 400ms;
+} */
+
+.notes > div > div > .ck-editor__editable_inline {
+    max-height: 150px;
+}
+
+/* tr.hovered >  td > .notes > div > div > .ck-editor__editable_inline{
+    max-height: 200px;
+    height: 200px;
+} */

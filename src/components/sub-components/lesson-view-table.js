@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,13 @@ import Paper from '@material-ui/core/Paper';
 import {setSelectedLesson} from '../../actions/lessonActions';
 import { Lesson } from '../../models/lesson';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import './styles/table-styles.css';
+
 export function LessonViewTable(props){
+
+    const [hoveredRow,setHoveredRow] = useState(null)
 
     const setLesson = (lesson) => {
         if(props.user.level <= 1 || (props.user.id === lesson.teacher.id)){
@@ -51,6 +57,15 @@ export function LessonViewTable(props){
         }
     }
 
+    const enterRow = (row) => {
+        console.log('row entered');
+        setHoveredRow(row);
+    }
+
+    const exitRow = () => {
+        setHoveredRow(null);
+    }
+
     const buildTable = (passedLessons) =>{
         let lessons = passedLessons.map(lesson => new Lesson(lesson));
         lessons = lessons.sort((a,b) => {
@@ -69,15 +84,31 @@ export function LessonViewTable(props){
             let studentSpans = buildStudentSpans(lesson.students);
 
             let date = new Date(lesson.date);
+            let classes = "clickable";
+            if(i === hoveredRow){
+                classes += ' hovered';
+            }
             let row =  (
-                <TableRow className="clickable" key={lesson.notes + i}>
+                <TableRow className={classes} key={lesson.notes + i}>
                     <TableCell component="th" scope="row" onClick={(e)=> dateClicked(date)}>
                         {date.toDateString() + ' : ' + date.toLocaleTimeString()}
                     </TableCell>
-                    <TableCell align="right">{lesson.lessonType}</TableCell>
-                    <TableCell align="right" onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell>
-                    <TableCell align="right">{studentSpans}</TableCell>
-                    <TableCell align="right" onClick={(e) => teacherClicked(lesson.teacher)}>{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
+                    <TableCell>{lesson.lessonType}</TableCell>
+                    {/* <TableCell onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell> */}
+                    <TableCell onClick={(e) => setLesson(lesson)}>
+                        <div className="notes">
+                            <CKEditor
+                                editor={ ClassicEditor }
+                                data={lesson.notes}
+                                disabled={true}
+                                config={{
+                                    toolbar:[]
+                                }}
+                            />
+                        </div>
+                    </TableCell>
+                    <TableCell>{studentSpans}</TableCell>
+                    <TableCell onClick={(e) => teacherClicked(lesson.teacher)}>{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
                 </TableRow>
             );
             rows.push(
@@ -90,10 +121,10 @@ export function LessonViewTable(props){
                 <TableHead>
                 <TableRow>
                     <TableCell>Date</TableCell>
-                    <TableCell align="right">Lesson Type</TableCell>
-                    <TableCell align="right">Notes</TableCell>
-                    <TableCell align="right">Students</TableCell>
-                    <TableCell align="right">Teacher</TableCell>
+                    <TableCell>Lesson Type</TableCell>
+                    <TableCell>Notes</TableCell>
+                    <TableCell>Students</TableCell>
+                    <TableCell>Teacher</TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>

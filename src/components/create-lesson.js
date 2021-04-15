@@ -23,7 +23,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FilterControl from './sub-components/filter-control';
 import { Lesson } from '../models/lesson';
 import './styles/create-lesson.css';
+
 import { Student } from '../models/student';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -31,6 +34,7 @@ export class CreateLesson extends React.Component{
         this.createPath = 'create-lesson';
         this.studentModal = 'studentModalOpen';
         this.studentTarget = 'fullName';
+        
         this.state = {
             lesson:new Lesson({
                 teacher:this.props.currentUser.id,
@@ -100,6 +104,14 @@ export class CreateLesson extends React.Component{
         lesson[field] = value;
         this.setState({
             [field]:value,
+            lesson
+        });
+    }
+
+    descriptionUpdated = (text) => {
+        let lesson = new Lesson(this.state.lesson);
+        lesson.notes = text;
+        this.setState({
             lesson
         });
     }
@@ -399,7 +411,22 @@ export class CreateLesson extends React.Component{
                         </MuiPickersUtilsProvider>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.lesson.notes} onChange={(e) => this.fieldChanged(e,'notes')}/>
+                            {/* <TextField required className="notes-field" label="Notes" id="notes" multiline rows="5" value={this.state.lesson.notes} onChange={(e) => this.fieldChanged(e,'notes')}/> */}
+                            <div className="text-editor">
+                                <CKEditor
+                                    editor={ ClassicEditor }
+                                    data={this.state.lesson.notes}
+                                    onReady={ editor => {
+                                        
+                                    } }
+                                    onChange={ ( event, editor ) => {
+                                        const data = editor.getData();
+                                        console.log( { event, editor, data } );
+                                        this.descriptionUpdated(data);
+                                    } }
+                                />
+                            </div>
+
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <div className="lesson-container">
