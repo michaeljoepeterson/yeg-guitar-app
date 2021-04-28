@@ -7,13 +7,11 @@ import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/lesson-dash';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
-import MyLessons from './components/my-lessons';
 import Summary from './components/summary';
 import TopNav from './components/navbar';
-import StudentLessonPage from './components/student-lessons-page';
+import StudentLessonPage from './components/pages/student-lessons-page';
 import CreateType from './components/pages/create-lesson-type';
 import fb from './fb/firebase';
-import {useGoogleRefresh} from './effects/googleSignIn';
 import './App.css';
 
 function App(props){
@@ -62,7 +60,7 @@ function App(props){
         props.dispatch(enableTestMode());
       }
       try{
-        let token = await fb.getToken();
+        await fb.getToken();
         await props.dispatch(refreshAuthToken());
         startPeriodicRefresh();
         setInitialLoad(false);

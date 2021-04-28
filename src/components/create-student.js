@@ -18,6 +18,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Student } from '../models/student';
 
 import './styles/create-student.css';
 import './styles/create-lesson.css';
@@ -27,10 +28,7 @@ export class CreateStudent extends React.Component{
         super(props);
         this.state = {
             //categrories for the student
-            categories:[''],
-            firstName:'',
-            lastName:'',
-            category:'',
+            student:new Student(),
             saved:false,
             savedMessage:'Saved',
             categoryCount:1,
@@ -45,15 +43,19 @@ export class CreateStudent extends React.Component{
     fieldChanged = (event,field) => {
         event.persist();
         let value = event.target.value;
+        let student = new Student(this.state.student);
+        student[field] = value;
         this.setState({
-            [field]:value
+            [field]:value,
+            student
         });
     }
 
     categoryChanged = (event,index) => {
         event.persist();
         let value = event.target.value;
-        let categories = [...this.state.categories];
+        let categories = [...this.state.student.category];
+        
         categories = categories.map((category,i) => {
             if(i === index){
                 return value;
@@ -62,8 +64,11 @@ export class CreateStudent extends React.Component{
                 return category
             }
         });
+        let student = new Student(this.state.student);
+        student.category = [...categories];
         this.setState({
-            categories
+            categories,
+            student
         });
     }
 
@@ -78,18 +83,15 @@ export class CreateStudent extends React.Component{
         }
         let selects = [];
         for(let i = 0;i < this.state.categoryCount;i++){
-            let value = this.state.categories[i] ? this.state.categories[i] : '';
             selects.push(
                 <Grid className="student-row" item xs={12} md={3} key={i}>
-                    <Select onChange={(e) => this.categoryChanged(e,i)} value={this.state.categories[i]} >{categoryItems}</Select>
+                    <Select onChange={(e) => this.categoryChanged(e,i)} value={this.state.student.category[i]} >{categoryItems}</Select>
                     <IconButton onClick={(e) => this.removeCategory(i)} aria-label="remove student">
                         <CancelOutlinedIcon/>
                     </IconButton>
                 </Grid>
             )
         }
-
-        //let categorySelect = (<Select onChange={(e) => this.fieldChanged(e,'category')} value={this.state.category} >{categoryItems}</Select>);
 
         let finalSelect = [];
         finalSelect.push(
@@ -104,14 +106,7 @@ export class CreateStudent extends React.Component{
     saveStudent = (event) =>{
         event.persist();
         event.preventDefault();
-
-        const student = {
-            firstName:this.state.firstName,
-            lastName:this.state.lastName,
-            category:this.state.categories,
-            active:this.state.active
-        };
-        //console.log(this.props.currentUser);
+        const student = this.state.student.getReq();
         this.props.dispatch(createStudent(student,this.props.currentUser.level))
 
         .then(res => {
@@ -144,8 +139,10 @@ export class CreateStudent extends React.Component{
 
     addCategory = () =>{
         const categoryCount = this.state.categoryCount + 1;
-        let categories = [...this.state.categories];
+        let categories = [...this.state.student.category];
         categories.push('');
+        let student = new Student(this.state.student);
+        student.category = [...categories];
         this.setState({
             categoryCount,
             categories
@@ -154,7 +151,9 @@ export class CreateStudent extends React.Component{
 
     removeCategory = (index) =>{
         const categoryCount = this.state.categoryCount - 1;
-        const categories = this.state.categories.filter((category,i) => index !== i);
+        const categories = this.state.student.category.filter((category,i) => index !== i);
+        let student = new Student(this.state.student);
+        student.category = [...categories];
         this.setState({
             categoryCount,
             categories
@@ -162,15 +161,16 @@ export class CreateStudent extends React.Component{
     }
 
     setActive = (event) =>{
+        let student = new Student(this.state.student);
+        student.active = event.target.checked;
         this.setState({
-            active:event.target.checked
+            active:event.target.checked,
+            student
         });
     }
 
-    render(){
-        
-        // console.log(this.state);
-        // console.log(this.props.categories);
+    render(){     
+        console.log(this.state);
 
         let categories = this.props.categories ? this.buildCategorySelect(this.props.categories) : [];
         return(
@@ -183,7 +183,7 @@ export class CreateStudent extends React.Component{
                                 <FormControlLabel
                                     control={
                                     <Switch
-                                        checked={this.state.active}
+                                        checked={this.state.student.active}
                                         onChange={this.setActive}
                                         name="active"
                                         color="primary"
@@ -195,12 +195,12 @@ export class CreateStudent extends React.Component{
                         </Grid>
                         <Grid item xs={12} md={3}>
                             <div className="lesson-container">
-                                <TextField required label="First Name" id="firstName" value={this.state.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
+                                <TextField required label="First Name" id="firstName" value={this.state.student.firstName} onChange={(e) => this.fieldChanged(e,'firstName')}/>
                             </div>
                         </Grid>
                         <Grid item xs={12} md={3}>
                             <div className="lesson-container">
-                                <TextField required label="Last Name" id="lastName" value={this.state.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
+                                <TextField required label="Last Name" id="lastName" value={this.state.student.lastName} onChange={(e) => this.fieldChanged(e,'lastName')}/>
                             </div>       
                         </Grid>
                         <Grid item xs={12} md={3}>

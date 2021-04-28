@@ -31,6 +31,18 @@ div > .notes-field{
     padding: 0.2em;
 }
 
+.text-editor{
+    width: 60%;
+    margin: auto;
+    padding-bottom: 2em;
+    padding-top: 2em;
+}
+
+.text-editor > div > div > .ck-editor__editable_inline {
+    min-height: 200px;
+    max-height: 350px;
+}
+
 @media (min-width: 960px) {
     .lesson-container{
         margin-top: 2.5em;
