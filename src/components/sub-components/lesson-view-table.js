@@ -23,7 +23,16 @@ export function LessonViewTable(props){
     const [page, setPage] = useState(0);
     const [resultNum, setresultNum] = useState(30);
     const pager = new Pager({
-        items:props.lessons,
+        items:props.lessons.sort((a,b) => {
+            let dateA = new Date(a.date);
+            let dateB = new Date(b.date);
+            if(dateA < dateB){
+                return 1;
+            }
+            else{
+                return -1;
+            }
+        }),
         resultPerPage:resultNum
     });
     const rowsPerPage = [10,20,30,50,70,100];
@@ -87,16 +96,6 @@ export function LessonViewTable(props){
 
     const buildTable = (passedLessons) =>{
         let lessons = passedLessons.map(lesson => new Lesson(lesson));
-        lessons = lessons.sort((a,b) => {
-            let dateA = new Date(a.date);
-            let dateB = new Date(b.date);
-            if(dateA < dateB){
-                return 1;
-            }
-            else{
-                return -1;
-            }
-        })
         let rows = [];
         for(let i = 0;i < lessons.length;i++){
             let lesson = lessons[i];
