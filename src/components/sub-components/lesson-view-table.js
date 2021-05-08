@@ -16,10 +16,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import TablePagination from '@material-ui/core/TablePagination';
 import {Pager} from '../../helpers/pager';
 import './styles/table-styles.css';
+import parse from 'html-react-parser';
 
 export function LessonViewTable(props){
 
-    const [hoveredRow,setHoveredRow] = useState(null);
     const [page, setPage] = useState(0);
     const [resultNum, setresultNum] = useState(30);
     const pager = new Pager({
@@ -75,16 +75,7 @@ export function LessonViewTable(props){
             props.teacherClicked(teacher);
         }
     };
-    /*
-    const enterRow = (row) => {
-        console.log('row entered');
-        setHoveredRow(row);
-    };
 
-    const exitRow = () => {
-        setHoveredRow(null);
-    };
-    */
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -103,9 +94,7 @@ export function LessonViewTable(props){
 
             let date = new Date(lesson.date);
             let classes = "clickable";
-            if(i === hoveredRow){
-                classes += ' hovered';
-            }
+     
             let row =  (
                 <TableRow className={classes} key={lesson.notes + i}>
                     <TableCell component="th" scope="row" onClick={(e)=> dateClicked(date)}>
@@ -115,14 +104,7 @@ export function LessonViewTable(props){
                     {/* <TableCell onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell> */}
                     <TableCell onClick={(e) => setLesson(lesson)}>
                         <div className="notes">
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={lesson.notes}
-                                disabled={true}
-                                config={{
-                                    toolbar:[]
-                                }}
-                            />
+                            {parse(lesson.notes)}
                         </div>
                     </TableCell>
                     <TableCell>{studentSpans}</TableCell>
