@@ -1,5 +1,6 @@
 export let API_BASE_URL = "https://yeg-guitar-api.herokuapp.com/api";
 //export let API_BASE_URL = "http://localhost:8080/api";
+//export let API_BASE_URL = "https://yeg-guitar-test-server.herokuapp.com/api";
 
 export let superAdmin = 0;
 export let admin = 1;
