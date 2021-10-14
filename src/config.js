@@ -39,6 +39,10 @@ export let possibleLinks = [
         {
           link:'/create-type',
           display:'New Class Type'
+        },
+        {
+          link:'/users',
+          display:'Manage Users'
         }
       ]
     }

@@ -64,3 +64,22 @@ export const getUsersAsync = async (authToken) => {
         console.log('error getting users ',e);
     }
 };
+
+export const updateUser = async(authToken,user,currentUser) => {
+    try{
+        let payload = {
+            user
+        };
+        await fetch(`${API_BASE_URL}/users/create?userLevel=${currentUser.level}`,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authToken}`
+            },
+            body:JSON.stringify(payload)
+        });
+    }
+    catch(e){
+        console.warn(e);
+    }
+}
