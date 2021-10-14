@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useGetTeachers} from '../../effects/getData';
 import {connect} from 'react-redux';
 import requiresLogin from '../../HOC/requires-login';
@@ -14,8 +14,10 @@ import LevelSelect from '../sub-components/level-select';
 import Button from '@material-ui/core/Button';
 import {updateUser} from '../../actions/userActions'
 import './styles/user-management.css'
+import ModalWrapper from '../sub-components/modal-wrapper';
 
 const UserManagement = (props) => {
+    const [addModalOpen, setAddModalOpen] = useState(false);
     const allTeachers = useGetTeachers(props.authToken,props.dispatch);
 
     const handleLevelChanged = (level,user) => {
@@ -25,14 +27,27 @@ const UserManagement = (props) => {
         updateUser(props.authToken,newUser,props.currentUser);
     }
 
-    const openAddUserModa = () => {
-        
+    const openAddUserModal = () => {
+        setAddModalOpen(true);
+    }
+
+    const handleModalClose = () => {
+        setAddModalOpen(false);
     }
 
     return(
         <div>
             <div className="add-button-container">
-                <Button variant="contained">Add User</Button>
+                <Button variant="contained" onClick={e => openAddUserModal()}>Add User</Button>
+                <ModalWrapper handleClose={handleModalClose} open={addModalOpen}>
+                    <div>
+                        <p>I'm a modal</p>
+                        <p>I'm a modal</p>
+                        <p>I'm a modal</p>
+                        <p>I'm a modal</p>
+                        <p>I'm a modal</p>
+                    </div>
+                </ModalWrapper>
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
