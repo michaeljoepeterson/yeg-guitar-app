@@ -12,19 +12,20 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import LevelSelect from '../sub-components/level-select';
 import Button from '@material-ui/core/Button';
-import {updateUser} from '../../actions/userActions'
-import './styles/user-management.css'
+import {updateUser} from '../../actions/userActions';
+import './styles/user-management.css';
 import ModalWrapper from '../sub-components/modal-wrapper';
+import AddUser from '../sub-components/add-user';
 
 const UserManagement = (props) => {
-    const [addModalOpen, setAddModalOpen] = useState(false);
     const allTeachers = useGetTeachers(props.authToken,props.dispatch);
+    const [addModalOpen, setAddModalOpen] = useState(false);
+    const [teachers,setTeachers] = useState(null);
 
-    const handleLevelChanged = (level,user) => {
-        console.log(user,level);
+    const handleLevelChanged = async (level,user) => {
         let newUser = {...user};
-        newUser.level = level;
-        updateUser(props.authToken,newUser,props.currentUser);
+        newUser.level = level !== '' ? level : null;
+        await updateUser(props.authToken,newUser,props.currentUser);
     }
 
     const openAddUserModal = () => {
@@ -35,17 +36,23 @@ const UserManagement = (props) => {
         setAddModalOpen(false);
     }
 
+    const userUpdated = (user) => {
+        setAddModalOpen(false);
+        let currentTeachers = teachers ? [...teachers] : [...allTeachers];
+        currentTeachers.push(user);
+        setTeachers(currentTeachers);
+        console.log(teachers);
+    }
+
+    let renderedTeachers = teachers ? teachers : allTeachers;
+
     return(
         <div>
             <div className="add-button-container">
                 <Button variant="contained" onClick={e => openAddUserModal()}>Add User</Button>
                 <ModalWrapper handleClose={handleModalClose} open={addModalOpen}>
                     <div>
-                        <p>I'm a modal</p>
-                        <p>I'm a modal</p>
-                        <p>I'm a modal</p>
-                        <p>I'm a modal</p>
-                        <p>I'm a modal</p>
+                        <AddUser userUpdated={userUpdated}/>
                     </div>
                 </ModalWrapper>
             </div>
@@ -61,7 +68,7 @@ const UserManagement = (props) => {
                     </TableHead>
                     <TableBody>
                         {
-                            allTeachers ? allTeachers.map(user => (
+                            renderedTeachers ? renderedTeachers.map(user => (
                                 <TableRow
                                 key={user.username}
                                 >
@@ -89,4 +96,4 @@ const mapStateToProps = state => ({
     authToken: state.auth.authToken
 });
 
-export default  CheckPermission()(requiresLogin()(connect(mapStateToProps)(UserManagement)));
+export default CheckPermission()(requiresLogin()(connect(mapStateToProps)(UserManagement)));

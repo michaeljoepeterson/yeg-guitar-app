@@ -31,7 +31,6 @@ export default function LevelSelect(props){
     }
 
     let select = null;
-
     if(selectedLevel === levels[0]?.level){
         select = (
             <p>Super Admin</p>
@@ -49,6 +48,7 @@ export default function LevelSelect(props){
                 label="Level"
                 onChange={handleChange}
                 >
+                    <MenuItem value="">None</MenuItem>
                     {
                         levels.map((level) => {
                             if(level.level == 0){

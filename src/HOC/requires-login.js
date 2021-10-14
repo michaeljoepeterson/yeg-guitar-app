@@ -5,7 +5,7 @@ import {loadAuthToken} from '../local-storage';
 
 export default () => Component => {
     function RequiresLogin(props){
-        let authToken = loadAuthToken();
+        //let authToken = loadAuthToken();
         const {loading,loggedIn,error,...passThroughProps} = props;
         if((!loggedIn || error)){
             return <Redirect to='/' />;

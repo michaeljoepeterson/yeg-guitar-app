@@ -1,17 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import './styles/modal-styles.css';
 
 export default function ModalWrapper(props){
-    const [modalOpen, setModalOpen] = useState(props.open);
 
     const closeModal = () => {
-        setModalOpen(false);
-        console.log('close',modalOpen);
         if(props.handleClose){
             props.handleClose(props.name);
         }
