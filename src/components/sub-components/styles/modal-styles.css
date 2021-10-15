@@ -25,7 +25,8 @@
 }
 
 .modal-body{
-    height:90%;
+    width: 40%;
+    margin: auto;
 }
 
 .modal-body > .modal-desc{
