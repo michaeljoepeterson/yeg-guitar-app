@@ -8,20 +8,22 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {setSelectedLesson} from '../../actions/lessonActions';
+import {setSelectedLesson,deleteLesson} from '../../actions/lessonActions';
 import { Lesson } from '../../models/lesson';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import TablePagination from '@material-ui/core/TablePagination';
 import {Pager} from '../../helpers/pager';
 import './styles/table-styles.css';
 import parse from 'html-react-parser';
+import IconButton from '@material-ui/core/IconButton';
+import Delete from '@material-ui/icons/Delete';
+import SimpleModal from './simple-modal';
 
 export function LessonViewTable(props){
 
     const [page, setPage] = useState(0);
     const [resultNum, setresultNum] = useState(30);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deleteLessonId, setDeleteLessonId] = useState(null);
     const pager = new Pager({
         items:props.lessons.sort((a,b) => {
             let dateA = new Date(a.date);
@@ -85,6 +87,29 @@ export function LessonViewTable(props){
         setPage(0);
     };
 
+    const handleDeleteLesson = async () => {
+        try{
+            props.dispatch(deleteLesson(deleteLessonId,props.user.level));
+        }
+        catch(e){
+            console.warn(e);
+        }
+        setDeleteModalOpen(false);
+        setDeleteLessonId(null);
+    }
+
+    const handleCloseDelete = async () => {
+        setDeleteModalOpen(false);
+        setDeleteLessonId(null);
+    }
+
+    const openDeleteModal = async (event,id) => {
+        event.stopPropagation();
+        console.log(id);
+        setDeleteModalOpen(true);
+        setDeleteLessonId(id);
+    }
+
     const buildTable = (passedLessons) =>{
         let lessons = passedLessons.map(lesson => new Lesson(lesson));
         let rows = [];
@@ -98,6 +123,11 @@ export function LessonViewTable(props){
             let row =  (
                 <TableRow className={classes} key={lesson.notes + i}>
                     <TableCell component="th" scope="row" onClick={(e)=> dateClicked(date)}>
+                        {
+                            props?.user?.level <= 1 ? (                        <IconButton onClick={(e) => openDeleteModal(e,lesson.id)} color="secondary" aria-label="delete" size="large">
+                                <Delete />
+                            </IconButton>) : null
+                        }
                         {date.toDateString() + ' : ' + date.toLocaleTimeString()}
                     </TableCell>
                     <TableCell>{lesson.lessonType}</TableCell>
@@ -151,6 +181,7 @@ export function LessonViewTable(props){
     return(
         <div>
             {table}
+            <SimpleModal open={deleteModalOpen} message={"Are you sure you want to delete this lesson?"} submitClick={handleDeleteLesson} handleClose={handleCloseDelete} color={"secondary"} submit={"Delete"}/>
         </div>
     )
 }

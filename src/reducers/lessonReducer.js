@@ -7,7 +7,8 @@ import {
     GET_LESSON_ERROR,
     SET_LESSON,
     GET_STUDENT_LESSON_SUCCESS,
-    GET_LESSON_TYPES_SUCCESS
+    GET_LESSON_TYPES_SUCCESS,
+    DELETE_LESSON_SUCCESS
 } from '../actions/lessonActions';
 
 const initialState = {
@@ -92,6 +93,17 @@ export default function reducer(state = initialState,action){
             lessonTypes:action.types,
             loading:false,
             error:null
+        });
+    }
+
+    else if(action.type === DELETE_LESSON_SUCCESS){
+        let {id} = action;
+        let lessons = state.lessons?.filter(lesson => lesson.id !== id);
+        return Object.assign({},state,{
+            lessonTypes:action.types,
+            loading:false,
+            error:null,
+            lessons
         });
     }
 

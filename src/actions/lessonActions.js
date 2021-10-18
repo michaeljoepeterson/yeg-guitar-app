@@ -53,6 +53,12 @@ export const getLessonTypesSuccess = (types) => ({
     types
 });
 
+export const DELETE_LESSON_SUCCESS = 'DELETE_LESSON_SUCCESS';
+export const deleteLessonSuccess = (id) => ({
+    type:DELETE_LESSON_SUCCESS,
+    id
+});
+
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;
@@ -340,5 +346,25 @@ export const createType = (type,level) => async (dispatch,getState) =>{
     catch(e){
         console.log('error saving type ',e);
         dispatch(addLessonRequest(e));
+    }
+}
+
+export const deleteLesson = (id,level) => async (dispatch,getState) => {
+    try{
+        const authToken = getState().auth.authToken;
+        const url = `${API_BASE_URL}/lessons/${id}?userLevel=${level}`;
+        let res = await fetch(url,{
+            method:'DELETE',
+            headers:{
+                Authorization: `Bearer ${authToken}`
+            }
+        });
+        res = await normalizeResponseErrors(res);
+        res = await res.json();
+        dispatch(deleteLessonSuccess(id));
+        return res;
+    }
+    catch(e){
+        console.log('error saving type ',e);
     }
 }

@@ -13,7 +13,7 @@ import StudentLessonPage from './components/pages/student-lessons-page';
 import CreateType from './components/pages/create-lesson-type';
 import fb from './fb/firebase';
 import './App.css';
-
+import UserManagement from './components/pages/user-management';
 function App(props){
 
   let refreshInterval = null;
@@ -116,6 +116,9 @@ function App(props){
         }/>
         <Route exact path="/create-type"  render={(props) => (
           <CreateType {...props}/>)
+        }/>
+        <Route exact path="/users"  render={(props) => (
+          <UserManagement {...props}/>)
         }/>
       </div>
     );
