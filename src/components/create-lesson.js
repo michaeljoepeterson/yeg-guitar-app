@@ -462,7 +462,7 @@ export class CreateLesson extends React.Component{
 }
 
 const mapStateToProps = state => {
-    let types = state.lessons.lessonTypes.filter(type => type.active).map(type => type.name);
+    let types = state.lessons?.lessonTypes ? state.lessons.lessonTypes.filter(type => type.active).map(type => type.name) : [];
     return{
         currentUser: state.auth.currentUser,
         lessonTypes:types,

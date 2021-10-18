@@ -24,6 +24,7 @@ export function LessonViewTable(props){
     const [resultNum, setresultNum] = useState(30);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleteLessonId, setDeleteLessonId] = useState(null);
+    const [deleteMessage, setDeleteMessage] = useState('');
     const pager = new Pager({
         items:props.lessons.sort((a,b) => {
             let dateA = new Date(a.date);
@@ -96,18 +97,23 @@ export function LessonViewTable(props){
         }
         setDeleteModalOpen(false);
         setDeleteLessonId(null);
+        setDeleteMessage('');
     }
 
     const handleCloseDelete = async () => {
         setDeleteModalOpen(false);
         setDeleteLessonId(null);
+        setDeleteMessage('');
     }
 
-    const openDeleteModal = async (event,id) => {
+    const openDeleteModal = async (event,lesson) => {
+        let {id,date} = lesson;
+        let lessonDate = new Date(date);
         event.stopPropagation();
-        console.log(id);
+        console.log(lesson);
         setDeleteModalOpen(true);
         setDeleteLessonId(id);
+        setDeleteMessage(`Are you sure you want to delete ${lesson.teacher.fullName}'s lesson from ${lessonDate.toDateString()}`);
     }
 
     const buildTable = (passedLessons) =>{
@@ -124,7 +130,7 @@ export function LessonViewTable(props){
                 <TableRow className={classes} key={lesson.notes + i}>
                     <TableCell component="th" scope="row" onClick={(e)=> dateClicked(date)}>
                         {
-                            props?.user?.level <= 1 ? (                        <IconButton onClick={(e) => openDeleteModal(e,lesson.id)} color="secondary" aria-label="delete" size="large">
+                            props?.user?.level <= 1 ? (                        <IconButton onClick={(e) => openDeleteModal(e,lesson)} color="secondary" aria-label="delete" size="large">
                                 <Delete />
                             </IconButton>) : null
                         }
@@ -181,7 +187,7 @@ export function LessonViewTable(props){
     return(
         <div>
             {table}
-            <SimpleModal open={deleteModalOpen} message={"Are you sure you want to delete this lesson?"} submitClick={handleDeleteLesson} handleClose={handleCloseDelete} color={"secondary"} submit={"Delete"}/>
+            <SimpleModal open={deleteModalOpen} message={deleteMessage} submitClick={handleDeleteLesson} handleClose={handleCloseDelete} color={"secondary"} submit={"Delete"}/>
         </div>
     )
 }
