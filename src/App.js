@@ -131,7 +131,9 @@ function App(props){
   
 }
 
-const mapStateToProps = state => ({
-  testMode:state.auth.testMode
-});
+const mapStateToProps = state => {
+  return {
+    testMode:state.auth.testMode
+  }
+};
 export default withRouter(connect(mapStateToProps)(App));

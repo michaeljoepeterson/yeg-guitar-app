@@ -5,10 +5,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import {BrowserRouter as Router} from 'react-router-dom';
-import store from './store';
+import { rtkStore } from './store/store';
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={rtkStore}>
     <Router>
       <App />
     </Router>
