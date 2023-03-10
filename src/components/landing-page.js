@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import LoginForm from './login-form';
 import { Redirect } from 'react-router';
 import { withRouter} from 'react-router-dom';
-import {refreshAuthToken,enableTestMode} from '../actions/authActions';
+import {enableTestMode} from '../actions/authActions';
 
 export function LandingPage(props){
     const title = 'Edmonton Guitar';

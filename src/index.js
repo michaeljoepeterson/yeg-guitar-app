@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import {BrowserRouter as Router} from 'react-router-dom';
 import { rtkStore } from './store/store';
+import store from './store';
 
 ReactDOM.render(
   <Provider store={rtkStore}>

@@ -6,9 +6,7 @@ import firebase from 'firebase';
 class Firebase {
   //can optionally use returned user to get auth token
   constructor() {
-    //if(!firebase.apps.length){
     app.initializeApp(fbConfig);
-    //}
     this.auth = app.auth();
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
@@ -19,7 +17,7 @@ class Firebase {
       if(!result){
         throw {message:'no account selected'};
       }
-      //result.user.
+
       return result.user;
     }
     catch(e){

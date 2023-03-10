@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { authApi } from "../api/auth-api";
 
 const initialState = {
     currentUser:null,
@@ -16,5 +17,10 @@ export const authSlice = createSlice({
             state.currentUser = action.currentUser;
             state.authToken = action.token;
         }
+    },
+    extraReducers: (builder) => {
+        builder.addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, action) => {
+            console.log('refreshed slice', state, action);
+        });
     }
 });

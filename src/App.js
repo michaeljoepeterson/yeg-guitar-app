@@ -11,38 +11,26 @@ import Summary from './components/summary';
 import TopNav from './components/navbar';
 import StudentLessonPage from './components/pages/student-lessons-page';
 import CreateType from './components/pages/create-lesson-type';
-import fb from './fb/firebase';
 import './App.css';
 import UserManagement from './components/pages/user-management';
+import { useLazyRefreshTokenQuery } from './store/api/auth-api';
 function App(props){
 
-  let refreshInterval = null;
   let minutes = 240;
+  const [refreshInterval, setRefreshInterval] = useState();
   const [initialLoad,setInitialLoad] = useState(true);
+  const [refreshAuthToken] = useLazyRefreshTokenQuery();
 
-  
-  /*
-  componentDidUpdate(prevProps) {
-    if (!prevProps.currentUser && this.props.currentUser) {
-      this.startPeriodicRefresh();
-    } 
-    else if (prevProps.currentUser && !this.props.currentUser) {
-      this.stopPeriodicRefresh();
-    }
-  }
-  componentWillUnmount() {
-    this.stopPeriodicRefresh();
-  }
-  */
   const startPeriodicRefresh = () => {
     
     const time = minutes * 60 * 1000;
     //const time = 10000;
-    refreshInterval = setInterval(
+    let interval = setInterval(
         () => props.dispatch(refreshAuthToken()),
         time
     );
     
+    setRefreshInterval(interval);
   }
 
   const stopPeriodicRefresh = () => {
@@ -60,8 +48,8 @@ function App(props){
         props.dispatch(enableTestMode());
       }
       try{
-        await fb.getToken();
-        await props.dispatch(refreshAuthToken());
+        //await props.dispatch(refreshAuthToken());
+        refreshAuthToken()
         startPeriodicRefresh();
         setInitialLoad(false);
       }
