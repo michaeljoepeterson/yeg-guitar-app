@@ -1,5 +1,4 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import {withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -102,12 +101,10 @@ export class LessonDisplay extends React.Component{
     render(){
         //console.log(this.state);
         let table = null;
-        if(this.props.lessons && this.props.lessons.length > 0 && !this.props.studentLessons){
+        if(this.props.lessons && this.props.lessons.length > 0){
             table = this.buildTable(this.props.lessons);
         }
-        else if(this.props.studentLessons && this.props.studentLessons.length > 0){
-            table = this.buildTable(this.props.studentLessons);
-        }
+
         return(
             <div>
                 {table}
@@ -116,8 +113,4 @@ export class LessonDisplay extends React.Component{
     }
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    lessons:state.lessons.lessons
-});
-export default (withRouter(connect(mapStateToProps)(LessonDisplay)));
+export default (withRouter(LessonDisplay));

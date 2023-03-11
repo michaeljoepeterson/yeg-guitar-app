@@ -1,7 +1,7 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import { withRouter} from 'react-router-dom';
-import {connect, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -29,6 +29,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useGetStudentsQuery } from '../store/api/student-api';
 import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
+import { useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
+import { useCallback } from 'react';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -141,7 +143,8 @@ export class CreateLesson extends React.Component{
 
     getStudentLessons = async (id) =>{
         try{
-            await this.props.dispatch(getStudentLesson(id))
+            //await this.props.dispatch(getStudentLesson(id))
+            this.props.getStudentLessons(id);
             this.modalOpened(this.studentModal);
         }
         catch(err){
@@ -375,7 +378,7 @@ export class CreateLesson extends React.Component{
         console.log(this.state);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.props.students.length > 0 && this.state.lesson.students.length > 0 ? this.buildStudentSelect() : [];
-        let studentLessonList = this.props.studentLessons ? (<LessonDisplay studentLessons={this.props.studentLessons}/>) : null;
+        let studentLessonList = this.props.studentLessons ? (<LessonDisplay lessons={this.props.studentLessons}/>) : null;
         
         return(
             <div>
@@ -455,7 +458,7 @@ export class CreateLesson extends React.Component{
                 
                 <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
                 <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage} name={"modalOpen"}/>
-                <SimpleModal open={this.state.studentModalOpen} handleClose={this.modalClosed} name={this.studentModal}>
+                <SimpleModal open={this.state.studentModalOpen} handleClose={() => this.modalClosed(this.studentModal)} name={this.studentModal}>
                     {studentLessonList}
                 </SimpleModal>
             </div>
@@ -481,8 +484,25 @@ const StateWrapper = (Component) => function Comp(props){
     const {currentUser, authToken} = auth;
     const {data: students} = useGetStudentsQuery(authToken);
     const {data: lessonData} = useGetLessonTypesQuery(authToken);
-    const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : []
-    return <Component lessonTypes={lessonTypes} currentUser={currentUser} students={students} {...props}/>
+    const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
+    const dispatch = useDispatch();
+    const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
+
+    const getStudentLessons = useCallback((id) => {
+        console.log(id)
+        getStudentLessonTrigger({token: authToken, id});
+    }, [getStudentLessonTrigger, authToken]);
+    console.log('studentLessons', studentLessonsResults);
+    return (
+        <Component 
+        lessonTypes={lessonTypes} 
+        currentUser={currentUser} 
+        students={students} 
+        dispatch={dispatch}
+        getStudentLessons={getStudentLessons}
+        studentLessons={studentLessonsResults?.data}
+        {...props}/>
+    )
 };
 
 export default requiresLogin()(withRouter(StateWrapper(CreateLesson)));
