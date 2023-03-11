@@ -5,14 +5,14 @@ import { loadAuthToken } from "../../local-storage";
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${API_BASE_URL}/auth/`
+        baseUrl: `${API_BASE_URL}/auth`
     }),
     endpoints: (builder) => ({
         refreshToken: builder.query({
             query: () => {
                 const token = loadAuthToken();
                 return {
-                    url: 'refresh',
+                    url: '/refresh',
                     method: 'POST',
                     headers: {
                         Authorization: `Bearer ${token}`

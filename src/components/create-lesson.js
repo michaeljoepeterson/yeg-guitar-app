@@ -1,7 +1,7 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import { withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -27,6 +27,7 @@ import './styles/create-lesson.css';
 import { Student } from '../models/student';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useGetStudentsQuery } from '../store/api/student-api';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -461,6 +462,7 @@ export class CreateLesson extends React.Component{
     }
 }
 
+/*
 const mapStateToProps = state => {
     let types = state.lessons?.lessonTypes ? state.lessons.lessonTypes.filter(type => type.active).map(type => type.name) : [];
     return{
@@ -472,3 +474,13 @@ const mapStateToProps = state => {
     };
 };
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
+*/
+const StateWrapper = (Component) => function Comp(props){
+    const auth = useSelector((state) => state.auth);
+    const {currentUser, authToken} = auth;
+    const {data: students, isLoading} = useGetStudentsQuery(authToken);
+    return <Component currentUser={currentUser} students={students} {...props}/>
+};
+
+export default requiresLogin()(withRouter(StateWrapper(CreateLesson)));
+

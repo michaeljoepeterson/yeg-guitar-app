@@ -7,6 +7,10 @@ import {enableTestMode} from '../actions/authActions';
 
 export function LandingPage(props){
     const title = 'Edmonton Guitar';
+    if(props.loading){
+        return null;
+    }
+
     if(props.currentUser){
         return <Redirect to='/create-lesson'/>;
     }
@@ -25,6 +29,7 @@ export function LandingPage(props){
 
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
-    error:state.auth.error
+    error:state.auth.error,
+    loading: state.auth.loading
 });
 export default withRouter(connect(mapStateToProps)(LandingPage));
