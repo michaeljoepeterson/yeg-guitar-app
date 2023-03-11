@@ -28,6 +28,7 @@ import { Student } from '../models/student';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useGetStudentsQuery } from '../store/api/student-api';
+import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -478,8 +479,10 @@ export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)
 const StateWrapper = (Component) => function Comp(props){
     const auth = useSelector((state) => state.auth);
     const {currentUser, authToken} = auth;
-    const {data: students, isLoading} = useGetStudentsQuery(authToken);
-    return <Component currentUser={currentUser} students={students} {...props}/>
+    const {data: students} = useGetStudentsQuery(authToken);
+    const {data: lessonData} = useGetLessonTypesQuery(authToken);
+    const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : []
+    return <Component lessonTypes={lessonTypes} currentUser={currentUser} students={students} {...props}/>
 };
 
 export default requiresLogin()(withRouter(StateWrapper(CreateLesson)));
