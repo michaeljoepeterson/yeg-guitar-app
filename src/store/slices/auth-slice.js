@@ -1,6 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authApi } from "../api/auth-api";
 import jwtDecode from 'jwt-decode';
+import fb from "../../fb/firebase";
+import { saveAuthToken } from "../../local-storage";
+import { API_BASE_URL } from "../../config";
 
 const initialState = {
     currentUser: null,
@@ -18,21 +21,57 @@ export const authSlice = createSlice({
             state.currentUser = action.currentUser;
             state.authToken = action.token;
             state.loading = false;
-        }
-    },
-    extraReducers: (builder) => {
-        builder.addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, action) => {
+        },
+        loginSuccess: (state, action) => {
             const authToken = action.payload;
             const decodedToken = jwtDecode(authToken);
             state.authToken = authToken;
             state.currentUser = decodedToken.user;
             state.loading = false;
+            state.error = null;
+        },
+        authError: (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+        .addCase(signInWithGoogle.fulfilled, (state, action) => {
+            if(action.payload){
+                authSlice.caseReducers.loginSuccess(state, action);
+            }
+            else{
+                authSlice.caseReducers.authError(state, {
+                    payload: 'Error logging in please verify access'
+                });
+            }
+        })
+        .addMatcher(authApi.endpoints.refreshToken.matchFulfilled, (state, action) => {
+            authSlice.caseReducers.loginSuccess(state, action);
         })
         .addMatcher(authApi.endpoints.refreshToken.matchPending, (state, action) => {
             state.loading = true;
         })
         .addMatcher(authApi.endpoints.refreshToken.matchRejected, (state, action) => {
-            state.loading = false;
+            authSlice.caseReducers.authError(state, {
+                payload: 'Error logging in'
+            });
         })
     }
+});
+
+export const signInWithGoogle = createAsyncThunk('googleSignIn', async () => {
+    await fb.signInWithGoogle();
+    const token = await fb.getToken();
+    let res = await fetch(`${API_BASE_URL}/auth/login`,{
+        method:'POST',
+        headers:{
+            authtoken:token
+        }
+    });
+    let resJson = await res.json();
+    let {authToken} = resJson;
+    saveAuthToken(authToken);
+    return authToken;
 });

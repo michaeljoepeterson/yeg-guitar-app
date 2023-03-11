@@ -489,10 +489,9 @@ const StateWrapper = (Component) => function Comp(props){
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
 
     const getStudentLessons = useCallback((id) => {
-        console.log(id)
         getStudentLessonTrigger({token: authToken, id});
     }, [getStudentLessonTrigger, authToken]);
-    console.log('studentLessons', studentLessonsResults);
+
     return (
         <Component 
         lessonTypes={lessonTypes} 

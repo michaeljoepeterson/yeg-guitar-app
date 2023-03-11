@@ -1,6 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {googleSignIn,emailSignIn} from '../actions/authActions';
+import {connect, useDispatch, useSelector} from 'react-redux';
+import {emailSignIn} from '../actions/authActions';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './styles/center.css';
 import './styles/login.css';
+import { useCallback } from 'react';
+import { signInWithGoogle } from '../store/slices/auth-slice';
 
 export class LoginForm extends React.Component{
     //should change this to state
@@ -39,7 +41,8 @@ export class LoginForm extends React.Component{
 
     googleSignIn = async () => {
         try{
-            await this.props.dispatch(googleSignIn());
+            //await this.props.dispatch(googleSignIn());
+            this.props.googleSignIn();
         }
         catch(e){
             console.log('error with google sign in page: ',e);
@@ -53,10 +56,10 @@ export class LoginForm extends React.Component{
                 <form className="login-form" onSubmit={(e) => this.tryLogin(e)}>
                     <Typography variant='h4' className="form-title">{this.props.title}</Typography>
                     <div className="input-container">
-                        <TextField required id="user" label="Email" variant="outlined" helperText={this.props.error ? 'Error Loging in' : ''} onChange={(e) => this.inputChanged(e,'email')}/>
+                        <TextField required id="user" label="Email" variant="outlined" helperText={this.props.error ? this.props.error : ''} onChange={(e) => this.inputChanged(e,'email')}/>
                     </div>
                     <div className="input-container">
-                        <TextField required id="password" label="Password" variant="outlined" type="password" helperText={this.props.error ? 'Error Loging in' : ''} onChange={(e) => this.inputChanged(e,'pass')}/>
+                        <TextField required id="password" label="Password" variant="outlined" type="password" helperText={this.props.error ? this.props.error : ''} onChange={(e) => this.inputChanged(e,'pass')}/>
                     </div>
                     <div className="input-container login-container">
                         <CircularProgress className={this.displayLoading ? '' : 'hidden'} />
@@ -86,4 +89,28 @@ const mapStateToProps = state => ({
     error:state.auth.error,
     loading:state.auth.loading
 });
-export default connect(mapStateToProps)(LoginForm);
+//export default connect(mapStateToProps)(LoginForm);
+
+const StateWrapper = (Component) => function Comp(props){
+    const auth = useSelector((state) => state.auth);
+    const {currentUser, loading, error} = auth;
+    const dispatch = useDispatch();
+    console.log('err', error);
+
+    const googleSignIn = useCallback(() => {
+        console.log('dispath')
+        dispatch(signInWithGoogle());
+    }, [dispatch]);
+
+    return (
+        <Component 
+            currentUser={currentUser} 
+            loading={loading}
+            error={error}
+            googleSignIn={googleSignIn}
+            {...props}
+        />
+    )
+}
+
+export default StateWrapper(LoginForm);

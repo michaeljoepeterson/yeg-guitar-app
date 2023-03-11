@@ -2,7 +2,7 @@ import React, {useEffect,useState} from 'react';
 import LandingPage from './components/landing-page';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {refreshAuthToken,enableTestMode} from './actions/authActions';
+import {enableTestMode} from './actions/authActions';
 import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/lesson-dash';
 import CreateStudent from './components/create-student';
@@ -26,7 +26,7 @@ function App(props){
     const time = minutes * 60 * 1000;
     //const time = 10000;
     let interval = setInterval(
-        () => props.dispatch(refreshAuthToken()),
+        () => refreshAuthToken(),
         time
     );
     
