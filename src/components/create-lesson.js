@@ -29,8 +29,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useGetStudentsQuery } from '../store/api/student-api';
 import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
-import { useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
+import { useCreateLessonMutation, useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
 import { useCallback } from 'react';
+import { useEffect } from 'react';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -262,9 +263,9 @@ export class CreateLesson extends React.Component{
         let isEdit = this.checkEditMode();
         const lesson = this.state.lesson.getReq();
         if(!isEdit){
-        
+            this.props.saveLesson(lesson);
             //console.log(lesson);
-
+            /*
             this.props.dispatch(saveLesson(lesson))
 
             .then(res => {
@@ -288,6 +289,7 @@ export class CreateLesson extends React.Component{
             .catch(err => {
                 console.log(err);
             });
+            */
         }
         //update
         else{
@@ -375,7 +377,6 @@ export class CreateLesson extends React.Component{
     }
 
     render(){
-        console.log(this.state);
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.props.students.length > 0 && this.state.lesson.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay lessons={this.props.studentLessons}/>) : null;
@@ -466,7 +467,7 @@ export class CreateLesson extends React.Component{
     }
 }
 
-/*
+/*todo implement editing
 const mapStateToProps = state => {
     let types = state.lessons?.lessonTypes ? state.lessons.lessonTypes.filter(type => type.active).map(type => type.name) : [];
     return{
@@ -487,10 +488,35 @@ const StateWrapper = (Component) => function Comp(props){
     const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
     const dispatch = useDispatch();
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
+    const [createLesson, {isLoading: createLoading, isSuccess: createSuccess}] = useCreateLessonMutation();
+
+    useEffect(() => {
+        if(!createLoading && createSuccess){
+            let startDate = new Date();
+            let endDate = new Date(startDate);
+            let startDateString = buildDateString(startDate);
+            let endDateString = buildDateString(endDate);
+            props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${currentUser.username}`);
+        }
+    }, [createLoading, createSuccess]);
+
+    const buildDateString = (date) => {
+        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    }
 
     const getStudentLessons = useCallback((id) => {
         getStudentLessonTrigger({token: authToken, id});
     }, [getStudentLessonTrigger, authToken]);
+
+    const saveLesson = useCallback((lesson) => {
+        console.log(props.editMode);
+        if(!props.editMode){
+            createLesson({
+                authToken,
+                lesson
+            });
+        }
+    }, [props.editMode]);
 
     return (
         <Component 
@@ -500,6 +526,7 @@ const StateWrapper = (Component) => function Comp(props){
         dispatch={dispatch}
         getStudentLessons={getStudentLessons}
         studentLessons={studentLessonsResults?.data}
+        saveLesson={saveLesson}
         {...props}/>
     )
 };

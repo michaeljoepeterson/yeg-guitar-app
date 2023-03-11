@@ -84,12 +84,6 @@ export class LoginForm extends React.Component{
     
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    error:state.auth.error,
-    loading:state.auth.loading
-});
-//export default connect(mapStateToProps)(LoginForm);
 
 const StateWrapper = (Component) => function Comp(props){
     const auth = useSelector((state) => state.auth);

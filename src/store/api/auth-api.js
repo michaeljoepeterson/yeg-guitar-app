@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { API_BASE_URL } from "../../config";
 import { loadAuthToken } from "../../local-storage";
 
+const keepUnusedDataFor = 60;
+
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
@@ -19,7 +21,8 @@ export const authApi = createApi({
                     } 
                 }
             },
-            transformResponse: (res) => res.authToken
+            transformResponse: (res) => res.authToken,
+            keepUnusedDataFor
         })
     })
 });
