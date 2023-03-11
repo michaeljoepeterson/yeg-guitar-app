@@ -27,15 +27,12 @@ export const authSlice = createSlice({
             state.authToken = authToken;
             state.currentUser = decodedToken.user;
             state.loading = false;
-            console.log('refreshed slice', state, action);
         })
         .addMatcher(authApi.endpoints.refreshToken.matchPending, (state, action) => {
             state.loading = true;
-            console.log('refreshed slice', state, action);
         })
         .addMatcher(authApi.endpoints.refreshToken.matchRejected, (state, action) => {
             state.loading = false;
-            console.log('refreshed slice', state, action);
         })
     }
 });

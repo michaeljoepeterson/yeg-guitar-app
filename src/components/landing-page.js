@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import LoginForm from './login-form';
 import { Redirect } from 'react-router';
 import { withRouter} from 'react-router-dom';
@@ -7,11 +7,12 @@ import {enableTestMode} from '../actions/authActions';
 
 export function LandingPage(props){
     const title = 'Edmonton Guitar';
-    if(props.loading){
+    const {currentUser, loading} = useSelector(state => state.auth);
+    if(loading){
         return null;
     }
 
-    if(props.currentUser){
+    if(currentUser){
         return <Redirect to='/create-lesson'/>;
     }
     
@@ -27,9 +28,4 @@ export function LandingPage(props){
     )
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    error:state.auth.error,
-    loading: state.auth.loading
-});
-export default withRouter(connect(mapStateToProps)(LandingPage));
+export default withRouter(LandingPage);
