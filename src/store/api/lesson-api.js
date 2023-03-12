@@ -46,6 +46,17 @@ export const lessonApi = createApi({
             transformResponse: (res) => res ? res.lesson : null,
             keepUnusedDataFor
         }),
+        updateLesson: builder.mutation({
+            query: ({authToken, lesson}) => ({
+                url:`/${lesson.id}`,
+                method: 'PUT',
+                headers:{
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body:JSON.stringify(lesson)
+            })
+        }),
     })
 });
 
@@ -53,5 +64,6 @@ export const {
     useGetStudentLessonsQuery,
     useLazyGetStudentLessonsQuery,
     useCreateLessonMutation,
-    useLazyGetLessonQuery
+    useLazyGetLessonQuery,
+    useUpdateLessonMutation
 } = lessonApi;

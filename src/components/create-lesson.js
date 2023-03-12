@@ -27,7 +27,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useGetStudentsQuery } from '../store/api/student-api';
 import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
-import { useCreateLessonMutation, useLazyGetLessonQuery, useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
+import { useCreateLessonMutation, useLazyGetLessonQuery, useLazyGetStudentLessonsQuery, useUpdateLessonMutation } from '../store/api/lesson-api';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import useRequiresLogin from '../hooks/use-requires-login';
@@ -295,7 +295,8 @@ export class CreateLesson extends React.Component{
         //update
         else{
             const lesson = this.state.lesson.getReq();
-
+            this.props.saveLesson(lesson);
+            /*
             this.props.dispatch(updateLesson(lesson))
 
             .then(res => {
@@ -319,6 +320,7 @@ export class CreateLesson extends React.Component{
             .catch(err => {
                 console.log(err);
             });
+            */
         }
         
     }
@@ -459,8 +461,6 @@ export class CreateLesson extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
-                
-                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
                 <SimpleModal open={this.state.modalOpen} handleClose={this.modalClosed} submitClick={this.modalSubmitted} message={this.state.modalMessage} name={"modalOpen"}/>
                 <SimpleModal open={this.state.studentModalOpen} handleClose={() => this.modalClosed(this.studentModal)} name={this.studentModal}>
                     {studentLessonList}
@@ -488,6 +488,8 @@ const StateWrapper = (Component) => function Comp(props){
     useRequiresLogin();
     const auth = useSelector((state) => state.auth);
     const {currentUser, authToken} = auth;
+    const [saved, setSaved] = useState(false);
+    const [savedMessage, setSavedMessage] = useState('Created Lesson!');
     const {data: students, isLoading: studentsLoading} = useGetStudentsQuery(authToken);
     const {data: lessonData, isLoading: typesLoading} = useGetLessonTypesQuery(authToken);
     const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
@@ -495,8 +497,10 @@ const StateWrapper = (Component) => function Comp(props){
     const dispatch = useDispatch();
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
     const [createLesson, {isLoading: createLoading, isSuccess: createSuccess}] = useCreateLessonMutation();
+    const [updateLesson, {isLoading: updateLoading, isSuccess: updateSuccess}] = useUpdateLessonMutation();
     const params = useParams();
     console.log(selectedLessonData);
+
     useEffect(() => {
         if(!createLoading && createSuccess){
             let startDate = new Date();
@@ -506,6 +510,13 @@ const StateWrapper = (Component) => function Comp(props){
             props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${currentUser.username}`);
         }
     }, [createLoading, createSuccess]);
+
+    useEffect(() => {
+        if(!updateLoading && updateSuccess){
+            setSaved(true);
+            setSavedMessage('Updated Lesson!');
+        }
+    }, [updateLoading, updateSuccess]);
 
     useEffect(() => {
         if(params.id && authToken){
@@ -527,30 +538,43 @@ const StateWrapper = (Component) => function Comp(props){
     }, [getStudentLessonTrigger, authToken]);
 
     const saveLesson = useCallback((lesson) => {
-        console.log(props.editMode);
-        if(!props.editMode){
+        if(!params?.id){
             createLesson({
                 authToken,
                 lesson
             });
         }
-    }, [props.editMode]);
+        else{
+            updateLesson({
+                authToken,
+                lesson
+            })
+        }
+    }, [props.editMode, authToken]);
+
+    const snackbarClosed = useCallback(() => {
+        setSaved(false);
+    }, [setSaved]);
     
     if(studentsLoading || typesLoading){
         return null;
     }
 
     return (
-        <Component 
-        lessonTypes={lessonTypes} 
-        currentUser={currentUser} 
-        students={students} 
-        dispatch={dispatch}
-        getStudentLessons={getStudentLessons}
-        studentLessons={studentLessonsResults?.data}
-        saveLesson={saveLesson}
-        selectedLesson={selectedLessonData}
-        {...props}/>
+        <>
+            <Component 
+            lessonTypes={lessonTypes} 
+            currentUser={currentUser} 
+            students={students} 
+            dispatch={dispatch}
+            getStudentLessons={getStudentLessons}
+            studentLessons={studentLessonsResults?.data}
+            saveLesson={saveLesson}
+            selectedLesson={selectedLessonData}
+            updateLesson={saveLesson}
+            {...props}/>
+            <SnackbarWrapper saved={saved} snackbarClosed={snackbarClosed} saveField={"saved"} savedMessage={savedMessage}/>
+        </>
     )
 };
 
