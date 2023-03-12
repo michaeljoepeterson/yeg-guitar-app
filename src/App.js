@@ -48,7 +48,6 @@ function App(props){
         props.dispatch(enableTestMode());
       }
       try{
-        //await props.dispatch(refreshAuthToken());
         refreshAuthToken()
         startPeriodicRefresh();
         setInitialLoad(false);

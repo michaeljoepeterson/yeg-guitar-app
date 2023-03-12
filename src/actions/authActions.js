@@ -72,6 +72,10 @@ export const login = (email,password) => (dispatch,getState) => {
     );
 };
 
+/**
+ * @deprecated
+ * @returns
+ */
 export const refreshAuthToken = () => async (dispatch,getState) => {
     //dispatch(authRequest());
     try{
@@ -99,6 +103,10 @@ export const enableTestMode = () => (dispatch) =>{
     dispatch(testEnable());
 }
 
+/**
+ * @deprecated
+ * @returns 
+ */
 export const googleSignIn = () => async (dispatch) => {
     try{
         await fb.signInWithGoogle();

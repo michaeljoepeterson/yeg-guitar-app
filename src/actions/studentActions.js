@@ -24,6 +24,10 @@ export const createStudentSuccess = () => ({
     type:CREATE_STUDENT_SUCCESS
 });
 
+/**
+ * @deprecated
+ * @returns
+ */
 export const getStudents = () => (dispatch,getState) => {
     dispatch(studentRequest());
     const authToken = getState().auth.authToken;

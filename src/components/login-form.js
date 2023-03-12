@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {emailSignIn} from '../actions/authActions';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
@@ -34,14 +34,12 @@ export class LoginForm extends React.Component{
    tryLogin = (event) =>{
         event.persist();
         event.preventDefault();
-        //console.log(this.state.email,this.state.pass);
         this.props.dispatch(emailSignIn(this.state.email,this.state.pass));
         
     }
 
     googleSignIn = async () => {
         try{
-            //await this.props.dispatch(googleSignIn());
             this.props.googleSignIn();
         }
         catch(e){

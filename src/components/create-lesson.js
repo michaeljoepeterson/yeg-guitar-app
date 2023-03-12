@@ -56,8 +56,8 @@ export class CreateLesson extends React.Component{
 
     async componentDidMount(){
         try{
-            await this.props.dispatch(getLessonTypes());
-            await this.props.dispatch(getStudents())
+            //await this.props.dispatch(getLessonTypes());
+            //await this.props.dispatch(getStudents())
             let currentStudents = this.state.lesson.students.map(student => new Student(student));
             let firstStudent = this.props.students.find(student => student.active);
             currentStudents.push(new Student(firstStudent));
@@ -483,8 +483,8 @@ export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)
 const StateWrapper = (Component) => function Comp(props){
     const auth = useSelector((state) => state.auth);
     const {currentUser, authToken} = auth;
-    const {data: students} = useGetStudentsQuery(authToken);
-    const {data: lessonData} = useGetLessonTypesQuery(authToken);
+    const {data: students, isLoading: studentsLoading} = useGetStudentsQuery(authToken);
+    const {data: lessonData, isLoading: typesLoading} = useGetLessonTypesQuery(authToken);
     const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
     const dispatch = useDispatch();
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
@@ -517,6 +517,10 @@ const StateWrapper = (Component) => function Comp(props){
             });
         }
     }, [props.editMode]);
+    
+    if(studentsLoading || typesLoading){
+        return null;
+    }
 
     return (
         <Component 

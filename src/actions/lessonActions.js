@@ -59,6 +59,11 @@ export const deleteLessonSuccess = (id) => ({
     id
 });
 
+/**
+ * @deprecated
+ * @param {*} lesson 
+ * @returns 
+ */
 export const saveLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;
@@ -236,6 +241,11 @@ export const getLessonSummary = (id,startDate,endDate) => (dispatch,getState) =>
     return promise;
 }
 
+/**
+ * @deprecated
+ * @param {} id 
+ * @returns 
+ */
 export const getStudentLesson = (id) => (dispatch,getState) => {
     dispatch(getLessonRequest());
     const authToken = getState().auth.authToken;
@@ -298,6 +308,10 @@ export const generalSearch = (options) => async (dispatch,getState) =>{
     }
 }
 
+/**
+ * @deprecated
+ * @returns
+ */
 export const getLessonTypes = () => async (dispatch,getState) =>{
     console.log('getting lessons');
     dispatch(getLessonRequest());
