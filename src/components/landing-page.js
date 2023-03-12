@@ -12,7 +12,7 @@ export function LandingPage(props){
         return null;
     }
 
-    if(currentUser){
+    if(currentUser && props.location.pathname === '/'){
         return <Redirect to='/create-lesson'/>;
     }
     

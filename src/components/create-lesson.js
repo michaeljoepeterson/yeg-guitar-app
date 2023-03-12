@@ -4,16 +4,14 @@ import { withRouter} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
-import {getStudents} from '../actions/studentActions';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Help from '@material-ui/icons/Help';
-import {saveLesson,updateLesson,getStudentLesson,getLessonTypes} from '../actions/lessonActions';
+import {updateLesson} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';
@@ -32,6 +30,7 @@ import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
 import { useCreateLessonMutation, useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
+import useRequiresLogin from '../hooks/use-requires-login';
 
 export class CreateLesson extends React.Component{
     constructor(props) {
@@ -58,6 +57,7 @@ export class CreateLesson extends React.Component{
         try{
             //await this.props.dispatch(getLessonTypes());
             //await this.props.dispatch(getStudents())
+
             let currentStudents = this.state.lesson.students.map(student => new Student(student));
             let firstStudent = this.props.students.find(student => student.active);
             currentStudents.push(new Student(firstStudent));
@@ -83,6 +83,7 @@ export class CreateLesson extends React.Component{
      */
     checkSelectedLesson = () =>{
         let isEdit = this.checkEditMode();
+
         if(this.props.selectedLesson && isEdit){
             let selectedLesson = this.props.selectedLesson;
             let lessonData = {
@@ -481,6 +482,7 @@ const mapStateToProps = state => {
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
 */
 const StateWrapper = (Component) => function Comp(props){
+    useRequiresLogin();
     const auth = useSelector((state) => state.auth);
     const {currentUser, authToken} = auth;
     const {data: students, isLoading: studentsLoading} = useGetStudentsQuery(authToken);
@@ -489,7 +491,6 @@ const StateWrapper = (Component) => function Comp(props){
     const dispatch = useDispatch();
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
     const [createLesson, {isLoading: createLoading, isSuccess: createSuccess}] = useCreateLessonMutation();
-
     useEffect(() => {
         if(!createLoading && createSuccess){
             let startDate = new Date();
@@ -535,5 +536,5 @@ const StateWrapper = (Component) => function Comp(props){
     )
 };
 
-export default requiresLogin()(withRouter(StateWrapper(CreateLesson)));
+export default withRouter(StateWrapper(CreateLesson));
 
