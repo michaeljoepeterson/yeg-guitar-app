@@ -2,10 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 
+/**
+ * @deprecated
+ */
 export default () => Component => {
     function RequiresLogin(props){
         const {loading,loggedIn,error,...passThroughProps} = props;
-        if((!loggedIn || error)){
+        if((!loggedIn || error) && !loading){
             return <Redirect to='/' />;
         }
 

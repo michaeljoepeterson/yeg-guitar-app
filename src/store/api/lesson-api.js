@@ -10,12 +10,12 @@ export const lessonApi = createApi({
     }),
     endpoints: (builder) => ({
         getStudentLessons: builder.query({
-            query: ({token, id}) => {
+            query: ({authToken, id}) => {
                 return {
                     url: `/search-student?id=${id}`,
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${authToken}`
                     } 
                 }
             },
@@ -32,12 +32,26 @@ export const lessonApi = createApi({
                 },
                 body:JSON.stringify(lesson)
             })
-        })
+        }),
+        getLesson: builder.query({
+            query: ({authToken, id}) => {
+                return {
+                    url: `/${id}`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    } 
+                }
+            },
+            transformResponse: (res) => res ? res.lesson : null,
+            keepUnusedDataFor
+        }),
     })
 });
 
 export const {
     useGetStudentLessonsQuery,
     useLazyGetStudentLessonsQuery,
-    useCreateLessonMutation
+    useCreateLessonMutation,
+    useLazyGetLessonQuery
 } = lessonApi;

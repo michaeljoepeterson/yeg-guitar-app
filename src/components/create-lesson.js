@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import requiresLogin from '../HOC/requires-login';
-import { withRouter} from 'react-router-dom';
+import { useParams, withRouter} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -27,7 +27,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useGetStudentsQuery } from '../store/api/student-api';
 import { useGetLessonTypesQuery } from '../store/api/lesson-types-api';
-import { useCreateLessonMutation, useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
+import { useCreateLessonMutation, useLazyGetLessonQuery, useLazyGetStudentLessonsQuery } from '../store/api/lesson-api';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import useRequiresLogin from '../hooks/use-requires-login';
@@ -381,7 +381,7 @@ export class CreateLesson extends React.Component{
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
         let studentItems = this.props.students && this.props.students.length > 0 && this.state.lesson.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay lessons={this.props.studentLessons}/>) : null;
-        
+        console.log('notes', this.state.lesson.notes)
         return(
             <div>
                 <form onSubmit={(e) => this.saveLesson(e)}>
@@ -424,7 +424,9 @@ export class CreateLesson extends React.Component{
                                     editor={ ClassicEditor }
                                     data={this.state.lesson.notes}
                                     onReady={ editor => {
-                                        
+                                        if(this.state.lesson.notes){
+                                            editor.setData(this.state.lesson.notes);
+                                        }
                                     } }
                                     onChange={ ( event, editor ) => {
                                         const data = editor.getData();
@@ -481,6 +483,7 @@ const mapStateToProps = state => {
 };
 export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
 */
+//todo move to data component once class component converted to functional comp
 const StateWrapper = (Component) => function Comp(props){
     useRequiresLogin();
     const auth = useSelector((state) => state.auth);
@@ -488,9 +491,12 @@ const StateWrapper = (Component) => function Comp(props){
     const {data: students, isLoading: studentsLoading} = useGetStudentsQuery(authToken);
     const {data: lessonData, isLoading: typesLoading} = useGetLessonTypesQuery(authToken);
     const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
+    const [getSelectedLesson, {data: selectedLessonData, isLoading: selectedLessonLoading}] = useLazyGetLessonQuery();
     const dispatch = useDispatch();
     const lessonTypes = lessonData ? lessonData.filter(type => type.active).map(type => type.name) : [];
     const [createLesson, {isLoading: createLoading, isSuccess: createSuccess}] = useCreateLessonMutation();
+    const params = useParams();
+    console.log(selectedLessonData);
     useEffect(() => {
         if(!createLoading && createSuccess){
             let startDate = new Date();
@@ -501,12 +507,23 @@ const StateWrapper = (Component) => function Comp(props){
         }
     }, [createLoading, createSuccess]);
 
+    useEffect(() => {
+        if(params.id && authToken){
+            getSelectedLesson({
+                authToken,
+                id: params.id
+            }, true);
+        }
+    }, [params, authToken, getSelectedLesson]);
+
     const buildDateString = (date) => {
         return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     }
 
     const getStudentLessons = useCallback((id) => {
-        getStudentLessonTrigger({token: authToken, id});
+        if(authToken){
+            getStudentLessonTrigger({authToken, id}, true);
+        }
     }, [getStudentLessonTrigger, authToken]);
 
     const saveLesson = useCallback((lesson) => {
@@ -532,6 +549,7 @@ const StateWrapper = (Component) => function Comp(props){
         getStudentLessons={getStudentLessons}
         studentLessons={studentLessonsResults?.data}
         saveLesson={saveLesson}
+        selectedLesson={selectedLessonData}
         {...props}/>
     )
 };
