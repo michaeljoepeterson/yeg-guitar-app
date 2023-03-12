@@ -55,9 +55,6 @@ export class CreateLesson extends React.Component{
 
     async componentDidMount(){
         try{
-            //await this.props.dispatch(getLessonTypes());
-            //await this.props.dispatch(getStudents())
-
             let currentStudents = this.state.lesson.students.map(student => new Student(student));
             let firstStudent = this.props.students.find(student => student.active);
             currentStudents.push(new Student(firstStudent));
@@ -263,10 +260,11 @@ export class CreateLesson extends React.Component{
         });
         let isEdit = this.checkEditMode();
         const lesson = this.state.lesson.getReq();
+        this.props.saveLesson(lesson);
+        /*
         if(!isEdit){
             this.props.saveLesson(lesson);
             //console.log(lesson);
-            /*
             this.props.dispatch(saveLesson(lesson))
 
             .then(res => {
@@ -290,13 +288,11 @@ export class CreateLesson extends React.Component{
             .catch(err => {
                 console.log(err);
             });
-            */
         }
         //update
         else{
             const lesson = this.state.lesson.getReq();
             this.props.saveLesson(lesson);
-            /*
             this.props.dispatch(updateLesson(lesson))
 
             .then(res => {
@@ -320,9 +316,8 @@ export class CreateLesson extends React.Component{
             .catch(err => {
                 console.log(err);
             });
-            */
         }
-        
+        */
     }
 
     snackbarClosed = (name) => {
@@ -557,6 +552,10 @@ const StateWrapper = (Component) => function Comp(props){
     }, [setSaved]);
     
     if(studentsLoading || typesLoading){
+        return null;
+    }
+
+    if(params.id && !selectedLessonData){
         return null;
     }
 

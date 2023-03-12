@@ -44,7 +44,8 @@ export const lessonApi = createApi({
                 }
             },
             transformResponse: (res) => res ? res.lesson : null,
-            keepUnusedDataFor
+            keepUnusedDataFor,
+            providesTags: ['Put'],
         }),
         updateLesson: builder.mutation({
             query: ({authToken, lesson}) => ({
@@ -55,7 +56,8 @@ export const lessonApi = createApi({
                     Authorization: `Bearer ${authToken}`
                 },
                 body:JSON.stringify(lesson)
-            })
+            }),
+            invalidatesTags: ['Put']
         }),
     })
 });
