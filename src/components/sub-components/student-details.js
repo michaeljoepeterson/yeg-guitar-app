@@ -19,14 +19,15 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import './styles/student-details.css'
 import { useGetCategoriesQuery } from '../../store/api/categories-api';
 import { useMemo } from 'react';
+import { useUpdateStudentMutation } from '../../store/api/student-api';
 
 function StudentDetails(props){
     const [studentCopy,setStudentCopy] = useState(null);
-    const [isLoading,setIsLoading] = useState(false);
     const [isExpanded,setIsExpanded] = useState(false);
     const {authToken, currentUser} = useSelector(state => state.auth);
     const user = useMemo(() => currentUser, [currentUser]);
     const {data: categories} = useGetCategoriesQuery({authToken});
+    const [updateStudentMutation, {isLoading}] = useUpdateStudentMutation()
 
     //const adminFields = ['firstName','lastName','active'];
     const adminFields = {
@@ -178,14 +179,12 @@ function StudentDetails(props){
     }
 
     const updateStudent = async () => {
-        setIsLoading(true);
         try{
-            const resp = await updateStudentAsync(studentCopy, user.level);
-            await props.dispatch(getStudents());
-            setIsLoading(false);
+            updateStudentMutation({ authToken, student: studentCopy, level: user.level});
+            //const resp = await updateStudentAsync(studentCopy, user.level);
+            //await props.dispatch(getStudents());
         }
         catch(e){
-            setIsLoading(false);
             console.log('error updating student: ',e);
         }
     }

@@ -100,6 +100,12 @@ export const createStudent = (student,level) => (dispatch,getState) => {
     return promise;
 };
 
+/**
+ * @deprecated
+ * @param {*} student 
+ * @param {*} level 
+ * @returns 
+ */
 export const updateStudentAsync = async (student,level) => {
     let authToken = loadAuthToken();
     try{

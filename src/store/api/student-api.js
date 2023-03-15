@@ -8,6 +8,7 @@ export const studentApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${API_BASE_URL}/students`
     }),
+    tagTypes:['Put'],
     endpoints: (builder) => ({
         getStudents: builder.query({
             query: ({authToken}) => {
@@ -20,11 +21,31 @@ export const studentApi = createApi({
                 }
             },
             transformResponse: (res) => res ? res.students : [],
-            keepUnusedDataFor
+            keepUnusedDataFor,
+            providesTags: ['Put']
         }),
+        updateStudent: builder.mutation({
+            query: ({authToken, student, level}) => {
+                let payloadStudent = {...student};
+                payloadStudent.category = payloadStudent.category.map(cat => {
+                    return cat.id
+                });
+                return { 
+                    url: `/${student.id}?userLevel=${level}`,
+                    method:'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${authToken}`
+                    },
+                    body:JSON.stringify({student: payloadStudent})
+                }
+            },
+            invalidatesTags: ['Put']
+        })
     })
 });
 
 export const {
-    useGetStudentsQuery
+    useGetStudentsQuery,
+    useUpdateStudentMutation
 } = studentApi;

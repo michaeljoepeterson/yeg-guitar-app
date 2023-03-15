@@ -72,8 +72,6 @@ function StudentLessonPage(props){
         }
     }, [teachers,props.teacher]);
 
-    console.log(loadingLessons, lessons);
-
     return(
         <div>
             {!initialLoad && (
