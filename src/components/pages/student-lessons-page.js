@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import GetUrlFilters from '../../HOC/get-url-filters';
 import useRequiresLogin from '../../hooks/use-requires-login';
 import { useGetUsersQuery } from '../../store/api/users-api';
+import { useLazySearchLessonsQuery } from '../../store/api/lesson-api';
+import { CircularProgress } from '@material-ui/core';
 
 function StudentLessonPage(props){
     useRequiresLogin();
@@ -17,9 +19,9 @@ function StudentLessonPage(props){
     const [selectedDate,setSelectedDate] = useState(null);
     const [selectedStudent,setSelectedStudent] = useState(null);
     const [initialLoad,setInitialLoad] = useState(true);
-    const [lessons, setLessons] = useState([]);
     const {authToken, currentUser} = useSelector(state => state.auth);
     const {data: teachers} = useGetUsersQuery({authToken});
+    const [triggerSearch, {data: lessons, isFetching: loadingLessons}] = useLazySearchLessonsQuery();
 
     const teacherClicked = (teacher) =>{
         setTeacher(teacher); 
@@ -50,8 +52,9 @@ function StudentLessonPage(props){
         }
     }
 
-    const onLessonsFiltered = (lessons) => {
-        setLessons(lessons);
+    const onFiltersChanged = (options) => {
+        console.log('options', options);
+        triggerSearch({authToken, options}, true);
     }
     
     const activeProp = 'active';
@@ -69,6 +72,8 @@ function StudentLessonPage(props){
         }
     }, [teachers,props.teacher]);
 
+    console.log(loadingLessons, lessons);
+
     return(
         <div>
             {!initialLoad && (
@@ -81,7 +86,7 @@ function StudentLessonPage(props){
                         updateStudent={updateSelectedStudent} 
                         startDate={props.endDate} 
                         endDate={props.startDate}
-                        onLessonsFiltered={onLessonsFiltered}
+                        onFiltersChanged={onFiltersChanged}
                     />
                 )
             }
@@ -90,12 +95,17 @@ function StudentLessonPage(props){
                     <StudentDetails student={selectedStudent}/>
                 </Grid>
             </Grid>
-            <LessonViewTable 
-            lessons={lessons}
-            studentClicked={studentClicked} 
-            teacherClicked={teacherClicked} 
-            dateClicked={dateClicked}
-            />
+            {
+                (loadingLessons || !lessons) && <CircularProgress />
+            }
+            {!loadingLessons && lessons && 
+                <LessonViewTable 
+                    lessons={lessons}
+                    studentClicked={studentClicked} 
+                    teacherClicked={teacherClicked} 
+                    dateClicked={dateClicked}
+                />
+            }
         </div>
     )
 }

@@ -4,7 +4,6 @@ import DatePicker from './date-picker';
 import Grid from '@material-ui/core/Grid';
 import FilterControl from './filter-control';
 import './styles/filter-controls.css';
-import { useSearchLessonsQuery } from '../../store/api/lesson-api';
 import { useGetUsersQuery } from '../../store/api/users-api';
 import { useGetStudentsQuery } from '../../store/api/student-api';
 
@@ -39,16 +38,14 @@ function FilterControls(props){
     });
     const {authToken, currentUser} = useSelector(state => state.auth);
     //these should really be passed to component
-    const {data: allStudents} = useGetStudentsQuery({authToken}) 
+    const {data: allStudents} = useGetStudentsQuery({authToken});
     const {data: allTeachers} = useGetUsersQuery({authToken}); 
-    const {data: lessons} = useSearchLessonsQuery({authToken, options: filters});
 
     useEffect(() => {
-        if(props.onLessonsFiltered){
-            console.log(filters);
-            props.onLessonsFiltered(lessons);
+        if(props.onFiltersChanged){
+            props.onFiltersChanged(filters);
         }
-    }, [lessons]);
+    }, [filters]);
     
     //reset selected student when student updated
     useEffect(() => {
@@ -131,8 +128,6 @@ function FilterControls(props){
         }
 
     }
-
-    console.log('all students ', allStudents, authToken);
 
     const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={currentUser.level <= 1 ? null : props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherChange} filterChanged={filterChanged} title={"Teacher"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;

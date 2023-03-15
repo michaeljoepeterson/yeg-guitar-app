@@ -75,7 +75,6 @@ export const lessonApi = createApi({
                     filters.endDate = endString;
                 }
                 const query = buildQuery(filters,['selectedDate']);
-
                 return {
                     url: `/search${query}`,
                     method: 'GET',
@@ -96,5 +95,6 @@ export const {
     useCreateLessonMutation,
     useLazyGetLessonQuery,
     useUpdateLessonMutation,
-    useSearchLessonsQuery
+    useSearchLessonsQuery,
+    useLazySearchLessonsQuery
 } = lessonApi;
