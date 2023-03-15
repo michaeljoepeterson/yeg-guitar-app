@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {connect} from 'react-redux';
 import {withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
@@ -25,19 +25,24 @@ export function LessonViewTable(props){
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleteLessonId, setDeleteLessonId] = useState(null);
     const [deleteMessage, setDeleteMessage] = useState('');
-    const pager = new Pager({
-        items:props.lessons.sort((a,b) => {
-            let dateA = new Date(a.date);
-            let dateB = new Date(b.date);
-            if(dateA < dateB){
-                return 1;
-            }
-            else{
-                return -1;
-            }
-        }),
-        resultPerPage:resultNum
-    });
+    const pager = useMemo(() => {
+        const lessons = props.lessons ? props.lessons : []
+        const p = new Pager({
+            items: lessons.sort((a,b) => {
+                let dateA = new Date(a.date);
+                let dateB = new Date(b.date);
+                if(dateA < dateB){
+                    return 1;
+                }
+                else{
+                    return -1;
+                }
+            }),
+            resultPerPage:resultNum
+        });
+
+        return p
+    }, [props.lessons])
     const rowsPerPage = [10,20,30,50,70,100];
     const visisbleLessons = pager.getPage(page);
 
@@ -193,7 +198,6 @@ export function LessonViewTable(props){
 }
 
 const mapStateToProps = state => ({
-    lessons:state.lessons.lessons,
     user: state.auth.currentUser
 });
 export default (withRouter(connect(mapStateToProps)(LessonViewTable)));

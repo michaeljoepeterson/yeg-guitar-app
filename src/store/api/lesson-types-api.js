@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { API_BASE_URL } from "../../config";
 
-const keepUnusedDataFor = 1200;
+const keepUnusedDataFor = 120;
 
 export const lessonTypesApi = createApi({
     reducerPath: 'lessonTypesApi',

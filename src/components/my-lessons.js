@@ -10,6 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
 import GetUrlFilters from '../HOC/get-url-filters';
 
+/**
+ * @deprecated
+ */
 export class MyLessons extends React.Component{
     constructor(props) {
         super(props);

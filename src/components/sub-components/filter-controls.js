@@ -1,11 +1,12 @@
-import React, { useState, useEffect  } from 'react';
-import {connect} from 'react-redux';
+import React, { useState, useEffect, useMemo  } from 'react';
+import {useSelector} from 'react-redux';
 import DatePicker from './date-picker';
 import Grid from '@material-ui/core/Grid';
-import {useGetStudents,useGetTeachers} from '../../effects/getData';
-import {useFilterLessons} from '../../effects/filterLessons';
 import FilterControl from './filter-control';
 import './styles/filter-controls.css';
+import { useSearchLessonsQuery } from '../../store/api/lesson-api';
+import { useGetUsersQuery } from '../../store/api/users-api';
+import { useGetStudentsQuery } from '../../store/api/student-api';
 
 function FilterControls(props){
     const startDateType = 'startDate';
@@ -13,9 +14,7 @@ function FilterControls(props){
     const studentTarget = 'fullName';
     const teacherTarget = 'fullName';
     const teacherChange = 'fullNameTeacher';
-    
-
-    const setInitialDates = () => {
+    const dates = useMemo(() => {
         let startDate = !props.startDate ? new Date() : new Date(props.startDate);
         if(!props.startDate){
             startDate.setDate(startDate.getDate() + 1);
@@ -28,9 +27,7 @@ function FilterControls(props){
         }
         let dates = [startDate,endDate];
         return dates;
-    }
-
-    const dates = setInitialDates();
+    }, [props.startDate, props.endDate]);
     const [filters,setFilters] = useState({
         teacherId:props.teacher ? props.teacher.id : null,
         studentId:props.studentId ? props.studentId : null,
@@ -40,47 +37,18 @@ function FilterControls(props){
         selectedStudent:props.student ? props.student : null,
         selectedDate:props.date ? props.date : null
     });
+    const {authToken} = useSelector(state => state.auth);
+    //these should really be passed to component
+    const {data: allStudents} = useGetStudentsQuery({authToken}) 
+    const {data: allTeachers} = useGetUsersQuery({authToken}); 
+    const {data: lessons} = useSearchLessonsQuery({authToken, options: filters});
 
-    const dateUpdated = (event, dateField) => {
-        let newDate = new Date(event);
-        console.log('updating date');
-        let curFilters = {...filters};
-        if(dateField === startDateType){
-            curFilters.startDate = newDate;
+    useEffect(() => {
+        if(props.onLessonsFiltered){
+            console.log(filters);
+            props.onLessonsFiltered(lessons);
         }
-        else if(dateField === endDateType){
-            curFilters.endDate = newDate;
-        }
-        setFilters(curFilters);
-    }
-
-    const filterChanged = (newVal,changeType,changeData) =>{
-        let curFilters = {...filters};
-        //console.log(newVal);
-
-        try{
-            if(changeData === studentTarget){
-                curFilters.studentId = newVal ? newVal.id : null;
-                curFilters.selectedStudent = newVal;
-                if(props.updateStudent){
-                    props.updateStudent(newVal);
-                }
-            }
-            else if(changeData === teacherChange){
-                curFilters.teacherId = newVal ? newVal.id : null;
-                curFilters.selectedTeacher = newVal;
-            }
-            if(props.filterChanged){
-                props.filterChanged(newVal,changeType,changeData);
-            }
-            setFilters(curFilters);
-        }
-        catch(e){
-            console.log('error updating filters',e);
-        }
-
-    }
-
+    }, [lessons]);
     
     //reset selected student when student updated
     useEffect(() => {
@@ -123,13 +91,47 @@ function FilterControls(props){
         }
         setFilters(currFilter);
     }, [props.selectedDate]);
-    
-    
-    let allStudents = useGetStudents(props.authToken,props.students);
-    //let allStudents = props.students;
-    let allTeachers = useGetTeachers(props.authToken,props.dispatch); 
-    //effect to get lessons
-    useFilterLessons(filters,props.dispatch);
+
+    const dateUpdated = (event, dateField) => {
+        let newDate = new Date(event);
+        console.log('updating date');
+        let curFilters = {...filters};
+        if(dateField === startDateType){
+            curFilters.startDate = newDate;
+        }
+        else if(dateField === endDateType){
+            curFilters.endDate = newDate;
+        }
+        setFilters(curFilters);
+    }
+
+    const filterChanged = (newVal,changeType,changeData) =>{
+        let curFilters = {...filters};
+        //console.log(newVal);
+
+        try{
+            if(changeData === studentTarget){
+                curFilters.studentId = newVal ? newVal.id : null;
+                curFilters.selectedStudent = newVal;
+                if(props.updateStudent){
+                    props.updateStudent(newVal);
+                }
+            }
+            else if(changeData === teacherChange){
+                curFilters.teacherId = newVal ? newVal.id : null;
+                curFilters.selectedTeacher = newVal;
+            }
+            if(props.filterChanged){
+                props.filterChanged(newVal,changeType,changeData);
+            }
+            setFilters(curFilters);
+        }
+        catch(e){
+            console.log('error updating filters',e);
+        }
+
+    }
+
     //console.log('all teachers',allTeachers);
     //console.log('all teacher ',allTeachers)
 
@@ -159,10 +161,4 @@ function FilterControls(props){
     )
 }
 
-const mapStateToProps = state => ({
-    authToken: state.auth.authToken,
-    students:state.students.students,
-    user: state.auth.currentUser
-});
-
-export default connect(mapStateToProps)(FilterControls);
+export default FilterControls;

@@ -2,6 +2,12 @@ import React, {useEffect,useState} from 'react';
 import {getStudentsAsync} from '../actions/studentActions';
 import {getUsersAsync,getUserSuccess} from '../actions/userActions';
 
+/**
+ * @deprecated
+ * @param {*} authToken 
+ * @param {*} students 
+ * @returns 
+ */
 export const useGetStudents =  (authToken,students) => {
     const [allStudents,setStudents] = useState([]);
 
@@ -25,6 +31,12 @@ export const useGetStudents =  (authToken,students) => {
     return allStudents;
 }
 
+/**
+ * @deprecated
+ * @param {*} authToken 
+ * @param {*} dispatch 
+ * @returns 
+ */
 export const useGetTeachers =  (authToken,dispatch) => {
     const [allTeachers,setTeachers] = useState([]);
 

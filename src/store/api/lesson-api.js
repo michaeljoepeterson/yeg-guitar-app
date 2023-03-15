@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { API_BASE_URL } from "../../config";
+import buildQuery from "../../utils/build-query";
 
-const keepUnusedDataFor = 1200;
+const keepUnusedDataFor = 60;
 
 export const lessonApi = createApi({
     reducerPath: 'lessonApi',
@@ -59,6 +60,30 @@ export const lessonApi = createApi({
             }),
             invalidatesTags: ['Put']
         }),
+        searchLessons: builder.query({
+            query: ({authToken, options}) => {
+                let {startDate,endDate} = options;
+                //todo fix this weird logic
+                let filters = {...options};
+                if(startDate && endDate){
+                    startDate.setHours(23,59);
+                    endDate.setHours(0,0,0,0);
+                    let startString = startDate.toISOString();
+                    let endString = endDate.toISOString();
+                    filters.startDate = startString;
+                    filters.endDate = endString;
+                }
+                const query = buildQuery(filters,['selectedDate']);
+
+                return {
+                    url: `/search${query}`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    }
+                }
+            }
+        })
     })
 });
 
@@ -67,5 +92,6 @@ export const {
     useLazyGetStudentLessonsQuery,
     useCreateLessonMutation,
     useLazyGetLessonQuery,
-    useUpdateLessonMutation
+    useUpdateLessonMutation,
+    useSearchLessonsQuery
 } = lessonApi;

@@ -176,6 +176,11 @@ export const setSelectedLesson = (lesson) => (dispatch,getState) => {
     dispatch(setLesson(lesson));
 }
 
+/**
+ * @deprecated
+ * @param {} lesson 
+ * @returns 
+ */
 export const updateLesson = (lesson) => (dispatch,getState) => {
     dispatch(addLessonRequest());
     const authToken = getState().auth.authToken;

@@ -3,28 +3,28 @@ import { API_BASE_URL } from "../../config";
 
 const keepUnusedDataFor = 120;
 
-export const studentApi = createApi({
-    reducerPath: 'studentApi',
+export const categoriesApi = createApi({
+    reducerPath: 'categoriesApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${API_BASE_URL}/students`
+        baseUrl: `${API_BASE_URL}/category`
     }),
     endpoints: (builder) => ({
-        getStudents: builder.query({
-            query: (token) => {
+        getCategories: builder.query({
+            query: ({authToken}) => {
                 return {
-                    url: '',
+                    url: ``,
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${authToken}`
                     } 
                 }
             },
-            transformResponse: (res) => res ? res.students : [],
+            transformResponse: (res) => res ? res.categories : [],
             keepUnusedDataFor
         }),
     })
 });
 
 export const {
-    useGetStudentsQuery
-} = studentApi;
+    useGetCategoriesQuery
+} = categoriesApi;

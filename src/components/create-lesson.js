@@ -494,7 +494,6 @@ const StateWrapper = (Component) => function Comp(props){
     const [createLesson, {isLoading: createLoading, isSuccess: createSuccess}] = useCreateLessonMutation();
     const [updateLesson, {isLoading: updateLoading, isSuccess: updateSuccess}] = useUpdateLessonMutation();
     const params = useParams();
-    console.log(selectedLessonData);
 
     useEffect(() => {
         if(!createLoading && createSuccess){
@@ -550,7 +549,7 @@ const StateWrapper = (Component) => function Comp(props){
     const snackbarClosed = useCallback(() => {
         setSaved(false);
     }, [setSaved]);
-    
+    //necessary for the current functionality of the component, since no update lifecycle set
     if(studentsLoading || typesLoading){
         return null;
     }

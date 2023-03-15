@@ -3,7 +3,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Switch from '@material-ui/core/Switch';
@@ -12,17 +12,21 @@ import Button from '@material-ui/core/Button';
 import {updateStudentAsync,getStudents} from '../../actions/studentActions';
 import Select from '@material-ui/core/Select';
 import { MenuItem } from '@material-ui/core';
-import {getCategories} from '../../actions/categoryActions';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import InputLabel from '@material-ui/core/InputLabel';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import './styles/student-details.css'
+import { useGetCategoriesQuery } from '../../store/api/categories-api';
+import { useMemo } from 'react';
 
 function StudentDetails(props){
     const [studentCopy,setStudentCopy] = useState(null);
     const [isLoading,setIsLoading] = useState(false);
     const [isExpanded,setIsExpanded] = useState(false);
+    const {authToken, currentUser} = useSelector(state => state.auth);
+    const user = useMemo(() => currentUser, [currentUser]);
+    const {data: categories} = useGetCategoriesQuery({authToken});
 
     //const adminFields = ['firstName','lastName','active'];
     const adminFields = {
@@ -67,7 +71,7 @@ function StudentDetails(props){
         let value = event.target.value;
         let student = {...studentCopy};
         //debugger;
-        let foundCategory = props.categories.find(cat => value === cat.id);
+        let foundCategory = categories.find(cat => value === cat.id);
         student.category = student.category.map((cat,i) => {
             if(i === index){
                 return foundCategory;
@@ -95,15 +99,18 @@ function StudentDetails(props){
     }
 
     const buildStudentDetails = () => {
-        const userLevel = props.user.level;
+        if(!user){
+            return null;
+        }
+        const userLevel = user.level;
         let details = null;
         try{
             if(studentCopy){
                 if(userLevel <= 1){
                     let categoryItems = [];
 
-                    for(let i = 0;i < props.categories.length;i++){
-                        const item = props.categories[i];
+                    for(let i = 0;i < categories.length;i++){
+                        const item = categories[i];
                         categoryItems.push(
                             <MenuItem value={item.id} key={i}>{item.name}</MenuItem>
                         );
@@ -173,7 +180,7 @@ function StudentDetails(props){
     const updateStudent = async () => {
         setIsLoading(true);
         try{
-            const resp = await updateStudentAsync(studentCopy,props.user.level);
+            const resp = await updateStudentAsync(studentCopy, user.level);
             await props.dispatch(getStudents());
             setIsLoading(false);
         }
@@ -220,10 +227,6 @@ function StudentDetails(props){
         }
     },[props.student]);
 
-    useEffect(() => {
-        props.dispatch(getCategories())
-    },[])
-
     const studentDetails = buildStudentDetails();
     const updateButton = studentCopy ? (<Button  variant="contained" onClick={(e) => updateStudent()} disabled={isLoading}>Update</Button>) : null;
 
@@ -242,9 +245,5 @@ function StudentDetails(props){
     )
 }
 
-const mapStateToProps = state => ({
-    user: state.auth.currentUser,
-    categories:state.category.categories
-});
 
-export default connect(mapStateToProps)(StudentDetails);
+export default StudentDetails;
