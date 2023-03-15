@@ -68,7 +68,7 @@ export class CreateLesson extends React.Component{
             });
         }
         catch(e){
-            
+            console.error(e);
         }
     }
 
@@ -80,7 +80,6 @@ export class CreateLesson extends React.Component{
      */
     checkSelectedLesson = () =>{
         let isEdit = this.checkEditMode();
-
         if(this.props.selectedLesson && isEdit){
             let selectedLesson = this.props.selectedLesson;
             let lessonData = {
@@ -258,66 +257,8 @@ export class CreateLesson extends React.Component{
         this.setState({
             modalOpen:false
         });
-        let isEdit = this.checkEditMode();
         const lesson = this.state.lesson.getReq();
         this.props.saveLesson(lesson);
-        /*
-        if(!isEdit){
-            this.props.saveLesson(lesson);
-            //console.log(lesson);
-            this.props.dispatch(saveLesson(lesson))
-
-            .then(res => {
-                let {code} = res;
-                
-                if(code === 200){
-                    let startDate = new Date();
-                    let endDate = new Date(startDate);
-                    let startDateString = this.buildDateString(startDate);
-                    let endDateString = this.buildDateString(endDate);
-                    this.props.history.push(`/my-lessons?startdate=${startDateString}&enddate=${endDateString}&teacher=${this.props.currentUser.username}`);
-                }
-                else{
-                    this.setState({
-                        saved:true,
-                        savedMessage:'Error saving lesson'
-                    });
-                }
-            })
-
-            .catch(err => {
-                console.log(err);
-            });
-        }
-        //update
-        else{
-            const lesson = this.state.lesson.getReq();
-            this.props.saveLesson(lesson);
-            this.props.dispatch(updateLesson(lesson))
-
-            .then(res => {
-                let {code} = res;
-                
-                if(code === 200){
-                    this.setState({
-                        saved:true,
-                        savedMessage:'Lesson Updated!'
-                    });
-                }
-                else{
-                    //console.log(res)
-                    this.setState({
-                        saved:true,
-                        savedMessage:'Error updating lesson'
-                    });
-                }
-            })
-
-            .catch(err => {
-                console.log(err);
-            });
-        }
-        */
     }
 
     snackbarClosed = (name) => {
@@ -485,8 +426,8 @@ const StateWrapper = (Component) => function Comp(props){
     const {currentUser, authToken} = auth;
     const [saved, setSaved] = useState(false);
     const [savedMessage, setSavedMessage] = useState('Created Lesson!');
-    const {data: students, isLoading: studentsLoading} = useGetStudentsQuery(authToken);
-    const {data: lessonData, isLoading: typesLoading} = useGetLessonTypesQuery(authToken);
+    const {data: students, isLoading: studentsLoading} = useGetStudentsQuery({authToken});
+    const {data: lessonData, isLoading: typesLoading} = useGetLessonTypesQuery({authToken});
     const [getStudentLessonTrigger, studentLessonsResults] = useLazyGetStudentLessonsQuery();
     const [getSelectedLesson, {data: selectedLessonData, isLoading: selectedLessonLoading}] = useLazyGetLessonQuery();
     const dispatch = useDispatch();
@@ -550,10 +491,9 @@ const StateWrapper = (Component) => function Comp(props){
         setSaved(false);
     }, [setSaved]);
     //necessary for the current functionality of the component, since no update lifecycle set
-    if(studentsLoading || typesLoading){
+    if(studentsLoading || typesLoading || !students){
         return null;
     }
-
     if(params.id && !selectedLessonData){
         return null;
     }

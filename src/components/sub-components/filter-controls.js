@@ -37,7 +37,7 @@ function FilterControls(props){
         selectedStudent:props.student ? props.student : null,
         selectedDate:props.date ? props.date : null
     });
-    const {authToken} = useSelector(state => state.auth);
+    const {authToken, currentUser} = useSelector(state => state.auth);
     //these should really be passed to component
     const {data: allStudents} = useGetStudentsQuery({authToken}) 
     const {data: allTeachers} = useGetUsersQuery({authToken}); 
@@ -132,10 +132,9 @@ function FilterControls(props){
 
     }
 
-    //console.log('all teachers',allTeachers);
-    //console.log('all teacher ',allTeachers)
+    console.log('all students ', allStudents, authToken);
 
-    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={props.user.level <= 1 ? null : props.studentActive}/>) : null;
+    const studentFilter = allStudents ? (<FilterControl responses={allStudents} target={studentTarget} changeData={studentTarget} filterChanged={filterChanged} title={"Name"} value={filters.selectedStudent} ignoreEmpty={true} activeProp={currentUser.level <= 1 ? null : props.studentActive}/>) : null;
     const teacherFilter = allTeachers ? (<FilterControl responses={allTeachers} target={teacherTarget} changeData={teacherChange} filterChanged={filterChanged} title={"Teacher"} value={filters.selectedTeacher} ignoreEmpty={true}/>) : null;
     return(
         <Grid container>

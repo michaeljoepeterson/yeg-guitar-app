@@ -10,12 +10,12 @@ export const studentApi = createApi({
     }),
     endpoints: (builder) => ({
         getStudents: builder.query({
-            query: (token) => {
+            query: ({authToken}) => {
                 return {
                     url: '',
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${authToken}`
                     } 
                 }
             },

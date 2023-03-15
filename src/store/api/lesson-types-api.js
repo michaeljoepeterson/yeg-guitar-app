@@ -10,12 +10,12 @@ export const lessonTypesApi = createApi({
     }),
     endpoints: (builder) => ({
         getLessonTypes: builder.query({
-            query: (token) => {
+            query: ({authToken}) => {
                 return {
                     url: '',
                     method: 'GET',
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${authToken}`
                     } 
                 }
             },

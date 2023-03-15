@@ -26,7 +26,7 @@ export function LessonViewTable(props){
     const [deleteLessonId, setDeleteLessonId] = useState(null);
     const [deleteMessage, setDeleteMessage] = useState('');
     const pager = useMemo(() => {
-        const lessons = props.lessons ? props.lessons : []
+        const lessons = props.lessons ? [...props.lessons] : [];
         const p = new Pager({
             items: lessons.sort((a,b) => {
                 let dateA = new Date(a.date);

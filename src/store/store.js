@@ -15,8 +15,7 @@ export const rtkStore = configureStore(({
         [lessonTypesApi.reducerPath]: lessonTypesApi.reducer,
         [lessonApi.reducerPath]: lessonApi.reducer,
         [usersApi.reducerPath]: usersApi.reducer,
-        [categoriesApi.reducerPath]: categoriesApi.reducer,
-        [studentApi.reducerPath]: studentApi.reducer
+        [categoriesApi.reducerPath]: categoriesApi.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         // required due to passing options filter object in get lessons api
@@ -29,5 +28,4 @@ export const rtkStore = configureStore(({
     .concat(lessonApi.middleware)
     .concat(usersApi.middleware)
     .concat(categoriesApi.middleware)
-    .concat(studentApi.middleware)
 }));

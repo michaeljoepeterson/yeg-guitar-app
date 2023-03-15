@@ -9,6 +9,7 @@ export const lessonApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${API_BASE_URL}/lessons`
     }),
+    tagTypes:['Put'],
     endpoints: (builder) => ({
         getStudentLessons: builder.query({
             query: ({authToken, id}) => {
@@ -82,7 +83,9 @@ export const lessonApi = createApi({
                         Authorization: `Bearer ${authToken}`
                     }
                 }
-            }
+            },
+            transformResponse: (res) => res ? res.lessons : null,
+            keepUnusedDataFor,
         })
     })
 });
