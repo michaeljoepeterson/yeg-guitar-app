@@ -94,6 +94,7 @@ function StudentDetails(props){
 
     const addCategory = () => {
         let student = {...studentCopy};
+        student.category = [...studentCopy.category];
         student.category.push({});
 
         setStudentCopy(student);
