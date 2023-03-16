@@ -25,6 +25,8 @@ export const authSlice = createSlice({
         loginSuccess: (state, action) => {
             const authToken = action.payload;
             const decodedToken = jwtDecode(authToken);
+            console.log('login', authToken);
+            saveAuthToken(authToken);
             state.authToken = authToken;
             state.currentUser = decodedToken.user;
             state.loading = false;
@@ -72,6 +74,5 @@ export const signInWithGoogle = createAsyncThunk('googleSignIn', async () => {
     });
     let resJson = await res.json();
     let {authToken} = resJson;
-    saveAuthToken(authToken);
     return authToken;
 });
