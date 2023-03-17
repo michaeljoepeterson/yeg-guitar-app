@@ -85,6 +85,23 @@ export const lessonApi = createApi({
             },
             transformResponse: (res) => res ? res.lessons : null,
             keepUnusedDataFor,
+        }),
+        getLessonSummary: builder.query({
+            query: ({authToken, id, startDate, endDate}) => {
+                startDate.setHours(23,59);
+                endDate.setHours(0,0,0,0);
+                let startString = startDate.toISOString();
+                let endString = endDate.toISOString();
+                const query = buildQuery({id,startDate:startString,endDate:endString});
+                return {
+                    url: `/summary/${query}`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    }
+                }
+            },
+            transformResponse: (res) => res.lessonData
         })
     })
 });
@@ -96,5 +113,6 @@ export const {
     useLazyGetLessonQuery,
     useUpdateLessonMutation,
     useSearchLessonsQuery,
-    useLazySearchLessonsQuery
+    useLazySearchLessonsQuery,
+    useLazyGetLessonSummaryQuery
 } = lessonApi;

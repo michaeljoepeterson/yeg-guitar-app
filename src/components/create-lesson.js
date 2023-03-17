@@ -406,19 +406,6 @@ export class CreateLesson extends React.Component{
     }
 }
 
-/*todo implement editing
-const mapStateToProps = state => {
-    let types = state.lessons?.lessonTypes ? state.lessons.lessonTypes.filter(type => type.active).map(type => type.name) : [];
-    return{
-        currentUser: state.auth.currentUser,
-        lessonTypes:types,
-        students:state.students.students,
-        selectedLesson:state.lessons.selectedLesson,
-        studentLessons:state.lessons.studentLessons
-    };
-};
-export default requiresLogin()(withRouter(connect(mapStateToProps)(CreateLesson)));
-*/
 //todo move to data component once class component converted to functional comp
 const StateWrapper = (Component) => function Comp(props){
     useRequiresLogin();

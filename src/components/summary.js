@@ -2,13 +2,16 @@ import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import {Route, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {getUsers} from '../actions/userActions';
 import {getLessonSummary} from '../actions/lessonActions';
 import UserList from './sub-components/user-list';
 import SummaryView from './sub-components/summary-view';
 import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
+import { useGetUsersQuery } from '../store/api/users-api';
+import { useLazyGetLessonSummaryQuery } from '../store/api/lesson-api';
+import { useMemo } from 'react';
 
 export class Summary extends React.Component{
     constructor(props) {
@@ -32,25 +35,12 @@ export class Summary extends React.Component{
         if(id){
             this.updateUserSummary(id);
         }
-        else{
-            this.findUsers();
-        }
     }
 
     updateUserSummary = (id) => {
         id = id ? id : this.state.selectedId;
         if(id){
-            this.props.dispatch(getLessonSummary(id,this.state.startDate,this.state.endDate))
-            .then(lessonData => {
-                console.log('lesson data: ',lessonData.lessonData);
-                this.setState({
-                    lessonData:lessonData.lessonData
-                });
-            })
-
-            .catch(err => {
-                console.log(err);
-            })
+            this.props.getLessonSummary(id, this.state.startDate, this.state.endDate);
         }
     }
 
@@ -60,10 +50,6 @@ export class Summary extends React.Component{
             selectedId:id
         });
         return id;
-    }
-
-    findUsers = () =>{
-        this.props.dispatch(getUsers());
     }
 
     dateUpdated = (event, dateField) =>{
@@ -98,9 +84,9 @@ export class Summary extends React.Component{
         <UserList summary={true} users={filteredUsers}/>
         );
 
-        let summary = this.state.selectedId && this.state.lessonData? (
-            <SummaryView data={this.state.lessonData}/>
-        ) :null;
+        let summary = this.state.selectedId && this.props.lessonSummary ? (
+            <SummaryView data={this.props.lessonSummary}/>
+        ) : null;
         
         return(
             <div>
@@ -113,9 +99,35 @@ export class Summary extends React.Component{
     }
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    users:state.users.users
-});
 
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(Summary))));
+const StateWrapper = (Component) => function Comp(props){
+    const {authToken, currentUser} = useSelector(state => state.auth);
+    const {data: users} = useGetUsersQuery({authToken}); 
+    const [getSummary, {data: lessonSummary}] = useLazyGetLessonSummaryQuery();
+    const getLessonSummary = async (id, startDate, endDate) => {
+        try{
+            getSummary({authToken, id, startDate, endDate}, true);
+        }
+        catch(e){
+            console.warn(e);
+        }
+    };
+
+    if(!users){
+        return null;
+    }
+
+    return (
+        <>
+            <Component
+                users={users}
+                currentUser={currentUser}
+                getLessonSummary={getLessonSummary}
+                lessonSummary={lessonSummary}
+                {...props}
+            />
+        </>
+    );
+}
+
+export default CheckPermission()(requiresLogin()((withRouter(StateWrapper(Summary)))));
