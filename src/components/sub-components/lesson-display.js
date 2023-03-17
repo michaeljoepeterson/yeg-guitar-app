@@ -19,10 +19,6 @@ export class LessonDisplay extends React.Component{
         };
     }
 
-    componentDidMount(){
-        //this.props.dispatch(getLessons())
-    }
-
     setSelectedLesson = (lesson) => {
         console.log('selected lesson: ',lesson);
         this.props.dispatch(setSelectedLesson(lesson));

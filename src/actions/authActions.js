@@ -23,16 +23,6 @@ export const authError = (error) => ({
 });
 //losgout actions
 export const LOGOUT = "LOGOUT";
-/**
- * @deprecated
- * @returns 
- */
-export const logoutSession = () => {
-    clearAuthToken();
-    return {
-        type:LOGOUT
-    };
-}
 
 export const TEST_ENABLE = 'TEST_ENABLE';
 export const testEnable = () => ({
@@ -76,63 +66,11 @@ export const login = (email,password) => (dispatch,getState) => {
     );
 };
 
-/**
- * @deprecated
- * @returns
- */
-export const refreshAuthToken = () => async (dispatch,getState) => {
-    //dispatch(authRequest());
-    try{
-        const token = loadAuthToken();
-        let res = await fetch(`${API_BASE_URL}/auth/refresh`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`
-            } 
-        })
-        res = await normalizeResponseErrors(res);
-        let resJson = await res.json();
-        let {authToken} = resJson;
-        storeAuthInfo(authToken,dispatch)
-
-    }
-    catch(e){
-        console.log('error refreshing token: ',e);
-        dispatch(authError(e));   
-    }
-};
-
 export const enableTestMode = () => (dispatch) =>{
     setTestUrl();
     dispatch(testEnable());
 }
 
-/**
- * @deprecated
- * @returns 
- */
-export const googleSignIn = () => async (dispatch) => {
-    try{
-        await fb.signInWithGoogle();
-        const token = await fb.getToken();
-        //console.log('google auth data: ',userData);
-        let res = await fetch(`${API_BASE_URL}/auth/login`,{
-            method:'POST',
-            headers:{
-                authtoken:token
-            }
-        });
-        res = await normalizeResponseErrors(res);
-        let resJson = await res.json();
-        let {authToken} = resJson;
-
-        storeAuthInfo(authToken,dispatch)
-    }
-    catch(e){
-        console.log('error logging in with google: ',e);
-        dispatch(authError(e));
-    }
-}
 
 export const emailSignIn = (email,pass) => async (dispatch) => {
     try{

@@ -17,10 +17,6 @@ export class ExampleTable extends React.Component{
         };
     }
 
-    componentDidMount(){
-        //this.props.dispatch(getLessons())
-    }
-
     teacherClicked = (teacher) =>{
         this.setState({
             teacher:teacher

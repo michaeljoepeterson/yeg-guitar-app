@@ -1,6 +1,11 @@
 import React, {useEffect,useState} from 'react';
 import {generalSearch} from '../actions/lessonActions';
 
+/**
+ * @deprecated
+ * @param {*} filters 
+ * @param {*} dispatch 
+ */
 export const useFilterLessons = (filters,dispatch) => {
     //debounce request to limit second req caused by setting fitlers after props change
     const [loading,setLoading] = useState(false);

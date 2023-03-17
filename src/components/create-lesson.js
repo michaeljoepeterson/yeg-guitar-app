@@ -139,7 +139,6 @@ export class CreateLesson extends React.Component{
 
     getStudentLessons = async (id) =>{
         try{
-            //await this.props.dispatch(getStudentLesson(id))
             this.props.getStudentLessons(id);
             this.modalOpened(this.studentModal);
         }

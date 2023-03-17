@@ -16,10 +16,6 @@ export class UserList extends React.Component{
         };
     }
 
-    componentDidMount(){
-        //this.props.dispatch(getLessons())
-    }
-
     selectUser = (user) => {
         console.log('selected user: ',user);
         this.props.history.push(`/summary/${user.id}`);
