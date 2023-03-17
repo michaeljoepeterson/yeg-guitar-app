@@ -2,7 +2,7 @@ import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import { withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -22,6 +22,11 @@ import { Student } from '../models/student';
 
 import './styles/create-student.css';
 import './styles/create-lesson.css';
+import { useGetCategoriesQuery } from '../store/api/categories-api';
+import { useCallback } from 'react';
+import { useCreateStudentMutation } from '../store/api/student-api';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export class CreateStudent extends React.Component{
     constructor(props) {
@@ -34,10 +39,6 @@ export class CreateStudent extends React.Component{
             categoryCount:1,
             active:true
         };
-    }
-
-    componentDidMount(){
-        this.props.dispatch(getCategories())
     }
 
     fieldChanged = (event,field) => {
@@ -107,28 +108,7 @@ export class CreateStudent extends React.Component{
         event.persist();
         event.preventDefault();
         const student = this.state.student.getReq();
-        this.props.dispatch(createStudent(student,this.props.currentUser.level))
-
-        .then(res => {
-            let {code} = res;
-            
-            if(code === 200){
-                this.setState({
-                    saved:true,
-                    savedMessage:'Student Saved!'
-                });
-            }
-            else{
-                this.setState({
-                    saved:true,
-                    savedMessage:'Error saving student'
-                });
-            }
-        })
-
-        .catch(err => {
-            console.log(err);
-        });
+        this.props.saveStudent(student);
     }
 
     snackbarClosed = (name) => {
@@ -145,7 +125,8 @@ export class CreateStudent extends React.Component{
         student.category = [...categories];
         this.setState({
             categoryCount,
-            categories
+            categories,
+            student
         });
     }
 
@@ -156,7 +137,8 @@ export class CreateStudent extends React.Component{
         student.category = [...categories];
         this.setState({
             categoryCount,
-            categories
+            categories,
+            student
         });
     }
 
@@ -215,14 +197,42 @@ export class CreateStudent extends React.Component{
                         </Grid>
                     </Grid>
                 </form>
-                <SnackbarWrapper saved={this.state.saved} snackbarClosed={this.snackbarClosed} saveField={"saved"} savedMessage={this.state.savedMessage}/>
             </div>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    categories:state.category.categories
-});
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(CreateStudent))));
+const StateWrapper = (Component) => function Comp(props){
+    const [saved, setSaved] = useState(false);
+    const {currentUser, authToken} = useSelector(state => state.auth);
+    const {data: categories} = useGetCategoriesQuery({authToken});
+    const [createStudent, {isSuccess, isLoading}] = useCreateStudentMutation();
+
+    useEffect(() => {
+        if(isSuccess && !isLoading){
+            setSaved(true);
+        }
+    }, [isSuccess, isLoading]);
+
+    const saveStudent = useCallback((student) => {
+        createStudent({student, authToken, level: currentUser.level});
+    }, [authToken, currentUser]);
+
+    const snackbarClosed = useCallback(() => {
+        setSaved(false);
+    }, [setSaved]);
+
+    return (
+        <>
+            <Component
+                currentUser={currentUser}
+                categories={categories}
+                saveStudent={saveStudent}
+                {...props}
+            />
+            <SnackbarWrapper saved={saved} snackbarClosed={snackbarClosed} saveField={"saved"} savedMessage={'Saved'}/>
+        </>
+    )
+}
+
+export default CheckPermission()(requiresLogin()(withRouter(StateWrapper(CreateStudent))));

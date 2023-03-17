@@ -37,15 +37,27 @@ export const studentApi = createApi({
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${authToken}`
                     },
-                    body:JSON.stringify({student: payloadStudent})
+                    body: JSON.stringify({student: payloadStudent})
                 }
             },
             invalidatesTags: ['Put']
+        }),
+        createStudent: builder.mutation({
+            query: ({authToken, student, level}) => ({
+                url: `?level=${level}`,
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: JSON.stringify(student)
+            })
         })
     })
 });
 
 export const {
     useGetStudentsQuery,
-    useUpdateStudentMutation
+    useUpdateStudentMutation,
+    useCreateStudentMutation
 } = studentApi;
