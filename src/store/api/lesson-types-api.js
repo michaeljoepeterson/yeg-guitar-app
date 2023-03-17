@@ -22,9 +22,26 @@ export const lessonTypesApi = createApi({
             transformResponse: (res) => res ? res.types : [],
             keepUnusedDataFor
         }),
+        createType: builder.mutation({
+            query: ({authToken, type, level}) => {
+                const payload = !type.lessonType ? {
+                    lessonType:type
+                } : type;
+                return {
+                    url: `?userLevel=${level}`,
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(payload)
+                }
+            }
+        })
     })
 });
 
 export const {
-    useGetLessonTypesQuery
+    useGetLessonTypesQuery,
+    useCreateTypeMutation
 } = lessonTypesApi;

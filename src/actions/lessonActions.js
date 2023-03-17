@@ -213,6 +213,13 @@ export const updateLesson = (lesson) => (dispatch,getState) => {
     return promise;
 }
 
+/**
+ * @deprecated
+ * @param {*} id 
+ * @param {*} startDate 
+ * @param {*} endDate 
+ * @returns 
+ */
 export const getLessonSummary = (id,startDate,endDate) => (dispatch,getState) => {
     //dispatch(getLessonRequest());
     const authToken = getState().auth.authToken;
@@ -340,6 +347,12 @@ export const getLessonTypes = () => async (dispatch,getState) =>{
     }
 }
 
+/**
+ * @deprecated
+ * @param {*} type 
+ * @param {*} level 
+ * @returns 
+ */
 export const createType = (type,level) => async (dispatch,getState) =>{
     try{
         dispatch(addLessonRequest);

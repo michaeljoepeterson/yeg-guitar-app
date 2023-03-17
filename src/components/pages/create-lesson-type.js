@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import requiresLogin from '../../HOC/requires-login';
 import CheckPermission from '../../HOC/check-permission';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import { withRouter} from 'react-router-dom';
-import {createType} from '../../actions/lessonActions';
 import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -14,33 +13,33 @@ import Typography from '@material-ui/core/Typography';
 import { LessonType } from '../../models/lesson-type';
 
 import '../styles/create-lesson.css';
+import { useCreateTypeMutation } from '../../store/api/lesson-types-api';
+import { useEffect } from 'react';
 
 function CreateType(props){
     const [type,setType] = useState(new LessonType());
+    const {currentUser, authToken} = useSelector(state => state.auth);
+    const [createType, {isLoading, isSuccess}] = useCreateTypeMutation();
 
     const [snackBarData,setSnackBar] = useState({
         saved:false,
         savedMessage:'Saved'
     });
 
+    useEffect(() => {
+        if(!isLoading && isSuccess){
+            setSnackBar({
+                saved:true,
+                savedMessage:'Type Saved!'
+            });
+        }
+    }, [isLoading, isSuccess]);
+
     const saveType = async (event) => {
         event.preventDefault();
         try{
-            const {level} = props.currentUser; 
-            let res = await props.dispatch(createType(type,level));
-            let {code} = res;
-            if(code === 200){
-                setSnackBar({
-                    saved:true,
-                    savedMessage:'Type Saved!'
-                });
-            }
-            else{
-                setSnackBar({
-                    saved:true,
-                    savedMessage:'Error saving type'
-                });
-            }
+            const {level} = currentUser; 
+            createType({authToken, type, level});
         }
         catch(e){
             setSnackBar({
@@ -108,9 +107,5 @@ function CreateType(props){
     )
 }
 
-const mapStateToProps = state => ({
-    isLoading: state.lessons.loading,
-    currentUser: state.auth.currentUser
-});
 
-export default CheckPermission()(requiresLogin()(withRouter(connect(mapStateToProps)(CreateType))));
+export default CheckPermission()(requiresLogin()(withRouter(CreateType)));

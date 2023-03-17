@@ -79,13 +79,6 @@ export class TopNav extends React.Component{
     }
 }
 
-/*
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    testMode:state.auth.testMode
-});
-export default connect(mapStateToProps)(TopNav);
-*/
 
 const StateWrapper = (Component) => function Comp(props){
     const {currentUser} = useSelector(state => state.auth);
