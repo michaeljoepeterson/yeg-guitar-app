@@ -90,7 +90,6 @@ const StateWrapper = (Component) => function Comp(props){
     console.log('err', error);
 
     const googleSignIn = useCallback(() => {
-        console.log('dispath')
         dispatch(signInWithGoogle());
     }, [dispatch]);
 

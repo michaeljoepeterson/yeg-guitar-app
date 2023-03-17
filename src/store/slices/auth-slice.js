@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authApi } from "../api/auth-api";
 import jwtDecode from 'jwt-decode';
 import fb from "../../fb/firebase";
-import { saveAuthToken } from "../../local-storage";
+import { clearAuthToken, saveAuthToken } from "../../local-storage";
 import { API_BASE_URL } from "../../config";
 
 const initialState = {
@@ -35,6 +35,13 @@ export const authSlice = createSlice({
         authError: (state, action) => {
             state.loading = false;
             state.error = action.payload;
+        },
+        logout: (state, action) => {
+            clearAuthToken();
+            state.loading = false;
+            state.error = false;
+            state.currentUser = null;
+            state.authToken = null;
         }
     },
     extraReducers: (builder) => {
@@ -76,3 +83,5 @@ export const signInWithGoogle = createAsyncThunk('googleSignIn', async () => {
     let {authToken} = resJson;
     return authToken;
 });
+
+export const {logout} = authSlice.actions;

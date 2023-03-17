@@ -23,6 +23,10 @@ export const authError = (error) => ({
 });
 //losgout actions
 export const LOGOUT = "LOGOUT";
+/**
+ * @deprecated
+ * @returns 
+ */
 export const logoutSession = () => {
     clearAuthToken();
     return {

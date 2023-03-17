@@ -1,10 +1,11 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, { useCallback } from 'react';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {logoutSession} from '../actions/authActions';
 import { Navbar,Nav,Button, NavDropdown } from 'react-bootstrap';
 import {possibleLinks} from '../config';
 import './styles/navbar.css';
+import { logout } from '../store/slices/auth-slice';
 //add logout functions
 export class TopNav extends React.Component{
     //should change this to state
@@ -18,7 +19,7 @@ export class TopNav extends React.Component{
     
     logout = (event) => {
         event.preventDefault();
-        this.props.dispatch(logoutSession());
+        this.props.logoutSession();
     }
 
     getNavLinks = () => {
@@ -78,8 +79,29 @@ export class TopNav extends React.Component{
     }
 }
 
+/*
 const mapStateToProps = state => ({
     currentUser: state.auth.currentUser,
     testMode:state.auth.testMode
 });
 export default connect(mapStateToProps)(TopNav);
+*/
+
+const StateWrapper = (Component) => function Comp(props){
+    const {currentUser} = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+
+    const logoutSession = useCallback(() => {
+        dispatch(logout());
+    }, [dispatch]);
+
+    return (
+        <Component
+            currentUser={currentUser}
+            logoutSession={logoutSession}
+            {...props}
+        />
+    )
+}
+
+export default StateWrapper(TopNav);
