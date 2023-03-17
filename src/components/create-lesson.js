@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import requiresLogin from '../HOC/requires-login';
 import { useParams, withRouter} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +10,6 @@ import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import Help from '@material-ui/icons/Help';
-import {updateLesson} from '../actions/lessonActions';
 import SnackbarWrapper from './snackbar-wrapper';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider,KeyboardDatePicker,KeyboardTimePicker } from '@material-ui/pickers';

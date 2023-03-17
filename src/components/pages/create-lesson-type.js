@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import requiresLogin from '../../HOC/requires-login';
 import CheckPermission from '../../HOC/check-permission';
 import {useSelector} from 'react-redux';
 import { withRouter} from 'react-router-dom';
@@ -15,8 +14,10 @@ import { LessonType } from '../../models/lesson-type';
 import '../styles/create-lesson.css';
 import { useCreateTypeMutation } from '../../store/api/lesson-types-api';
 import { useEffect } from 'react';
+import useRequiresLogin from '../../hooks/use-requires-login';
 
 function CreateType(props){
+    useRequiresLogin();
     const [type,setType] = useState(new LessonType());
     const {currentUser, authToken} = useSelector(state => state.auth);
     const [createType, {isLoading, isSuccess}] = useCreateTypeMutation();
@@ -108,4 +109,4 @@ function CreateType(props){
 }
 
 
-export default CheckPermission()(requiresLogin()(withRouter(CreateType)));
+export default CheckPermission()(withRouter(CreateType));

@@ -2,15 +2,17 @@ import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import LevelSelect from './level-select';
 import Button from '@material-ui/core/Button';
-import {connect} from 'react-redux';
-import {updateUser} from '../../actions/userActions'
+import {useSelector} from 'react-redux';
 import './styles/add-user.css';
+import { useUpdateUserMutation } from '../../store/api/users-api';
 
 export function AddUser(props){
     const [selectedLevel, setSelectedLevel] = useState('');
     const [email,setEmail] = useState('');
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
+    const {currentUser, authToken} = useSelector(state => state.auth);
+    const [updateUser] = useUpdateUserMutation();
 
     const handleLevelChanged = (level) => {
         console.log(level);
@@ -26,7 +28,7 @@ export function AddUser(props){
             level:selectedLevel
         }
         try{
-            await updateUser(props.authToken,user,props.currentUser);
+            await updateUser({authToken,user, level: currentUser.level});
             if(props.userUpdated){
                 props.userUpdated(user);
             }
@@ -57,9 +59,4 @@ export function AddUser(props){
     )
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser,
-    authToken: state.auth.authToken
-});
-
-export default connect(mapStateToProps)(AddUser);
+export default AddUser;

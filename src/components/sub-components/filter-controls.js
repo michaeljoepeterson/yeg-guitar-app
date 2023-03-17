@@ -39,7 +39,7 @@ function FilterControls(props){
     const {authToken, currentUser} = useSelector(state => state.auth);
     //these should really be passed to component
     const {data: allStudents} = useGetStudentsQuery({authToken});
-    const {data: allTeachers} = useGetUsersQuery({authToken}); 
+    const {data: allTeachers} = useGetUsersQuery({authToken});
 
     useEffect(() => {
         if(props.onFiltersChanged){
@@ -88,6 +88,10 @@ function FilterControls(props){
         }
         setFilters(currFilter);
     }, [props.selectedDate]);
+
+    if(!currentUser){
+        return null;
+    }
 
     const dateUpdated = (event, dateField) => {
         let newDate = new Date(event);

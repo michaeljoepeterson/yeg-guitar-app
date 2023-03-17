@@ -1,17 +1,14 @@
 import React from 'react';
 import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
-import {Route, withRouter} from 'react-router-dom';
-import {connect, useSelector} from 'react-redux';
-import {getUsers} from '../actions/userActions';
-import {getLessonSummary} from '../actions/lessonActions';
+import {withRouter} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import UserList from './sub-components/user-list';
 import SummaryView from './sub-components/summary-view';
 import Grid from '@material-ui/core/Grid';
 import DatePicker from './sub-components/date-picker';
 import { useGetUsersQuery } from '../store/api/users-api';
 import { useLazyGetLessonSummaryQuery } from '../store/api/lesson-api';
-import { useMemo } from 'react';
 
 export class Summary extends React.Component{
     constructor(props) {

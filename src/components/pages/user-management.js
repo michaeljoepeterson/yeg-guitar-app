@@ -12,20 +12,23 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import LevelSelect from '../sub-components/level-select';
 import Button from '@material-ui/core/Button';
-import {updateUser} from '../../actions/userActions';
 import './styles/user-management.css';
 import ModalWrapper from '../sub-components/modal-wrapper';
 import AddUser from '../sub-components/add-user';
+import {useSelector} from 'react-redux';
+import { useGetUsersQuery, useUpdateUserMutation } from '../../store/api/users-api';
 
 const UserManagement = (props) => {
-    const allTeachers = useGetTeachers(props.authToken,props.dispatch);
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [teachers,setTeachers] = useState(null);
+    const {currentUser, authToken} = useSelector(state => state.auth);
+    const {data: allTeachers} = useGetUsersQuery({authToken});
+    const [updateUser] = useUpdateUserMutation();
 
     const handleLevelChanged = async (level,user) => {
         let newUser = {...user};
         newUser.level = level !== '' ? level : null;
-        await updateUser(props.authToken,newUser,props.currentUser);
+        await updateUser({authToken, user: newUser, level: currentUser.level});
     }
 
     const openAddUserModal = () => {
@@ -90,10 +93,4 @@ const UserManagement = (props) => {
     )
 }
 
-const mapStateToProps = state => ({
-    isLoading: state.lessons.loading,
-    currentUser: state.auth.currentUser,
-    authToken: state.auth.authToken
-});
-
-export default CheckPermission()(requiresLogin()(connect(mapStateToProps)(UserManagement)));
+export default CheckPermission()(requiresLogin()(UserManagement));

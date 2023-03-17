@@ -47,7 +47,11 @@ export const getUsers = () => (dispatch,getState) => {
         })
     );
 };
-
+/**
+ * @deprecated
+ * @param {*} authToken 
+ * @returns 
+ */
 export const getUsersAsync = async (authToken) => {  
     try{
         let usersRaw = await fetch(`${API_BASE_URL}/users`,{
@@ -65,6 +69,12 @@ export const getUsersAsync = async (authToken) => {
     }
 };
 
+/**
+ * @deprecated
+ * @param {*} authToken 
+ * @param {*} user 
+ * @param {*} currentUser 
+ */
 export const updateUser = async(authToken,user,currentUser) => {
     try{
         let payload = {

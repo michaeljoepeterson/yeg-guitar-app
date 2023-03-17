@@ -22,9 +22,26 @@ export const usersApi = createApi({
             transformResponse: (res) => res ? res.users : [],
             keepUnusedDataFor
         }),
+        updateUser: builder.mutation({
+            query: ({authToken, user, level}) => {
+                let payload = {
+                    user
+                };
+                return {
+                    url: `/create?userLevel=${level}`,
+                    method:'POST',
+                    headers:{
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${authToken}`
+                    },
+                    body:JSON.stringify(payload)
+                }
+            }
+        })
     })
 });
 
 export const {
-    useGetUsersQuery
+    useGetUsersQuery,
+    useUpdateUserMutation
 } = usersApi;
