@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {connect} from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import {withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,6 +17,7 @@ import parse from 'html-react-parser';
 import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import SimpleModal from './simple-modal';
+import { useDeleteLessonMutation } from '../../store/api/lesson-api';
 
 export function LessonViewTable(props){
 
@@ -25,6 +26,9 @@ export function LessonViewTable(props){
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleteLessonId, setDeleteLessonId] = useState(null);
     const [deleteMessage, setDeleteMessage] = useState('');
+    const {authToken} = useSelector(state => state.auth)
+    const [deleteLesson] = useDeleteLessonMutation();
+
     const pager = useMemo(() => {
         const lessons = props.lessons ? [...props.lessons] : [];
         const p = new Pager({
@@ -95,7 +99,11 @@ export function LessonViewTable(props){
 
     const handleDeleteLesson = async () => {
         try{
-            props.dispatch(deleteLesson(deleteLessonId,props.user.level));
+            deleteLesson({
+                authToken,
+                id: deleteLessonId,
+                level: props.user.level
+            });
         }
         catch(e){
             console.warn(e);

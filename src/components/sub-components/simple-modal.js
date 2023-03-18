@@ -24,7 +24,7 @@ export default function SimpleModal(props){
                 </p>
                 <div>
                     <Button onClick={(e) => closeModal(e)} variant="contained">{props.cancel ? props.cancel : 'Cancel'}</Button>
-                    {props.submitClicked && <Button color={props.color ? props.color :'primary'} onClick={(e) => submitClicked(e)} variant="contained">{props.submit ? props.submit : 'Submit'}</Button>}
+                    {props.submitClick && <Button color={props.color ? props.color :'primary'} onClick={(e) => submitClicked(e)} variant="contained">{props.submit ? props.submit : 'Submit'}</Button>}
                 </div>
             </Paper>
         </div>

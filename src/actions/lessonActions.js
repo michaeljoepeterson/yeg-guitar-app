@@ -204,6 +204,12 @@ export const createType = (type,level) => async (dispatch,getState) =>{
     }
 }
 
+/**
+ * @deprecated
+ * @param {*} id 
+ * @param {*} level 
+ * @returns 
+ */
 export const deleteLesson = (id,level) => async (dispatch,getState) => {
     try{
         const authToken = getState().auth.authToken;
