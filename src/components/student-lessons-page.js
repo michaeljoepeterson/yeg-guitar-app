@@ -7,9 +7,7 @@ import LessonViewTable from './sub-components/lesson-view-table';
 import FilterControls from './sub-components/filter-controls';
 import StudentDetails from './sub-components/student-details';
 import Grid from '@material-ui/core/Grid';
-import {getStudents} from '../actions/studentActions';
 import GetUrlFilters from '../HOC/get-url-filters';
-import {useGetTeachers} from '../effects/getData';
 
 function StudentLessonPage(props){
     const [student,setStudent] = useState(null);
@@ -64,7 +62,6 @@ function StudentLessonPage(props){
         }
     }, [props.teachers,props.teacher]);
     const filterControls = initialLoad ? null : (<FilterControls student={student} teacher={teacher} filterChanged={filterChanged} selectedDate={selectedDate} studentActive={activeProp} updateStudent={updateSelectedStudent} startDate={props.endDate} endDate={props.startDate}/>);
-    useGetTeachers(props.authToken,props.dispatch); 
     return(
         <div>
             {filterControls}

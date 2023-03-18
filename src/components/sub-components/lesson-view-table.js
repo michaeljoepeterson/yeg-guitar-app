@@ -8,7 +8,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {setSelectedLesson,deleteLesson} from '../../actions/lessonActions';
 import { Lesson } from '../../models/lesson';
 import TablePagination from '@material-ui/core/TablePagination';
 import {Pager} from '../../helpers/pager';
@@ -53,7 +52,6 @@ export function LessonViewTable(props){
     const setLesson = (lesson) => {
         if(props.user.level <= 1 || (props.user.id === lesson.teacher.id)){
             console.log('selected lesson: ',lesson);
-            props.dispatch(setSelectedLesson(lesson));
             props.history.push(`/edit-lesson/${lesson.id}`);
         }
     };

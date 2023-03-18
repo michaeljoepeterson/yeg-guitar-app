@@ -3,7 +3,6 @@ import {useSelector} from 'react-redux';
 import LoginForm from './login-form';
 import { Redirect } from 'react-router';
 import { withRouter} from 'react-router-dom';
-import {enableTestMode} from '../actions/authActions';
 
 export function LandingPage(props){
     const title = 'Edmonton Guitar';
@@ -17,7 +16,6 @@ export function LandingPage(props){
     }
     
     if(props.location.pathname.includes('/test')){
-        props.dispatch(enableTestMode());
         return <Redirect to='/'/>;
     }
     

@@ -1,6 +1,5 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {emailSignIn} from '../actions/authActions';
 import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -34,7 +33,6 @@ export class LoginForm extends React.Component{
    tryLogin = (event) =>{
         event.persist();
         event.preventDefault();
-        this.props.dispatch(emailSignIn(this.state.email,this.state.pass));
         
     }
 

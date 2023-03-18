@@ -102,6 +102,7 @@ export const lessonApi = createApi({
                     }
                 }
             },
+            providesTags: ['Put', 'Delete'],
             transformResponse: (res) => res.lessonData
         }),
         deleteLesson: builder.mutation({

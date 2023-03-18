@@ -2,8 +2,7 @@ import React, {useEffect,useState} from 'react';
 import LandingPage from './components/landing-page';
 import {Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {enableTestMode} from './actions/authActions';
-import CreateAdmin from './components/create-admin';
+//import CreateAdmin from './components/create-admin';
 import ExampleTable from './components/lesson-dash';
 import CreateStudent from './components/create-student';
 import CreateLesson from './components/create-lesson';
@@ -44,9 +43,6 @@ function App(props){
   useEffect(() => {
     console.log(props.location);
     const init = async () =>{
-      if(props.location.pathname.includes('/test')){
-        props.dispatch(enableTestMode());
-      }
       try{
         refreshAuthToken()
         startPeriodicRefresh();
@@ -94,7 +90,7 @@ function App(props){
         <Route exact path="/summary" render={(props) => (
           <Summary key={props.match.params.pageid} {...props} />)
         } />
-        <Route exact path="/create-admin" component={CreateAdmin} />
+        {/* <Route exact path="/create-admin" component={CreateAdmin} /> */}
         <Route exact path="/test"  render={(props) => (
           <LandingPage />)
         }/>

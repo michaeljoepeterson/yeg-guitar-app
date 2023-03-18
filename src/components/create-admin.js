@@ -3,14 +3,14 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {API_BASE_URL} from '../config';
-import {normalizeResponseErrors} from '../actions/utils';
 import {Link} from 'react-router-dom';
-import {createEmailUser} from '../actions/authActions';
 import './styles/center.css';
 import './styles/login.css';
 import {connect} from 'react-redux';
 
+/**
+ * deprecated
+ */
 export class CreateAdmin extends React.Component{
     
     constructor(props){
@@ -40,7 +40,6 @@ export class CreateAdmin extends React.Component{
         });
         if(this.state.pass === this.state.pass2){
             try{
-                await this.props.dispatch(createEmailUser(this.state.email,this.state.pass));
     
                 this.setState({
                     error:'User Created'

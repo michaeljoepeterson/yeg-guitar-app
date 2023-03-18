@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useGetTeachers} from '../../effects/getData';
 import {connect} from 'react-redux';
 import requiresLogin from '../../HOC/requires-login';
 import CheckPermission from '../../HOC/check-permission';

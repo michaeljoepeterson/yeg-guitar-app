@@ -3,7 +3,6 @@ import requiresLogin from '../HOC/requires-login';
 import CheckPermission from '../HOC/check-permission';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {getMyLessons} from '../actions/lessonActions';
 import LessonDisplay from './sub-components/lesson-display';
 import LessonViewTable from './sub-components/lesson-view-table';
 import Grid from '@material-ui/core/Grid';

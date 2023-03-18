@@ -8,6 +8,7 @@ export const usersApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${API_BASE_URL}/users`
     }),
+    tagTypes: ['Put'],
     endpoints: (builder) => ({
         getUsers: builder.query({
             query: ({authToken}) => {
@@ -20,7 +21,8 @@ export const usersApi = createApi({
                 }
             },
             transformResponse: (res) => res ? res.users : [],
-            keepUnusedDataFor
+            keepUnusedDataFor,
+            providesTags: ['Put']
         }),
         updateUser: builder.mutation({
             query: ({authToken, user, level}) => {
@@ -36,7 +38,8 @@ export const usersApi = createApi({
                     },
                     body:JSON.stringify(payload)
                 }
-            }
+            },
+            invalidatesTags: ['Put']
         })
     })
 });

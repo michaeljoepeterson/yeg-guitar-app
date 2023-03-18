@@ -8,6 +8,7 @@ export const lessonTypesApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${API_BASE_URL}/lesson-types`
     }),
+    tagTypes: ['Post'],
     endpoints: (builder) => ({
         getLessonTypes: builder.query({
             query: ({authToken}) => {
@@ -20,7 +21,8 @@ export const lessonTypesApi = createApi({
                 }
             },
             transformResponse: (res) => res ? res.types : [],
-            keepUnusedDataFor
+            keepUnusedDataFor,
+            providesTags: ['Post']
         }),
         createType: builder.mutation({
             query: ({authToken, type, level}) => {
@@ -36,7 +38,8 @@ export const lessonTypesApi = createApi({
                     },
                     body: JSON.stringify(payload)
                 }
-            }
+            },
+            invalidatesTags: ['Post']
         })
     })
 });

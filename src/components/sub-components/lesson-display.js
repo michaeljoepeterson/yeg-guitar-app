@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {setSelectedLesson} from '../../actions/lessonActions';
 
 
 export class LessonDisplay extends React.Component{
@@ -21,7 +20,6 @@ export class LessonDisplay extends React.Component{
 
     setSelectedLesson = (lesson) => {
         console.log('selected lesson: ',lesson);
-        this.props.dispatch(setSelectedLesson(lesson));
         this.props.history.push(`/edit-lesson/${lesson.id}`);
     }
 
