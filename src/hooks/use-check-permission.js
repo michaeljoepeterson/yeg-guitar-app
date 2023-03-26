@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-export const useRequiresLogin = () =>{
+export const useCheckPermission = (level) => {
     const {currentUser, loading, error} = useSelector((state) => state.auth);
-    const loggedIn = currentUser !== null;
     const history = useHistory();
-    if(!loading && (!loggedIn || error)){
+
+    if(!loading && currentUser?.level > level){
         history.push('/');
     }
 
@@ -14,4 +14,4 @@ export const useRequiresLogin = () =>{
     };
 }
 
-export default useRequiresLogin
+export default useCheckPermission;

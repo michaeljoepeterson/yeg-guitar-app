@@ -4,6 +4,9 @@ import {Redirect} from 'react-router-dom';
 import {possibleLinks} from '../config';
 import {withRouter} from 'react-router-dom';
 
+/**
+ * @deprecated use check permission hook instead
+ */
 export default () => Component => {
     function CheckPermission(props){
         const {location,user,...passThroughProps} = props;

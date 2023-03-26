@@ -9,7 +9,7 @@ export const lessonApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${API_BASE_URL}/lessons`
     }),
-    tagTypes:['Put', 'Delete'],
+    tagTypes:['Put', 'Delete', 'Create Lesson'],
     endpoints: (builder) => ({
         getStudentLessons: builder.query({
             query: ({authToken, id}) => {
@@ -22,7 +22,8 @@ export const lessonApi = createApi({
                 }
             },
             transformResponse: (res) => res ? res.lessons : [],
-            keepUnusedDataFor
+            keepUnusedDataFor,
+            providesTags: ['Put', 'Create Lesson', 'Delete']
         }),
         createLesson: builder.mutation({
             query: ({authToken, lesson}) => ({
@@ -33,7 +34,8 @@ export const lessonApi = createApi({
                     Authorization: `Bearer ${authToken}`
                 },
                 body:JSON.stringify(lesson)
-            })
+            }),
+            invalidatesTags: ['Create Lesson']
         }),
         getLesson: builder.query({
             query: ({authToken, id}) => {
@@ -47,7 +49,7 @@ export const lessonApi = createApi({
             },
             transformResponse: (res) => res ? res.lesson : null,
             keepUnusedDataFor,
-            providesTags: ['Put'],
+            providesTags: ['Put', 'Create Lesson', 'Delete'],
         }),
         updateLesson: builder.mutation({
             query: ({authToken, lesson}) => ({
@@ -85,7 +87,7 @@ export const lessonApi = createApi({
             },
             transformResponse: (res) => res ? res.lessons : null,
             keepUnusedDataFor,
-            providesTags: ['Put', 'Delete']
+            providesTags: ['Put', 'Delete', 'Create Lesson']
         }),
         getLessonSummary: builder.query({
             query: ({authToken, id, startDate, endDate}) => {
@@ -102,7 +104,7 @@ export const lessonApi = createApi({
                     }
                 }
             },
-            providesTags: ['Put', 'Delete'],
+            providesTags: ['Put', 'Delete', 'Create Lesson'],
             transformResponse: (res) => res.lessonData
         }),
         deleteLesson: builder.mutation({
@@ -114,6 +116,22 @@ export const lessonApi = createApi({
                 }
             }),
             invalidatesTags: ['Delete']
+        }),
+        getStudentLastLesson: builder.query({
+            query: ({authToken, level, startDate, endDate}) => {
+                const start = new Date(startDate).toISOString();
+                const end = new Date(endDate).toISOString();
+
+                return {
+                    url: `/student-last-lesson?userLevel=${level}&startDate=${start}&endDate${endDate}`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    }
+                };
+            },
+            //todo move to separate var for easier updating across get methods
+            providesTags: ['Put', 'Delete', 'Create Lesson'],
         })
     })
 });
@@ -127,5 +145,6 @@ export const {
     useSearchLessonsQuery,
     useLazySearchLessonsQuery,
     useLazyGetLessonSummaryQuery,
-    useDeleteLessonMutation
+    useDeleteLessonMutation,
+    useLazyGetStudentLastLessonQuery
 } = lessonApi;
