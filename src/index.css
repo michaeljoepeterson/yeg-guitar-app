@@ -62,6 +62,10 @@ code {
   cursor: pointer;
 }
 
+.visible-hidden{
+  visibility: hidden;
+}
+
 @media (min-width: 960px) {
   .date-controls{
     width: 80%;
