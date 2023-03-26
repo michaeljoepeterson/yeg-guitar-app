@@ -20,7 +20,7 @@ export const StudentLastLessonPage = () => {
                 level: currentUser.level,
                 startDate,
                 endDate
-            });
+            }, true);
         }
     }, [trigger, currentUser, authToken]);
 
@@ -36,7 +36,9 @@ export const StudentLastLessonPage = () => {
             <DateControls
                 dateUpdated={dateUpdated}
             />
-            <LastLessonTable />
+            <LastLessonTable 
+                data={data?.lessons}
+            />
         </div>
     )
 }
