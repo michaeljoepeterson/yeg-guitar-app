@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, TableCell, TableHead, TableRow } from "@material-ui/core";
 
-export const LastLessonTable = () => {
+export const LastLessonTable = ({data}) => {
     return (
         <Table>
             <TableHead>
