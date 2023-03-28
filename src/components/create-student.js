@@ -149,9 +149,7 @@ export class CreateStudent extends React.Component{
         });
     }
 
-    render(){     
-        console.log(this.state);
-
+    render(){
         let categories = this.props.categories ? this.buildCategorySelect(this.props.categories) : [];
         return(
             <div>

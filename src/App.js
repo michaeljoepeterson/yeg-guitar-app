@@ -42,7 +42,6 @@ function App(props){
   }
   
   useEffect(() => {
-    console.log(props.location);
     const init = async () =>{
       try{
         refreshAuthToken()

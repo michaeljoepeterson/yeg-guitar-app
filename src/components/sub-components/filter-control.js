@@ -37,7 +37,6 @@ export default function FilterControl(props){
             //}
         });
         let filteredResponses = removeCopies(copiedResponses);
-        //console.log('filtered responses: ',filteredResponses)
         const filter = !props.value && !props.ignoreEmpty ?(
             <Autocomplete
                 onChange={(e,newValue) => filterChanged(e,newValue) }
