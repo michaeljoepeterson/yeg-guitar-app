@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useCallback, useMemo  } from 'react';
+import React, { useState,useEffect } from 'react';
 import CheckPermission from '../../HOC/check-permission';
 import {withRouter} from 'react-router-dom';
 import {useSelector} from 'react-redux';
@@ -12,7 +12,7 @@ import { useGetUsersQuery } from '../../store/api/users-api';
 import { useLazySearchLessonsQuery } from '../../store/api/lesson-api';
 import { CircularProgress } from '@material-ui/core';
 import DownloadCsv from '../sub-components/download-csv';
-import { lessonTableCsvConvert } from '../../utils/lesson-table-csv-convert';
+import { lessonTableCsvConvert } from '../../utils/csv/lesson-table-csv-convert';
 
 function StudentLessonPage(props){
     useRequiresLogin();
@@ -83,16 +83,16 @@ function StudentLessonPage(props){
 
         if(selectedTeacher){
             const teacherString = fileName !== "" ? `${selectedTeacher.firstName + " " + selectedTeacher.lastName}`: selectedTeacher.firstName + " " + selectedTeacher.lastName;
-            fileName += " Teacher-" + teacherString;
+            fileName += " Teacher - " + teacherString;
         }
 
         if(selectedStudent){
             const studentString = fileName !== "" ? `${selectedStudent.firstName + " " + selectedStudent.lastName}`: selectedStudent.firstName + " " + selectedStudent.lastName;
-            fileName += " Student-" + studentString; 
+            fileName += " Student - " + studentString; 
         }
 
         triggerSearch({authToken, options}, true);
-        setCsvFileName(fileName);
+        setCsvFileName("Lessons - ", fileName);
     }
 
     const activeProp = 'active';

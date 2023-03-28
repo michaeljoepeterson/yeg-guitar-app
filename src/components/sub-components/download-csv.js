@@ -20,7 +20,7 @@ export const DownloadCsv = ({
     const handleClick = useCallback(() => {
         const csvString = csvParser(data);
         setCsv(csvString);
-    }, [csvParser]);
+    }, [csvParser, data, setCsv]);
 
     return (
         <>

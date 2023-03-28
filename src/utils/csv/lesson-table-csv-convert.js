@@ -1,3 +1,5 @@
+import { cleanCsvRow } from "./clean-row";
+
 export const lessonTableCsvConvert = (data) => {
     let csvData = [["Date", "Lesson Type", "Notes", "Students", "Teacher"]];
     data.forEach(lesson => {
@@ -13,8 +15,4 @@ export const lessonTableCsvConvert = (data) => {
     csvData = csvData.map(row => cleanCsvRow(row));
     csv += csvData.map(row => row.join(",")).join("\n");
     return csv;
-};
-
-const cleanCsvRow = (row) => {
-    return row.map(col => typeof col !== "string" ? col : `"${col.replace(/"/g, '""')}"`);
 };
