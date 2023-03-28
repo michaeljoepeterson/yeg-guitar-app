@@ -16,7 +16,6 @@ export const lastLessonTableCsvConvert = (data) => {
     let csv = "data:text/csv;charset=utf-8,";
     csvData = csvData.map(row => cleanCsvRow(row));
     csv += csvData.map(row => row.join(",")).join("\n");
-    console.log(data);
-    console.log(csv);
+
     return csv;
 }
