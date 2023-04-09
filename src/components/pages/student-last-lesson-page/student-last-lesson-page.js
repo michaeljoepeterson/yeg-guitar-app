@@ -11,7 +11,7 @@ import LastLessonTable from "./components/last-lesson-table";
 export const StudentLastLessonPage = () => {
     const {loading} = useRequiresLogin();
     const [csvName, setCsvName] = useState();
-    const {loading: permissionLoading} = useCheckPermission(1);
+    const {loading: permissionLoading} = useCheckPermission(2);
     const {currentUser, authToken} = useSelector((state) => state.auth);
     const [trigger, {data}] = useLazyGetStudentLastLessonQuery();
 
