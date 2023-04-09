@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import { Navbar,Nav,Button, NavDropdown } from 'react-bootstrap';
 import {possibleLinks} from '../config';

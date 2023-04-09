@@ -13,6 +13,7 @@ import CreateType from './components/pages/create-lesson-type';
 import './App.css';
 import UserManagement from './components/pages/user-management';
 import { useLazyRefreshTokenQuery } from './store/api/auth-api';
+import StudentLastLessonPage from './components/pages/student-last-lesson-page/student-last-lesson-page';
 function App(props){
 
   let minutes = 240;
@@ -41,7 +42,6 @@ function App(props){
   }
   
   useEffect(() => {
-    console.log(props.location);
     const init = async () =>{
       try{
         refreshAuthToken()
@@ -99,6 +99,9 @@ function App(props){
         }/>
         <Route exact path="/create-type"  render={(props) => (
           <CreateType {...props}/>)
+        }/>
+         <Route exact path="/last-lesson"  render={(props) => (
+          <StudentLastLessonPage {...props}/>)
         }/>
         <Route exact path="/users"  render={(props) => (
           <UserManagement {...props}/>)

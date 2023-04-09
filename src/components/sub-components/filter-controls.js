@@ -95,7 +95,6 @@ function FilterControls(props){
 
     const dateUpdated = (event, dateField) => {
         let newDate = new Date(event);
-        console.log('updating date');
         let curFilters = {...filters};
         if(dateField === startDateType){
             curFilters.startDate = newDate;
@@ -108,7 +107,6 @@ function FilterControls(props){
 
     const filterChanged = (newVal,changeType,changeData) =>{
         let curFilters = {...filters};
-        //console.log(newVal);
 
         try{
             if(changeData === studentTarget){

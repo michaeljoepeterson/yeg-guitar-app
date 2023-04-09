@@ -45,7 +45,7 @@ export function LessonViewTable(props){
         });
 
         return p
-    }, [props.lessons])
+    }, [props.lessons, resultNum]);
     const rowsPerPage = [10,20,30,50,70,100];
     const visisbleLessons = pager.getPage(page);
 
@@ -182,10 +182,10 @@ export function LessonViewTable(props){
                     component="div"
                     count={props.lessons.length}
                     page={page}
-                    onChangePage={handleChangePage}
+                    onPageChange={handleChangePage}
                     rowsPerPage={resultNum}
                     rowsPerPageOptions={rowsPerPage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                     />
             </TableContainer>
         );

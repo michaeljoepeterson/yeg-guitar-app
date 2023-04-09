@@ -25,6 +25,11 @@ export let possibleLinks = [
       level:2
     },
     {
+      link: 'last-lesson',
+      level: 1,
+      display: 'Last Lesson'
+    },
+    {
       link:'/summary',
       display:'Summary',
       level:2
