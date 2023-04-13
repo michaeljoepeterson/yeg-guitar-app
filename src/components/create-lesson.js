@@ -54,8 +54,8 @@ export class CreateLesson extends React.Component{
     async componentDidMount(){
         try{
             let currentStudents = this.state.lesson.students.map(student => new Student(student));
-            let firstStudent = this.props.students.find(student => student.active);
-            currentStudents.push(new Student(firstStudent));
+            // let firstStudent = this.props.students.find(student => student.active);
+            // currentStudents.push(new Student(firstStudent));
             let lesson = new Lesson(this.state.lesson);
             lesson.students = currentStudents.map(student => new Student(student));
             this.setState({
@@ -154,10 +154,10 @@ export class CreateLesson extends React.Component{
         const activeProp = 'active';
         for(let i = 0;i < this.state.studentCount;i++){
             selects.push(
-                <Grid className="student-row" item xs={12} md={6} xl={4} key={this.state.lesson.students[i].id + i}>
+                <Grid className="student-row" item xs={12} md={6} xl={4} key={this.state.lesson.students[i]?.id ? this.state.lesson.students[i].id + i : i}>
                     <div className="filter-container-lesson">
                         <Tooltip title="See Previous Lessons">
-                            <IconButton onClick={(e) => this.getStudentLessons(this.state.lesson.students[i].id)} aria-label="student lessons">
+                            <IconButton onClick={(e) => this.getStudentLessons(this.state.lesson.students[i]?.id)} aria-label="student lessons">
                                 <Help/>
                             </IconButton>
                         </Tooltip>
@@ -204,12 +204,7 @@ export class CreateLesson extends React.Component{
 
     addStudent = () => {
         const studentCount = this.state.studentCount + 1;
-        const blankStudent = new Student ({
-            id:this.props.students[0].id,
-            fullName:this.props.students[0].fullName
-        });
         let students = [...this.state.lesson.students];
-        students.push(blankStudent);
         let lesson = new Lesson(this.state.lesson);
         lesson.students = students.map(student => new Student(student));
         this.setState({
@@ -314,7 +309,7 @@ export class CreateLesson extends React.Component{
 
     render(){
         let lessonItems = this.props.lessonTypes ? this.buildLessonSelect() : [];
-        let studentItems = this.props.students && this.props.students.length > 0 && this.state.lesson.students.length > 0 ? this.buildStudentSelect() : [];
+        let studentItems = this.props.students && this.props.students.length > 0 ? this.buildStudentSelect() : [];
         let studentLessonList = this.props.studentLessons ? (<LessonDisplay lessons={this.props.studentLessons}/>) : null;
         console.log('notes', this.state.lesson.notes)
         return(
