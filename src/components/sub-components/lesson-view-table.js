@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {connect, useSelector} from 'react-redux';
-import {withRouter } from 'react-router-dom';
+import {Link, withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -149,10 +149,17 @@ export function LessonViewTable(props){
                     </TableCell>
                     <TableCell>{lesson.lessonType}</TableCell>
                     {/* <TableCell onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell> */}
-                    <TableCell onClick={(e) => setLesson(lesson)}>
-                        <div className="notes">
-                            {parse(lesson.notes)}
-                        </div>
+                    <TableCell>
+                        <Link 
+                        style={{
+                            color: 'black',
+                            textDecoration: 'none'
+                        }}
+                        to={`/edit-lesson/${lesson.id}`}>
+                            <div className="notes">
+                                {parse(lesson.notes)}
+                            </div>
+                        </Link>
                     </TableCell>
                     <TableCell>{studentSpans}</TableCell>
                     <TableCell onClick={(e) => teacherClicked(lesson.teacher)}>{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>
