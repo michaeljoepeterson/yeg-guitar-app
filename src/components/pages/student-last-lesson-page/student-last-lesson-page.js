@@ -7,13 +7,14 @@ import { lastLessonTableCsvConvert } from "../../../utils/csv/last-lesson-table-
 import DownloadCsv from "../../sub-components/download-csv";
 import DateControls from "./components/date-controls";
 import LastLessonTable from "./components/last-lesson-table";
+import { CircularProgress } from "@material-ui/core";
 
 export const StudentLastLessonPage = () => {
     const {loading} = useRequiresLogin();
     const [csvName, setCsvName] = useState();
     const {loading: permissionLoading} = useCheckPermission(2);
     const {currentUser, authToken} = useSelector((state) => state.auth);
-    const [trigger, {data}] = useLazyGetStudentLastLessonQuery();
+    const [trigger, {data, isFetching: loadingLessons}] = useLazyGetStudentLastLessonQuery();
 
     const createCsvName = (startDate, endDate) => {
         let fileName = "Last Lesson - ";
@@ -30,9 +31,7 @@ export const StudentLastLessonPage = () => {
     }
 
     const dateUpdated = useCallback((startDate, endDate) => {
-        console.log(startDate, endDate);
         if(currentUser && authToken){
-
             trigger({
                 authToken,
                 level: currentUser.level,
@@ -62,9 +61,10 @@ export const StudentLastLessonPage = () => {
                     fileName={csvName}
                 />
             </div>
-            <LastLessonTable 
-                data={data?.lessons}
-            />
+            {loadingLessons && <CircularProgress />}
+            {
+                !loadingLessons && <LastLessonTable data={data?.lessons}/> 
+            }
         </div>
     )
 }

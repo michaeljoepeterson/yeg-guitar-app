@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {connect, useSelector} from 'react-redux';
-import {Link, withRouter } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,11 +12,11 @@ import { Lesson } from '../../models/lesson';
 import TablePagination from '@material-ui/core/TablePagination';
 import {Pager} from '../../helpers/pager';
 import './styles/table-styles.css';
-import parse from 'html-react-parser';
 import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import SimpleModal from './simple-modal';
 import { useDeleteLessonMutation } from '../../store/api/lesson-api';
+import LessonDescription from './tables/lesson-description';
 
 export function LessonViewTable(props){
 
@@ -48,13 +48,6 @@ export function LessonViewTable(props){
     }, [props.lessons, resultNum]);
     const rowsPerPage = [10,20,30,50,70,100];
     const visisbleLessons = pager.getPage(page);
-
-    const setLesson = (lesson) => {
-        if(props.user.level <= 1 || (props.user.id === lesson.teacher.id)){
-            console.log('selected lesson: ',lesson);
-            props.history.push(`/edit-lesson/${lesson.id}`);
-        }
-    };
 
     const studentClicked = (student) => {
         console.log('student clicked: ',student);
@@ -150,16 +143,10 @@ export function LessonViewTable(props){
                     <TableCell>{lesson.lessonType}</TableCell>
                     {/* <TableCell onClick={(e) => setLesson(lesson)}>{lesson.notes}</TableCell> */}
                     <TableCell>
-                        <Link 
-                        style={{
-                            color: 'black',
-                            textDecoration: 'none'
-                        }}
-                        to={`/edit-lesson/${lesson.id}`}>
-                            <div className="notes">
-                                {parse(lesson.notes)}
-                            </div>
-                        </Link>
+                        <LessonDescription 
+                            id={lesson.id}
+                            notes={lesson.notes}
+                        />
                     </TableCell>
                     <TableCell>{studentSpans}</TableCell>
                     <TableCell onClick={(e) => teacherClicked(lesson.teacher)}>{!lesson.teacher.fullName ? lesson.teacher.username : lesson.teacher.fullName}</TableCell>

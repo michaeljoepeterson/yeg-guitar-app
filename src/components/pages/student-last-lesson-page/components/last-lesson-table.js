@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@material-ui/core";
-import parse from 'html-react-parser';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Pager } from "../../../../helpers/pager";
+import LessonDescription from "../../../sub-components/tables/lesson-description";
 
 export const LastLessonTable = ({data}) => {
     //could probably setup a pager component
@@ -222,9 +222,10 @@ export const LastLessonTable = ({data}) => {
                                     <TableCell>{teacher.fullName}</TableCell>
                                     <TableCell>{lessonType}</TableCell>
                                     <TableCell>
-                                        <div className="notes">
-                                            {parse(notes)}
-                                        </div>
+                                        <LessonDescription 
+                                            notes={notes}
+                                            id={latestLesson._id}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             )
